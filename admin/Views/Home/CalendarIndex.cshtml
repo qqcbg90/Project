@@ -1,0 +1,118 @@
+﻿@{
+	
+}
+
+@section head{
+	@Styles.Render("~/Content/fullcalendar/fullcalendar.css")
+	@Scripts.Render("~/Content/fullcalendar/moment.min.js", "~/Content/fullcalendar/fullcalendar.min.js", "~/Content/fullcalendar/lang-all.js", "~/Scripts/jqueryPlugin.js")
+	<script>
+		var loaded = false;
+		$(function () {
+			SetCalendar();
+			$("#btnSearch").click(function () {
+				$('#calendar').fullCalendar('today');
+				$('#calendar').fullCalendar('removeEvents');
+				restr = $.ajax({
+					url: '@Url.Action("GetAllCalendarEvent")',
+					type: 'post',
+					dataType: 'json',
+					data: {
+						start: $('#calendar').fullCalendar('getView').start.format("YYYY/MM/DD"),
+						end: $('#calendar').fullCalendar('getView').end.format("YYYY/MM/DD"),
+						k: $("#k").val()
+					},
+					cache: false,
+					async: false
+				});
+				$('#calendar').fullCalendar('addEventSource', JSON.parse(restr.responseText));
+			});
+		});
+		function SetCalendar() {
+			if (loaded) return;
+			loaded = true;
+
+			$('#calendar').fullCalendar({
+				editable: false,
+				events: function (start, end, timezone, callback) {
+					console.log(start.format("YYYY/MM/DD") + "-" + end.format("YYYY/MM/DD"));
+					restr = $.ajax({
+						url: '@Url.Action("GetAllCalendarEvent")',
+						type: 'post',
+						dataType: 'json',
+						data: {
+							start: start.format("YYYY/MM/DD"),
+							end: end.format("YYYY/MM/DD"),
+							k: $("#k").val()
+						},
+						cache: false,
+						async: false
+					});
+					callback(JSON.parse(restr.responseText));
+				},
+				header: {
+					left: 'prev next today',
+					center: 'title',
+					right: 'prev next today'
+				},
+				buttonText: {
+					today: '今天'
+					//prev: '< 上週',
+					//next: '下週 >'
+				},
+				//defaultDate: '@ViewBag.StartDate',
+				//firstDay: 1,
+				//defaultView: 'agendaWeek',
+				lang: 'zh-tw',
+				allDaySlot: false,
+				minTime: "09:00:00",
+				maxTime: "20:00:00",
+				height: 768,
+				axisFormat: 'HH:mm',
+				timeFormat: 'HH:mm',
+				displayEventEnd: true
+			});
+		}
+	</script>
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+<p class="search_box" style="display:block">
+	<label class="key">
+		<span class="select">
+			<select id="k" name="k">
+				<option value="">全部</option>
+				<option value="1">活動檔期</option>
+				@*<option value="1">活動檔期 - 拆／裝台／佈展／卸展時間</option>
+				<option value="2">活動檔期 - 正式展演時間</option>*@
+				<option value="3">公務車預約</option>
+			</select>
+		</span>
+	</label>
+	<label class="btn_box go"><input type="button" id="btnSearch" value="搜尋" title="搜尋" class="btn"></label>
+</p>
+<div class="two_box">
+	<ul style="width:100%;margin-bottom: 20px;background-color: lightgoldenrodyellow;padding: 10px 8px;">
+		<li style="display:inline-block;margin-right:10px;margin-bottom: 2px;">
+			<div style="width:20px;height:20px;border:1px solid #000;background-color:#ffd0d7;display:inline-block">&nbsp;</div>&nbsp;活動檔期 - 正式展演時間
+		</li>
+		<li style="display:inline-block;margin-right:10px;margin-bottom: 2px;">
+			<div style="width:20px;height:20px;border:1px solid #000;background-color:#cee6ff;display:inline-block">&nbsp;</div>&nbsp;活動檔期 - 拆／裝台／佈展／卸展時間
+		</li>
+		<li style="display:inline-block;margin-right:10px;margin-bottom: 2px;">
+			<div style="width:20px;height:20px;border:1px solid #000;background-color:#e6e6e6;display:inline-block">&nbsp;</div>&nbsp;公務車預約
+		</li>
+	</ul>
+	<div class="box_box helf">
+		<div id='calendar'></div>
+	</div>
+</div>
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

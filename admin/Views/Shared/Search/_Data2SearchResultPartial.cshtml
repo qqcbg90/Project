@@ -1,0 +1,43 @@
+﻿@model List<DATA2>
+@{
+    NODE _n = ViewBag.C1Node as NODE;
+    List<string> _c1 = _n == null ? new List<string>() : _n.CONTENT1.ToSplit(Function.DELIMITER).ToList();
+}
+<div class="tb_list_box" style="box-shadow:none">
+    <table class="tb_list">
+        <tr>
+            <th width="15%">選擇</th>
+            <th width="20%">解說員姓名</th>
+            <th width="15%">性別</th>
+            <th>場域類別</th>
+            <th width="10%">解說次數</th>
+        </tr>
+        @foreach (DATA2 m in Model)
+        {
+            if (_c1 != null && _c1.Count > 0)
+            {
+                List<string> _c6 = m.CONTENT13.ToSplit(Function.DELIMITER).ToList();
+                if (_c6.Where(p => _c1.Contains(p)).Count() != _c1.Count())
+                {
+                    continue;
+                }
+            }
+            <tr>
+                <td data-th="選擇"><input type="radio" name="_mainID" value="@m.ID" /></td>
+                <td data-th="解說員姓名">@m.CONTENT1</td>
+                <td data-th="性別">@m.GetValueOnLang(5)</td>
+                <td data-th="場域類別">@m.GetValueOnLang()</td>
+                <td data-th="解說次數">@m.GetPlusList().Count</td>
+            </tr>}
+    </table>
+</div>
+<script>
+    var _v = $("#MAIN_ID").val();
+    if (_v != "")
+    {
+        $("input[name=\"_mainID\"][value='" + _v + "']").prop('checked', true);
+    }
+    $('input[type=radio][name=\"_mainID\"]').change(function () {
+        $("#MAIN_ID").val($(this).val());
+    });
+</script>

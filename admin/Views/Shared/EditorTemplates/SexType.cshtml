@@ -1,0 +1,4 @@
+﻿@foreach (SexType sex in Enum.GetValues(typeof(SexType)))
+{
+    @(sex.ToIntValue()==SexType.Female.ToIntValue()?" ":"")@Html.RadioButton(string.Empty, sex.ToIntValue(), sex.ToIntValue() == ViewData.TemplateInfo.FormattedModelValue.ToString())@sex.GetDescription()
+}

@@ -1,0 +1,452 @@
+﻿@model ExhibitionModel
+@{
+
+}
+
+@section head{
+    @Styles.Render("~/Content/croppie/croppie.css")
+    @Scripts.Render("~/Content/croppie/croppie.js", "~/Content/croppie/exif.js")
+    <style type="text/css">
+        .group_title {
+            padding: 10px !important;
+            background: #6c4c3a;
+            color: #FFF;
+            border-radius: 3px;
+        }
+    </style>
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1, k2 = ViewBag.k2, k3 = ViewBag.k3, k4 = ViewBag.k4, c1 = ViewBag.c1, c2 = ViewBag.c2 }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        <div>
+            <div>
+                <ul>
+                    <li style="display: inline-block; padding-right: 15px;">
+                        @Html.CheckBox("DECIMAL1") @Html.LabelFor(m => m.DECIMAL1)
+                    </li>
+                    <li style="display: inline-block; padding-right: 15px;">
+                        @Html.CheckBox("DECIMAL2") @Html.LabelFor(m => m.DECIMAL2)
+                    </li>
+                    <li style="display: inline-block; padding-right: 15px;">
+                        @Html.CheckBox("DECIMAL7") @Html.LabelFor(m => m.DECIMAL7)
+                    </li>
+                    <li style="display: inline-block; padding-right: 15px;">
+                        @Html.CheckBox("DECIMAL3") @Html.LabelFor(m => m.DECIMAL3)
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="group_title">活動資訊</div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                活動名稱
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT7)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                演出館別
+            </label>
+            <div>
+                <ul>
+                    @foreach (SelectListItem sli in (ViewBag.hallType as SelectList))
+					{
+                        <li style="display: inline-block; padding-right: 15px;">
+                            <label for="CONTENT3_@sli.Value">
+                                <input type="radio" value="@sli.Value" id="CONTENT3_@sli.Value" name="CONTENT3" @(Model.CONTENT3.CheckStringValue(sli.Value) ? "checked" : "") />@sli.Text
+                            </label>
+                        </li>
+                    }
+                </ul>
+                @Html.ValidationMessageFor(m => m.CONTENT3)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                演出場地
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT4, ViewBag.hallSelect as SelectList)
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                展演類型
+            </label>
+            <div>
+                <span class="select">@Html.DropDownListFor(m => m.CONTENT5, ViewBag.performanceType as SelectList)</span>
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                活動類型
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT6, ViewBag.performanceSelect as SelectList, "請選擇")
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                展演團隊
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT1)
+            </div>
+        </div>
+        <div>
+            <label>
+                參加人數
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DECIMAL4)
+            </div>
+        </div>
+        <div>
+            <label>
+                活動內容
+            </label>
+            <div>
+                <input type="hidden" name="MAX_CONTENT.index" value="0" />
+                @Html.TextAreaFor(m => m.MAX_CONTENT[0], new { data_val_length_max = "5000", data_val_length = "請勿超過 5000 個字", rows = 10 })
+                @Html.ValidationMessageFor(m => m.MAX_CONTENT[0])
+            </div>
+        </div>
+        <div>
+            <label>
+                相關連結
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT14)
+            </div>
+        </div>
+        <div class="group_title">入場資訊</div>
+        <div>
+            <label>
+                入場說明
+            </label>
+            <div>
+                <input type="hidden" name="MAX_CONTENT.index" value="1" />
+                @Html.TextAreaFor(m => m.MAX_CONTENT[1], new { data_val_length_max = "5000", data_val_length = "請勿超過 5000 個字", rows = 5 })
+                @Html.ValidationMessageFor(m => m.MAX_CONTENT[1])
+            </div>
+        </div>
+        <div>
+            <label>
+                入場方式
+            </label>
+            <div>
+                <ul>
+                    @foreach (AdmissionType type in typeof(AdmissionType).GetEnumForeachOrderByPriority<AdmissionType>())
+                    {
+                        string sChecked = !Model.CONTENT15.IsNullOrEmpty() && Model.CONTENT15.StartsWith(type.ToString()) ? "checked" : "";
+                        <li style="display: inline-block; padding-right: 15px;"><input type="radio" id="@type.ToString()" name="CONTENT15" value="@type.ToString()" @sChecked>@type.GetDescription()</li>
+                    }
+                </ul>
+                @Html.EditorValidationFor(m => m.CONTENT15_OTHER)
+            </div>
+        </div>
+        <div id="divRopeTicket" style="@(!Model.CONTENT15.IsNullOrEmpty() && Model.CONTENT15.StartsWith(AdmissionType.ropeTicket.ToString()) ? "" : "display: none;")">
+            <label>
+                索票資訊
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DECIMAL5, new { htmlAttr = new { placeholder = "發送張數", style = "width: 100px" } })
+                @Html.EditorValidationFor(m => m.DATETIME1, new { htmlAttr = new { placeholder = "開放時間" } })
+            </div>
+        </div>
+        <div>
+            <label>
+                入場相關連結
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT16, new { htmlAttr = new { placeholder = "入場相關連結" } })
+            </div>
+        </div>
+        <div class="group_title">活動時間</div>
+        <div class="file_notic">
+            時間新增說明<br />
+            1. 「開始日期」和「開始時間」為必填，開始時間不可為 00:00。<br />
+            2. 單一日期時，請將「結束日期」保持空白。<br />
+            3. 設定完成，請按「新增」；新增／刪除時間後，請按「存檔」。
+        </div>
+        <div>
+            <label>時間</label>
+            <div>
+                <ul style="padding-bottom: 10px;width: 100%">
+                    @foreach (ExhibitionTimeType type in ExhibitionTimeType.dress.GetEnumForeach())
+                    {
+                        string sChecked = ExhibitionTimeType.dress.ToIntValue().CheckStringValue(type.ToIntValue()) ? "checked" : "";
+                        <li id="@type" style="display:@(!Model.CONTENT5.CheckStringValue("performance2") && type == ExhibitionTimeType.unload ? "none" : "inline-block"); padding-right: 15px;">
+                            <input type="radio" id="ORDER_@type.ToInt()" name="ORDER" value="@type.ToInt()" @sChecked>@type.GetDescription()
+                        </li>
+                    }
+                </ul>
+                @Html.Partial("Input/_TimeStartToEndExhibitionPartial", new string[] { "start", "end", DateTime.Now.ToString("yyyy/MM/dd 09:00"), "" })
+                @MyHtml.ClickButton("btnAdd", "新增")
+            </div>
+        </div>
+        <div>
+            <label></label>
+            <div class="new_time">
+                <p>拆／裝台／佈展</p>
+                <ul id="lsTime0" style="width: 100%">
+                    @Html.Partial("TimeAdd", Model.TIMEs.Where(p => p.ORDER == 0))
+                </ul>
+            </div>
+        </div>
+        <div>
+            <label></label>
+            <div class="new_time">
+                <p>正式展演</p>
+                <ul id="lsTime1" style="width: 100%">
+                    @Html.Partial("TimeAdd", Model.TIMEs.Where(p => p.ORDER == 1))
+                </ul>
+            </div>
+        </div>
+        <div id="performance2" style="@(Model.CONTENT5.CheckStringValue("performance2") ? "" : "display: none;")">
+            <label></label>
+            <div class="new_time">
+                <p>卸展</p>
+                <ul id="lsTime2" style="width: 100%">
+                    @Html.Partial("TimeAdd", Model.TIMEs.Where(p => p.ORDER == 2))
+                </ul>
+            </div>
+        </div>
+        <div>
+            <label>
+                展演時間說明
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT13)
+            </div>
+        </div>
+        <div class="group_title">圖片管理</div>
+        @Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = true, iDescType = 1, sPicWH = "700 x 400" })
+        <div class="file_notic">
+			直接拖拉可改變排序，存檔後可儲存排序結果；若要改變圖片大小，可捲動滑鼠滾輪調整圖片大小
+        </div>
+        <div>
+            <label>圖片上傳 @MyHtml.ClickButton("addAtt", "新增")</label>
+            <div class="up_img">
+                <div id="attListdiv"></div>
+                <br />
+                @Html.Partial("_AttachmentPartial", Model.PICs)
+            </div>
+        </div>
+        <div class="group_title">活動聯絡資料（不顯示於前台）</div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                主辦類型
+            </label>
+            <div>
+                <ul>
+                    @foreach (HostingType type in typeof(HostingType).GetEnumForeachOrderByPriority<HostingType>())
+                    {
+                        string sChecked = Model.CONTENT2.CheckStringValue(type.ToIntValue()) ? "checked" : "";
+                        <li style="display: inline-block; padding-right: 15px;"><input type="radio" id="CONTENT2_@type.ToInt()" name="CONTENT2" value="@type.ToInt()" @sChecked>@type.GetDescription()</li>
+                    }
+                </ul>
+                @Html.ValidationMessageFor(m => m.CONTENT2)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                聯絡人
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT8)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                聯絡電話
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT9, new { htmlAttr = new { placeholder = "區碼+電話" } })
+            </div>
+        </div>
+        <div>
+            <label>
+                聯絡手機
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT10)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                電子郵件
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT11)
+            </div>
+        </div>
+        <div>
+            <label>
+                傳真號碼
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT12, new { htmlAttr = new { placeholder = "區碼+電話" } })
+            </div>
+        </div>
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(true)</div>
+    @Html.Hidden("lsDel")
+    @Html.Hidden("lsID")
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script type="text/x-jquery-tmpl" id="tmplTime">
+        @Html.Partial("TimeAdd", new List<TimeModel>() { new TimeModel() { ID = "NO_DATA" } })
+    </script>
+    <script>
+        var _attOrder = 1;
+        $(function () {
+            $("#addAtt").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("AddCroppieAtt", "Exhibition")',
+                    data: { id: _attOrder, width: 700, height: 400 },
+                    dataType: "html",
+                    success: function (response) {
+                        $("#attListdiv").append(response);
+                        _attOrder++;
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('增加失敗');
+                    }
+                });
+            });
+            $(".sortable").sortable({
+                connectWith: "ul",
+                update: function (event, ui) {
+                    var lsID = $(".sortable>li").map(function () { return $(this).prop("id"); }).get().join(";");
+                    $("#lsID").val(lsID);
+                }
+            }).disableSelection();
+
+            @*卸展時間,只有展覽類有*@
+            $("[name=CONTENT5]").change(function () {
+                if ($(this).val() == "performance2") {
+                    $("#performance2").show();
+                    $("#unload").css('display', 'inline-block');
+                }
+                else {
+                    $("#performance2").hide();
+                    $("#unload").hide();
+                }
+            });
+
+            @*入場方式為索票時,才有開放張數和開放時間*@
+            $("[name=CONTENT15]").click(function () {
+                if ($(this).val() == "ropeTicket") {
+                    $("#divRopeTicket").show();
+                } else {
+                    $("#divRopeTicket").hide();
+                }
+            });
+
+            $("[name=CONTENT3]").click(function () {
+                getChild($(this).val(), "", "", 4);
+            });
+            $("[name=CONTENT5]").change(function () {
+                getChild($(this).val(), "", "請選擇", 6);
+            });
+            $("#btnAdd").click(function () {
+                var timeTypeText = ["拆／裝台／佈展", "正式展演", "卸展"];
+                var start = $("#start_date").val();
+                var starthour = $("#starthour").val();
+                var startminute = $("#startminute").val();
+                var end = $("#end_date").val();
+                var endhour = $("#endhour").val();
+                var endminute = $("#endminute").val();
+                var startTime = starthour + ":" + startminute;
+                var endTime = endhour + ":" + endminute;
+                if (start == "") {
+                    showMsg("時間：請輸入開始日期！", 3);
+                } else if (startTime == "00:00") {
+                    showMsg("時間：請輸入開始時間，<br />不可為 00:00！", 3);
+                } else if (end != "" && endTime == "00:00") {
+                    showMsg("時間：請輸入結束時間，<br />不可為 00:00！", 3);
+                } else {
+                    var objChecked = $("[name=ORDER]:checked");
+                    var timeTypeVal = objChecked.val();
+                    var sd = getDateWithWeek(start);
+                    var ed = getDateWithWeek(end);
+                    var showText = sd + (ed != "" && sd != ed ? "~" + ed + "" : "");
+                    showText += " " + startTime + (startTime != endTime && endTime != "00:00" ? "-" + endTime : "");
+                    if ($("#lsTime" + timeTypeVal + " li[title='" + showText + "']").length == 0) {
+                        var st = start + " " + startTime;
+                        var et = (end == "" ? start : end) + " " + (endTime == "00:00" ? startTime : endTime);
+                        $("#tmplTime").tmpl({
+                            ID: (new Date().getTime()) + "" + ($("#lsTime li").length + 1),
+                            ORDER: timeTypeVal,
+                            startTime: st,
+                            endTime: et,
+                            showText: showText
+                        }).appendTo("#lsTime" + timeTypeVal);
+                    } else {
+                        showMsg("此時間已存在！", 3);
+                    }
+                }
+            });
+        });
+
+        function getDateWithWeek(dt) {
+            if (dt != "") {
+                var weekText = ['日', '一', '二', '三', '四', '五', '六'];
+                return dt + " (" + weekText[(new Date(dt).getDay())] + ")";
+            }
+            return "";
+        }
+
+        function getChild(arg1, arg2, firstTextVal, idx) {
+            $.post("@Url.Action("GetChild", "Json")", { id: arg1, v: arg2, first: firstTextVal }, function (data) {
+                $("#CONTENT" + idx).html(data);
+            });
+        }
+
+        function delTime(vID) {
+            var lsDel = $("#lsDel").val();
+            $("#lsDel").val(vID + ";" + lsDel);
+
+            $("#" + vID).remove();
+        }
+
+        $(document).ready(function () {
+            var vURL = "@Url.Action("fnAutoComplete", "Json")";
+            funcAutoComplete(vURL, "CONTENT1", 1);
+            funcAutoComplete(vURL, "CONTENT7", 2);
+        });
+    </script>
+}
+

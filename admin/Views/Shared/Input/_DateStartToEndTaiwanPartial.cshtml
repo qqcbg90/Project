@@ -1,0 +1,49 @@
+﻿@*
+民國日期範圍 partial
+把 model[0] 當 日期起控制項name 傳入
+把 model[1] 當 日期迄控制項name 傳入
+把 model[2] 當 日期起值 傳入
+把 model[3] 當 日期迄值 傳入
+*@
+@model string[]
+@{
+    string start = Model[0];
+    string end = Model[1];
+    string startValue = Model[2];
+    string endValue = Model[3];
+        }
+<script type="text/javascript">
+    $(function () {
+        $("#@(start)").datepickerTW({
+            changeMonth: true,
+            changeYear:true,
+            dateFormat: 'yy/mm/dd',
+            showAnim: 'drop',
+            buttonImage: '@Url.Content("~/images/calendar.gif")',
+            showOn: 'both',
+            buttonImageOnly: true,
+            buttonText: '開始日期',
+            yearRange: "1912:+3",
+            onSelect: function (selectedDate) {
+                //console.log(selectedDate);
+                //$("#@(end)").datepickerTW("option", "minDate", selectedDate);
+            }
+        });
+        $("#@(end)").datepickerTW({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy/mm/dd',
+            showAnim: 'drop',
+            buttonImage: '@Url.Content("~/images/calendar.gif")',
+            showOn: 'both',
+            buttonImageOnly: true,
+            buttonText: '結束日期',
+            yearRange: "1912:+3",
+            onSelect: function (selectedDate) {
+                //console.log(selectedDate);
+                //$("#@(start)").datepickerTW("option", "maxDate", selectedDate);
+            }
+        });
+    });
+</script>
+@Html.TextBox(start, startValue, new { @class = "input" })&nbsp;&nbsp;至&nbsp;&nbsp;@Html.TextBox(end, endValue, new { @class = "input" })

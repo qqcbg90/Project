@@ -1,0 +1,72 @@
+﻿@model BidPicModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				標案名稱
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				標案案號
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT2)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				標案日期
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DATETIME1)
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = true, iDescType = 1 })
+		<div>
+			<label>照片上傳</label>
+			<div class="up_img">
+				<input type="file" name="HPFs" multiple accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" /><br/>
+				@Html.Partial("_AttachmentPartial", Model.PICs)
+			</div>
+		</div>	
+		<div>
+			<label>備註</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT3, new { htmlAttr = new { @class = "big_txtarea" } })
+			</div>
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	
+}
+

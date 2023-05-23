@@ -1,0 +1,122 @@
+﻿@{
+    ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+    string tmpName2 = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+@Html.Hidden(string.Empty)
+@Styles.Render("~/Content/fileUpload/css/uploadfile.css")
+@Scripts.Render("~/Content/fileUpload/js/jquery.uploadfile.js")
+<div id="eventsmessage2"></div>
+<input id="btnCancel2" type="button" value="取消全部" onclick="javascript: CancelUpload2()" class="btn3" />
+<div id="fileuploader2">Upload</div>
+@*<input id="btnAlert" type="button" value="上傳" onclick="javascript: AlertUpload()" class="btn" />*@
+<script type="text/javascript">
+	var _all2 = 0, _Index2 = 0;
+	var _total2 = 0, _now2 = 0, _fileLimit2 = '@ViewBag.FileUploadQueueSizeLimit2', _least2 = '@ViewBag.FileUploadAtLeast2';
+	var isMultiple2 = GetInt(_fileLimit2) > 1;
+	function UploadProgress2() {
+        @*$.blockUI({ message: '<img src="@Url.Content("~/images/loader.gif")" /><br /><span id="nowPic">0</span> / ' + _total + ' 處理中...' });*@
+		$.blockUI({ message: '<div id="uploadIng2"></div><span id="nowPic2">0</span> / <span id="allPic2">0</span> 處理中...' });
+	}
+	var _uploadFile2 = "#fileuploader2";
+	var _uploadFileObj2;
+	$(function () {
+		_uploadFileObj2 = $(_uploadFile2).uploadFile({
+			url: '@Url.Action("FileUpload", "Json", new { uploadType = ViewBag.FileUploadType2 })',
+			autoSubmit: false,
+			showPreview: true,
+			multiple: isMultiple2,
+			dragDrop: false,
+			showProgress: true,
+			fileName: "myfile2",
+			previewHeight: "auto",
+			previewWidth: "auto",
+			sizeErrorStr: "檔案大小超出限制 ",
+			//bytes
+			maxFileSize: "@ViewBag.FileUploadFileSizeLimit2",
+			maxFileCountErrorStr: "檔案數量超出限制 ",
+			maxFileCount: _fileLimit2,
+			extErrorStr: " 格式不正確，只允許 ",
+			//allowedTypes: "@ViewBag.FileUploadFileTypeExts2",
+			uploadStr: "@ViewBag.FileUploadButtonText2",
+			cancelStr: "取消",
+			acceptFiles: "@ViewBag.FileUploadAcceptFiles2",
+		    formData: { "mid": $("#@tmpName2").val(), "fc1": '@(ViewBag.fc2)' },
+		    //dynamicFormData: function()
+		    //{
+		        //var data = { c1: $('select[name=attC1] option:selected').val() }
+		        //return data;
+		    //},
+			extraHTML: function () {
+			    return '@Html.Raw(ViewBag.ExtraHTML2)';
+			},
+			onLoad: function (obj) {
+				//$("#eventsmessage").html($("#eventsmessage").html() + "<br/>Widget Loaded:");
+			},
+			onSelect: function (files) {
+				//_total += files.length;
+			},
+			onSubmit: function (files) {
+			    //$("#eventsmessage").html($("#eventsmessage").html() + "<br/>Submitting:" + $('select[name=attC1] option:selected').val());
+				//return false;
+			},
+			onSuccess: function (files, data, xhr, pd) {
+				pd.statusbar.remove();
+				_now2++;
+				_Index2++;
+				$('#nowPic2').html(_Index2);
+				//$("#eventsmessage").html($("#eventsmessage").html() + "<br/>Success for: " + JSON.stringify(data));
+			},
+			afterUploadAll: function (obj) {
+				if (_Index2 == _all2) {
+					CloseBlockUI();
+				}
+				_now2 = 0;
+				_total2 = 0;
+				//SendSubmit();
+				StartSendSubmitByFileUpload();
+				//$("#eventsmessage").html($("#eventsmessage").html() + "<br/>All files are uploaded");
+			},
+			onError: function (files, status, errMsg, pd) {
+				//$("#eventsmessage").html($("#eventsmessage").html() + "<br/>Error for: " + JSON.stringify(files));
+			},
+			onCancel: function (files, pd) {
+				//_total--;
+				//$("#eventsmessage").html($("#eventsmessage").html() + "<br/>Canceled  files: " + JSON.stringify(files));
+			}
+		});
+		$("body").on("click", "#save", function () { StartUpload2(); return false; });
+	});
+	function CancelUpload2() {
+		//$("div.files").find('div').each(function () {
+		//    $(this).fadeOut(function () { $(this).remove() });
+		//});
+		$("div.ajax-file-upload-error").remove();
+		_uploadFileObj2.cancelAll();
+	}
+	function AlertUpload2() {
+	    alert("您的檔案已準備上傳，請到最下方按「存檔」");
+	}
+	function StartUpload2() {
+		if ($("form").valid() == true) {
+			_total2 = _uploadFileObj2.getFileCount();
+			_all2 = _total2;
+			if (_total2 > 0 && _total2 >= _least2) {
+			    UploadProgress2();
+			    $("#allPic2").text(_all2);
+				//$("div.ajax-file-upload-statusbar").each(function () {
+				//	$(this).find("div.ajax-file-upload-filename").appendTo($("#uploadIng"));
+				//	$(this).find("div.ajax-file-upload-progress").appendTo($("#uploadIng"));
+				//});
+				_uploadFileObj2.startUpload();
+			}
+			else {
+				if (_total2 < _least2) {
+					$().toastmessage('showToast', { "text": "最少要選擇 " + _least2 + " 個檔案！", "position": "top-center", "type": "warning" });
+					return false;
+				}
+				//SendSubmit();
+				StartSendSubmitByFileUpload();
+			}
+		}
+	}
+</script>

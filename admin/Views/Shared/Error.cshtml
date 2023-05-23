@@ -1,0 +1,89 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+	Layout = null;
+	string IP = Function.GetIPAddress();
+	bool bERR = false;
+	if (Request.IsLocal || IP == "118.163.88.193" || IP == "118.163.88.194")
+	{
+		bERR = true;
+	}
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Error</title>
+	<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width" />
+	<style type="text/css">
+#div3 {
+	width:600px;
+	margin-top: 50px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+}
+.e1 {
+	width: 260px;
+	float: left;
+}
+.e2{
+	width: 340px;
+	float: left;
+}
+h1{
+	font-size: 20px;
+	color: #333;
+	font-weight: bolder;
+	}
+p {
+	font-family: "新細明體-ExtB";
+	font-size: 16px;
+	line-height: 2em;
+	color: #999;
+	padding-left: 10px;
+}
+ul{
+	list-style-image: url(@Url.Content("~/images/li.png"));
+	list-style-position: outside;
+		line-height: 2em;
+		color: #999;
+	}
+	</style>
+</head>
+<body>
+	<div id="div3">
+		<div class="e1"><img src="~/images/error.png" width="256" height="256" alt="error_pic" /></div>
+		@if (bERR)
+		{
+			if (Model != null)
+			{
+				<div class="e2">
+					<h1>@Function.DEFAULT_ERROR</h1>
+					<hr />
+					<p>
+						<a href="~/">回首頁</a><br />
+						@Model.Exception.Message;
+						<ul>
+							<li>Controller：@Model.ControllerName</li>
+							<li>Action：@Model.ActionName</li>
+						</ul>
+					</p>
+				</div>
+				<div style="color:#999">@Model.Exception.ToString()</div>
+			}
+		}
+		else
+		{
+			<div class="e2">
+				<h1>@Function.DEFAULT_ERROR</h1>
+				<hr />
+				<p>
+					<a href="~/">回首頁</a>
+				</p>
+			</div>
+		}
+	</div>
+	@TempData[Function.TEMPDATA_MESSAGE_KEY]
+</body>
+</html>

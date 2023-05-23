@@ -1,0 +1,86 @@
+﻿@model DATA3
+@{
+    Layout = null;
+    SYSUSER _sys = Function.GetSysUserByID(Model.DATA_TYPE);
+}
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    @*<meta name="viewport" content="width=device-width" />*@
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@Function.PAGE_TITLE</title>
+    @Styles.Render("~/BaseCss/css", "~/OtherCss/css")
+    @Scripts.Render("~/bundles/basejquery", "~/bundles/customjquery")
+    <script type="text/javascript">
+		$(function () {
+			
+		});
+    </script>
+</head>
+<body>
+    <div class="mobile_remind" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">請旋轉您的螢幕</h4>
+            </div>
+            <div class="modal-body">
+                為確保功能正常，且讓您有最好的使用體驗，請將您的螢幕旋轉為直向，謝謝！
+            </div>
+        </div>
+    </div>
+    <div class="overlay-landscape"></div>
+    <div class="Login">
+        <div class="bg"></div>
+        <div class="qr">
+            @for (int i = 0; i < 1; i++)
+            {
+                <div class="qr_wrapper">
+                    <img class="main_img" src="@Model.GetFirstAttachment().GetPic(PictureType.Medium)">
+                    <div class="item_des">
+                        <div class="qr_tit">
+                            <img src="@Url.Content("~/images/icon/icon_location_green.png")" style="padding: 4px 3px 0 0;">
+                            <h6 style="white-space: nowrap; text-overflow: ellipsis; width: 100%; overflow: hidden;">
+                                @_sys.NAME
+                            </h6>
+                        </div>
+                        <h5>
+                            @Model.GetValueOnLang()
+                        </h5>
+                    </div>
+
+                    <div >
+                        <div class="qr_price">
+                            <img class="icon2" src="@Url.Content("~/images/icon/icon_point.png")" style="margin-right: 4px;">
+                            <h4 style="color: #B7940A;">@Model.DECIMAL5.ToInt()</h4>
+                            @if (Model.DECIMAL4.ToInt() > 0)
+                            {
+                                <h6>+ NT$</h6>
+                                <h4>@Model.DECIMAL4.ToInt().ReplaceNumToThousand()</h4>
+                            }
+                        </div>
+                    </div>
+
+                    <div>
+                        <img src="@Model.GetQRCode()" class="qrcode" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    @StackExchange.Profiling.MiniProfiler.RenderIncludes(StackExchange.Profiling.RenderPosition.Left)
+    @Html.Raw(TempData[Function.TEMPDATA_MESSAGE_KEY])
+    <script type="text/javascript">
+        //判斷手機方向：
+        window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
+            if (window.orientation === 180 || window.orientation === 0) {
+                $('.mobile_remind').removeClass('active');
+            }
+            if (window.orientation === 90 || window.orientation === -90) {
+                $('.mobile_remind').addClass('active');
+            }
+        }, false);
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+﻿@model DataModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        @*<div>
+            <label>
+                顯示
+            </label>
+            <div>
+                @Html.CheckBoxFor(m => m.Bool_STATUS)
+            </div>
+        </div>*@
+        <div>
+            <label>
+                首頁顯示
+            </label>
+            <div>
+                @Html.CheckBoxFor(m => m.Bool_DECIMAL1)
+                @Html.Hidden("Bool_STATUS", "true")
+            </div>
+        </div>
+        <div>
+            <label>
+                預約解說
+            </label>
+            <div>
+                @Html.CheckBoxFor(m => m.Bool_DECIMAL2)
+            </div>
+        </div>
+        <div>
+            <label>
+                分類
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.DATA_TYPE, ViewBag.DATA1_fun3000_DT as SelectList, new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                所屬區域
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT2, ViewBag.H as SelectList, new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                上下線日期
+            </label>
+            <div>
+                @Html.Partial("Input/_DateStartToEndPartial", new string[] { "DATETIME1", "DATETIME2", Model.DATETIME1.ToDefaultString(), Model.DATETIME2.ToDefaultString(), "1" })
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                遊程商品代碼
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT3)
+                @Html.Hidden("CONTENT4", "KKday")
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                遊程名稱
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT1)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文遊程名稱
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT16, new { htmlAttr = new { placeholder = "未填表示英文版不出現" } })
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                特價
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DECIMAL4)
+            </div>
+        </div>
+        <div>
+            <label>
+                參考售價
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DECIMAL3)
+            </div>
+        </div>
+        <div>
+            <label>
+                贈送點數
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DECIMAL5)
+            </div>
+        </div>
+        <div>
+            <label>
+                點數促銷
+            </label>
+                @Html.Partial("_ModelTemplatePartial", Model)
+        </div>
+        <div>
+            <label>
+                出團人數
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DECIMAL6, new { htmlAttr = new { placeholder = "最少人數" } })
+                @Html.EditorValidationFor(m => m.DECIMAL7, new { htmlAttr = new { placeholder = "最多人數" } })
+            </div>
+        </div>
+        <div>
+            <label>
+                OTA網址
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT8)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文OTA網址
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT18)
+            </div>
+        </div>
+        <div>
+            <label>
+                相關影片連結
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT11)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文影片連結
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT19)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                內容
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.PH0)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文內容
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.PH1)
+            </div>
+        </div>
+        @Html.Partial("_ModelAttachmentPartial", Model)
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            setRequired(true, 'CONTENT3');
+            setRequired(true, 'DECIMAL4');
+            setRequired(true, 'DATETIME1');
+            setRequired(true, 'PH0');
+            $("#save").click(function () {
+            });
+        });
+    </script>
+}
+

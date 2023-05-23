@@ -1,0 +1,24 @@
+﻿@*
+    日期 partial
+    把 model[0] 當 日期控制項name 傳入
+    把 model[1] 當 日期值 傳入
+*@
+@model string[]
+@{
+    string start = Model[0];
+    string startValue = Model[1];
+}
+<script type="text/javascript">
+    $(function () {
+        $("#@(start)").datepicker(
+            {
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy/mm/dd',
+                showAnim: 'drop',
+                buttonImage: '@Url.Content("~/images/calendar.gif")',
+                showOn: 'both', buttonImageOnly: true
+            });
+    });
+</script>
+@Html.TextBox(start, startValue, new { @class = "search w150" })

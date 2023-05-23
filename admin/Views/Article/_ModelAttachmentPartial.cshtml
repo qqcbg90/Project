@@ -1,0 +1,20 @@
+﻿@model ArticleModel
+@{
+
+}
+<div>
+    <label>相關附檔</label>
+    <div class="up_img">
+        <input type="file" name="hpfAtt" multiple />
+        <div class="file_notic">※ 多檔上傳：按住 Ctrl 或 Shift +所要上傳的檔案。</div>
+        @Html.Partial("_AttachmentPartial", Model.Atts)
+    </div>
+</div>
+<div style="border-top: 1px dashed #CCC">
+    <label>相關圖片</label>
+    <div class="up_img">
+        <input type="file" name="hpfPic" multiple accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" />
+        <div class="file_notic">※ 多檔上傳：按住 Ctrl 或 Shift +所要上傳的圖片。</div>
+        @Html.Partial("_AttachmentPartial", Model.Pics)
+    </div>
+</div>

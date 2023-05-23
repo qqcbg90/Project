@@ -1,0 +1,330 @@
+﻿@model LectureModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1 }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.ORDER)
+			</label>
+			<div>
+				@foreach (SelectListItem sli in (ViewBag.LectureTypeSelect as SelectList))
+				{
+					<label for="ORDER_@sli.Value">
+						<input type="radio" id="ORDER_@sli.Value" name="ORDER" value="@sli.Value" @(sli.Value.ToInt() == Model.ORDER ? "checked" : "") /> @sli.Text
+					</label>
+				}
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT2)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT3)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT3)
+			</div>
+		</div>
+		<div class="AFTER">
+			<label>
+				@Html.LabelFor(m => m.CONTENT13_0)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT13_0)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT8)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT8)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT14)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT14)
+			</div>
+		</div>
+		<div class="AFTER">
+			<label>
+				@Html.LabelFor(m => m.CONTENT9)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT9)
+			</div>
+		</div>		
+		<div class="file_notic">
+			時間新增說明<br />
+			1. 「日期」和「時間」為必填，時間不可為 00:00。<br />
+			2. 設定完成，請按「新增」；新增／刪除時間後，請按「存檔」。
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()時間</label>
+			<div>
+				@Html.Partial("Input/_TimeStartToEndPartial", new string[] { "start", "end", DateTime.Now.ToString("yyyy/MM/dd 10:30"), DateTime.Now.ToString("yyyy/MM/dd 12:00"), "0" })
+				@MyHtml.ClickButton("btnAdd", "新增")
+			</div>
+		</div>
+		<div>
+			<label></label>
+			<div class="new_time">
+				<p>已新增時間</p>
+				<ul id="lsTime">
+					@foreach (TimeModel time in Model.TIMEs)
+				{
+					string showText = time.DATETIME1.ToDateTimeString(week: true) + "-" + time.DATETIME2.ToString("HH:mm");
+						<li id="@time.ID" title="@showText">
+							<span>@showText</span>
+							<a href="javascript:delTime('@time.ID')" title="刪除" class="close_bt"><i class="far fa-times-circle"></i></a>
+							<input type="hidden" id="TIMEs.index" name="TIMEs.index" value="@time.ID" />
+							<input type="hidden" id="TIMEs[@time.ID].ID" name="TIMEs[@time.ID].ID" value="@time.ID" />
+							<input type="hidden" id="TIMEs[@time.ID].DATETIME1" name="TIMEs[@time.ID].DATETIME1" value="@time.DATETIME1.ToDefaultStringWithTime()" />
+							<input type="hidden" id="TIMEs[@time.ID].DATETIME2" name="TIMEs[@time.ID].DATETIME2" value="@time.DATETIME2.ToDefaultStringWithTime()" />
+						</li>
+				}
+				</ul>
+			</div>			
+		</div>		
+		<div class="NO_REQUIRED">
+			<label>
+				@Html.LabelFor(m => m.CONTENT21)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT21, new { htmlAttr = new { @class = "big_txtarea" } })
+			</div>
+		</div>
+		<div class="NO_REQUIRED">
+			<label>
+				@Html.LabelFor(m => m.CONTENT4)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT4)
+			</div>
+		</div>
+		<div class="NO_REQUIRED">
+			<label>
+				@Html.LabelFor(m => m.CONTENT5)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT5)
+			</div>
+		</div>
+		<div class="NO_REQUIRED">
+			<label>
+				@Html.LabelFor(m => m.CONTENT6)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT6)
+			</div>
+		</div>
+		<div class="NO_REQUIRED">
+			<label>
+				@Html.LabelFor(m => m.CONTENT7)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT7)
+			</div>
+		</div>
+		<div class="NO_REQUIRED">
+			<label>
+				@Html.LabelFor(m => m.CONTENT22)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT22, new { htmlAttr = new { @class = "big_txtarea" } })
+			</div>
+		</div>
+		<div class="NO_REQUIRED">
+			<label>
+				@Html.LabelFor(m => m.CONTENT23)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT23, new { htmlAttr = new { @class = "big_txtarea" } })
+			</div>
+		</div>
+		<div class="LINK">
+			<label>
+				@Html.LabelFor(m => m.CONTENT13_2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT13_2)
+			</div>
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = true, iDescType = 1, sPicWH = "800 x 480" })
+		<div>
+			<label>
+				圖片上傳
+			</label>
+			<div class="up_img">
+				<input type="file" name="HPFs" multiple accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" /><br />
+				<div class="show_img del">
+					<ul style="width: 100%">
+						@if (Model != null && Model.PICs.Count > 0)
+						{
+							string sURL = string.Empty;
+							foreach (ATTACHMENT atta in Model.PICs)
+							{
+								sURL = Url.Content(atta.GetPic());
+								<li style="margin: 10px 0;display: flex; align-items: center;">
+									@Html.Hidden("PICs.index", atta.ID)
+									@Html.Hidden("PICs[" + atta.ID + "].ID", atta.ID)
+									<a href="@sURL" data-fancybox="images" title="點選圖片可放大檢視" style="min-width:70px;"><img src="@sURL" style="height:45px;max-width:65px;border: 1px solid #CCC;" /></a>
+									@Html.TextBox("PICs[" + atta.ID + "].DESCRIPTION", atta.DESCRIPTION, new { maxlength = 50, style = "width: 85%;margin: 0 5px;", title = atta.DESCRIPTION })
+									<a href="@Url.MyAction("DeleteAttachment", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = atta.MAIN_ID, attid = atta.ID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end, actionName = ViewBag.ActionName })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')"><i class="fa fa-times" style="font-size: x-large;color: #dd4b39;text-shadow: 2px 2px 2px #CCC;"></i></a>
+								</li>
+							}
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit, Url.MyAction("LectureIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { k1 = ViewBag.k1 }))</div>
+	@Html.Hidden("lsDel")
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script type="text/x-jquery-tmpl" id="tmplTime">
+		<li id="${ID}" style="display: inline-block; padding: 5px 8px;" title="${showText}">
+			<span>${showText}</span>
+			<a href="javascript:delTime('${ID}')" title="刪除"><img src="@Url.Content("~/Images/icon_del.png")" /></a>
+			<input type="hidden" id="TIMEs.index" name="TIMEs.index" value="${ID}" />
+			<input type="hidden" id="TIMEs[${ID}].ID" name="TIMEs[${ID}].ID" value="${ID}" />
+			<input type="hidden" id="TIMEs[${ID}].DATETIME1" name="TIMEs[${ID}].DATETIME1" value="${startTime}" />
+			<input type="hidden" id="TIMEs[${ID}].DATETIME2" name="TIMEs[${ID}].DATETIME2" value="${endTime}" />
+		</li>
+	</script>
+	<script>
+		$(function () {
+			$("#end_date").hide();
+			@Html.Raw(Model.ORDER == LectureType.Type0.ToInt() ? "$('.NO_REQUIRED').hide();" : "$('.NO_REQUIRED').show();")
+			@Html.Raw(Model.ORDER == LectureType.Type2.ToInt() ? "$('.LINK').show();" : "$('.LINK').hide();")
+			@Html.Raw(Model.ORDER != LectureType.Type0.ToInt() ? "$('.AFTER').hide();" : "$('.AFTER').show();")
+			$("[name=ORDER]").click(function () {
+				if ($(this).val() == "0") {
+					$('.NO_REQUIRED').hide();
+					$(".LINK").hide();
+					$(".AFTER").show();
+				} else if ($(this).val() == "1") {
+					$('.NO_REQUIRED').show();
+					$(".LINK").hide();
+					$(".AFTER").hide();
+				} else if ($(this).val() == "2") {
+					$('.NO_REQUIRED').show();
+					$(".LINK").show();
+					$(".AFTER").hide();
+				}
+			});
+
+			$("#save").click(function () {
+				if ($("#lsTime li").length == 0) {
+					showMsg("時間：至少 1 個！", 3);
+					return false;
+				}
+			});
+
+			$("#btnAdd").click(function () {
+				var weekText = ['日', '一', '二', '三', '四', '五', '六'];
+				var start = $("#start_date").val();
+				var starthour = $("#starthour").val();
+				var startminute = $("#startminute").val();
+				var end = $("#end_date").val();
+				var endhour = $("#endhour").val();
+				var endminute = $("#endminute").val();
+				var startTime = starthour + ":" + startminute;
+				var endTime = endhour + ":" + endminute;
+				if (start == "") {
+					showMsg("時間：請輸入日期！", 3);
+				} else if (startTime == "00:00" || endTime == "00:00") {
+					showMsg("時間：開始時間和結束時間不可為 00:00！", 3);
+				} else {
+					var showText = getDateWithWeek(start) + " " + startTime + (startTime != endTime && endTime != "00:00" ? "-" + endTime : "");
+					if ($("#lsTime li[title='" + showText + "']").length == 0) {
+						$("#tmplTime").tmpl({
+							ID: (new Date().getTime()) + "" + ($("#lsTime li").length + 1),
+							startTime: start + " " + startTime,
+							endTime: end + " " + endTime,
+							showText: showText
+						}).appendTo("#lsTime");
+					} else {
+						showMsg("此時間已存在！", 3);
+					}
+				}
+			});
+
+			$("input[name='ORDER']").click(function () {
+				var c3 = $("#CONTENT3").val();
+				var o = $(this).val();
+				if (o == "0") {
+					$("#CONTENT3").val("桃園光影文化館3F放映廳");
+				} else if (o == "2") {
+					$("#CONTENT3").val("桃園光影文化館2F研習教室");
+				}
+				else {
+					$("#CONTENT3").val("");
+				}
+			});
+		});
+
+		function getDateWithWeek(dt) {
+			if (dt != "") {
+				var weekText = ['日', '一', '二', '三', '四', '五', '六'];
+				return dt + " (" + weekText[(new Date(dt).getDay())] + ")";
+			}
+			return "";
+		}
+
+		function delTime(vID) {
+			if ($("#lsTime li").length > 1) {
+				var lsDel = $("#lsDel").val();
+				$("#lsDel").val(vID + ";" + lsDel);
+
+				$("#" + vID).remove();
+			} else {
+				showMsg("時間：至少 1 個（請先新增 1 個，再進行刪除）！", 3);
+			}
+		}
+	</script>
+}
+

@@ -1,0 +1,53 @@
+﻿@model List<InventoryRequisitionDetailModel>
+@{
+	Layout = "~/Views/Shared/_popupLayout.cshtml";
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	ViewBag.ContentTitle2 = "新增物品";
+}
+@section head{
+	<style type="text/css">
+		ul {
+			width: 100%;
+		}
+
+		ul > li {
+			width: 48%;
+		}
+	</style>
+}
+
+@section bottonList{
+	<input type="submit" class="btn" value="存檔" style="visibility: hidden" />
+
+}
+<p class="search_box" style="display:block;margin-top: 10px;">
+	<label class="key"><span class="select">@Html.DropDownList("k1", ViewBag.INVENTORY_ITEM as SelectList, "類別")</span></label>
+	<label class="key">@MyList.KeywordInput(ViewBag.Keyword, "物品名稱")</label>
+	<label class="btn_box go">@MyList.Submit()</label>
+</p>
+<ul style="width: 100%">
+	@foreach (InventoryRequisitionDetailModel m in Model)
+	{
+		<li style="display: inline-block;margin: 10px 5px;min-width:300px;">
+			<label for="chk_@m.PLUS_TYPE">
+				<input type="checkbox" id="chk_@m.PLUS_TYPE" name="chk" value="@m.PLUS_TYPE" title="@m.PLUS_TYPE_TITLE" @(m.DECIMAL2 == 0 ? "disabled" : "") /> @m.PLUS_TYPE_TITLE
+				(<span class="unit colortxt_red2">@m.PLUS_TYPE_UNIT</span>)&nbsp;(可申請庫存量：<span class="limit colortxt_red" style="font-weight:bold;">@m.DECIMAL2</span>)
+			</label>
+			<input type="hidden" id="@(m.PLUS_TYPE)_img" value="@m.PLUS_TYPE_IMG.ToMyString()" />
+		</li>
+	}
+</ul>
+@section scripts{
+	<script>
+		$(function () {
+			$("[name=chk]").click(function (idx) {
+				var vID = (new Date().getTime()) + idx;
+				var vText = $(this).prop("title");
+				var vUnit = $(this).parent().find(".unit").text();
+				var vLimit = $(this).parent().find(".limit").text();
+				var vImg = $("#" + $(this).val() + "_img").val();
+				parent.addInventory(vID, $(this).val(), vText, vUnit, vLimit, "1", vImg);
+			});
+		});
+	</script>
+}

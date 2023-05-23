@@ -1,0 +1,222 @@
+﻿
+@{
+    List<string> todolist = ViewBag.list;
+}
+
+<div class="container">
+    <div class="timer-container">
+        <div class="timer-time">
+            <div class="report-container">
+                <div class="Report-bar">
+                    @*<img src="https://pomofocus.io/icons/graph-white.png" alt="report" class="report-img">
+                        <div class="report-text">Report</div>*@
+                </div>
+            </div>
+            <div class="timer">25:00</div>
+            <form class="timer-form">
+                Hour：<span class="select">@Html.DropDownList("hr", ViewBag.HourSelect as SelectList, "小時", new { title = "小時" })</span>
+                Minutes：<span class="select">@Html.DropDownList("min", ViewBag.MinutesSelect as SelectList, "分鐘", new { title = "分鐘" })</span>
+                Seconds：<span class="select">@Html.DropDownList("sec", ViewBag.MinutesSelect as SelectList, "秒鐘", new { title = "秒鐘" })</span>
+            </form>
+        </div>
+        <ul class="timer-buttons">
+            <li><button id="start-button">Start</button></li>
+            <li><button id="pause-button">Pause</button></li>
+            <li><button id="reset-button">Reset</button></li>
+        </ul>
+
+        <div class="todo-container">
+
+            <h2 class="todo-header">To-Do List</h2>
+            <ul class="todo-list">
+                <li>Finish project proposal</li>
+                @if (todolist != null)
+                {
+                    foreach (var ph in todolist)
+                    {
+                        string[] data = ph.Split('_');
+                        if (data[2] == "1")
+                        {
+                            <li id="@data[1]">
+                                <input type="checkbox" class="todo-checkbox" checked onclick="check(this)"><span>@data[0]</span>
+                                <button class="delete-button" onclick="del('@data[1]')">DELETE</button>
+                            </li>
+                        }
+                        else
+                        {
+                            <li id="@data[1]">
+                                <input type="checkbox" class="todo-checkbox" onclick="check(this)"><span>@data[0]</span>
+                                <button class="delete-button" onclick="del('@data[1]')">DELETE</button>
+                            </li>
+                        }
+
+                    }
+                }
+            </ul>
+            <form class="todo-form">
+                <input type="text" id="todo-input" placeholder="Add a task">
+                <button id="add-button">Add</button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+
+@*網頁內容end*@
+
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script>
+        var timer = document.querySelector('.timer');
+        var startButton = document.querySelector('#start-button');
+        var pauseButton = document.querySelector('#pause-button');
+        var resetButton = document.querySelector('#reset-button');
+        var todoList = document.querySelector('.todo-list');
+        var todoInput = document.querySelector('#todo-input');
+        var addButton = document.querySelector('#add-button');
+        var timerInterval;
+        var temp_sec = null;
+        var order = $(".delete-button").length + 1;
+        var todotext = document.createElement('span');
+        updateTimer();
+        $("#hr").change(function () { updateTimer() })
+        $("#min").change(function () { updateTimer() })
+        $("#sec").change(function () { updateTimer() })
+        function updateTimer(update) {
+
+            if (update != null) {
+                console.log(temp_sec);
+                secondsLeft = update;
+                temp_sec = update;
+            }
+            else {
+                hours = $("#hr").val() != "" ? $("#hr").val() : 0;
+                minutes = $("#min").val() != "" ? $("#min").val() : 0;
+                seconds = $("#sec").val() != "" ? $("#sec").val() : 0;
+                secondsLeft = (hours * 3600) + (minutes * 60) + seconds;
+                if (hours == 0 && minutes == 0 && seconds == 0) { secondsLeft = 1500; }
+                temp_sec = secondsLeft;
+            }
+            var hours = Math.floor(secondsLeft / 3600);
+            var minutes = Math.floor((secondsLeft % 3600) / 60);
+            var seconds = secondsLeft % 60;
+            timer.textContent = (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+            return secondsLeft;
+        }
+
+        function startTimer() {
+            var secondsLeft = updateTimer(temp_sec);
+            timerInterval = setInterval(function () {
+                secondsLeft--;
+                if (secondsLeft <= 0) {
+                    clearInterval(timerInterval);
+                }
+                updateTimer(secondsLeft);
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            secondsLeft = 1500;
+            updateTimer();
+        }
+
+        startButton.addEventListener('click', startTimer);
+        pauseButton.addEventListener('click', pauseTimer);
+        resetButton.addEventListener('click', resetTimer);
+
+
+        /* todoList */
+        addButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            var todoText = todoInput.value.trim();
+            if (todoText) {
+                var todoItem = document.createElement('li');
+
+                // 創建 toggle 框框
+                var checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.classList.add('todo-checkbox');
+                todoItem.appendChild(checkbox);// 將 toggle 框框添加到 todoItem 中
+                checkbox.addEventListener('click', function () {
+                    check(this);
+                });
+
+                // 創建代辦事項文字
+                var todoTextSpan = document.createElement('span');
+                var order = $(".delete-button").length + 1;
+                todoTextSpan.textContent = todoText;
+                todoItem.appendChild(todoTextSpan); // 將代辦事項文字添加到 todoItem 中
+
+
+                //將text傳到資料庫
+                $.post("@Url.Action("SendtodoText", "Json")",
+                    { id: "@ViewBag.user", text: todoTextSpan.innerText, order: order },
+                    function (data) {
+                        ddd(data);// 將id傳至刪除紐
+                    });
+
+                // 創建刪除按鈕
+                function ddd(dd) {
+                    var deleteButton = document.createElement('button');
+                    deleteButton.textContent = "DELETE";
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.id = dd;
+                    todoItem.id = dd;
+                    
+                    // 添加刪除按鈕點擊事件
+                    deleteButton.addEventListener('click', function () {
+                        $.post("@Url.Action("DeletetodoText", "Json")",
+                                { id: deleteButton.id,},
+                             );
+                        todoItem.remove();
+                    });
+
+                    // 將刪除按鈕添加到 todoItem 中
+                    todoItem.appendChild(deleteButton);
+                }
+                // 添加 todoItem 到 todoList 中
+                todoList.appendChild(todoItem);
+
+                // 為 toggle 框框添加點擊事件
+                checkbox.addEventListener('click', function () {
+                    todoTextSpan.classList.toggle('completed');
+                });
+                todoInput.value = '';
+
+            }
+        });
+
+        /* 歷史紀錄todoList 刪除處理 */
+        function del(id) {
+             $.post("@Url.Action("DeletetodoText", "Json")",
+                   { id:id,},
+            );
+            $("#"+id).remove();
+        }
+
+        /*checkbox*/
+        function check(checkbox) {
+            // checkbox被選中
+            var id = $(checkbox).closest('li').attr('id');
+            if (checkbox.checked) {
+                $.post("@Url.Action("checktodoitem", "Json")",
+                      { id:id,data:"1"},
+                );
+            } else {
+                 $.post("@Url.Action("checktodoitem", "Json")",
+                       { id:id,data:"0"},
+                 );
+            }
+        }
+
+    </script>
+
+}

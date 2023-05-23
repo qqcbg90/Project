@@ -1,0 +1,185 @@
+﻿@model PagedList<DataModel>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string _edit = "Edit";
+    string _delete = "Delete";
+    string _sendtest = "SendNotice";
+    string _import = "Import";
+    string act2 = "Act2_Index";
+    string gpt = "ChatGPT_Index";
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            InputGo("@ViewBag.DefaultPage");
+        })
+        //select by dropdownlist
+        function SelectGo(page) {
+            $('div .pager').find('select').each(function () {
+                $(this).val(page);
+            });
+            var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=@(ViewBag.k)'
+				+ '&k1=' + $("[name=k1]").val()
+                + '&k2=' + $("[name=k2]").val()
+                + '&k3=' + $("[name=k3]").val()
+                + '&k4=' + $("[name=k4]").val()
+				+ '&start=' + $("#start").val()
+				+ '&end=' + $("#end").val();
+            GoUrl(url);
+        }
+    </script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+    <div class="pager">
+        <div class="pager">
+            @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null,
+                              new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.k, start = ViewBag.start, end = ViewBag.end })
+        </div>
+    </div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+<p class="search_box" style="display:block;width: 100%;">
+    <span> 活動標題：</span>
+    @MyList.KeywordInput(ViewBag.Keyword, "關鍵字(活動標題)")
+    <label class="btn_box go">
+        @MyList.Submit()
+    </label>
+</p>
+    <label class="key">
+        @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+        {
+            <label class="btn_box">
+                @MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, page = ViewBag.page, k = ViewBag.k, dt = ViewBag.dt, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end }))
+            </label>
+        }
+    </label>
+    <span class="custom-file-upload-ex">
+        <a href="~/Content/pOrder/匯入中獎者範例.xlsx" title="範例下載" target="blank" style="text-decoration: none; color: #354341; ">下載中獎者匯入範例</a>
+    </span>
+
+    if (MyList.IsTwoPagers())
+    {
+        @Pager()
+    }
+    <div class="tb_list_box">
+        <table class="tb_list">
+            <tr class="thead">
+                <th width="10%">
+                    標題
+                </th>
+                <th width="10%">
+                    活動網址
+                </th>
+                <th width="20%">
+                    活動通知信主題
+                </th>
+                <th width="25%">功能</th>
+                <th width="20%">匯入中獎者</th>
+                <th width="10%">測試寄信</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CONTENT1</td>
+                    <td>@item.CONTENT2</td>
+                    <td>@item.CONTENT3</td>
+                    <td name="功能" class="txtcenter">
+                        <a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = item.ID,k = ViewBag.k,start = ViewBag.start,end = ViewBag.end ,dt = ViewBag.dt})">
+                            <span class="btn edit" title="編輯">
+                                <i class="far fa-edit"></i>
+                            </span>
+                        </a>
+                        <a href="@Url.MyAction( _sendtest, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = item.ID, defaultPage = ViewBag.DefaultPage, page = ViewBag.page, k = ViewBag.k, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end })">
+                            <span class="btn emailall" title="寄信All">
+                                <i class="fas fa-paper-plane"></i>
+                            </span>
+                        </a>
+                        <a href="@Url.MyAction(act2, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {  id = item.ID })">
+                            <span class="btn reply" title="回覆狀態">
+                                <i class="fas fa-th-list"></i>
+                            </span>
+                        </a>
+                        @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+                        {
+                            <a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id =item.ID,k = ViewBag.k,start = ViewBag.start,end = ViewBag.end })" onclick="return confirm('再一次確認，您要刪除這筆資料？')">
+                                @MyList.DeleteImage()
+                            </a>
+                        }
+                    </td>
+                    <td class="txtcenter">
+                        <form action="@Url.MyAction(_import, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = item.ID,k = ViewBag.k,start = ViewBag.start,end = ViewBag.end })" method="post" enctype="multipart/form-data">
+                            <a><label for="file" class="custom-file-upload">選擇檔案</label></a>
+                            <a><input type="submit" name="import" class="custom-file-upload" value="匯入" /></a>
+                            <input type="file" name="fileImport" id="file" accept=".xlsx" style="width:200px;" onchange="change(this.files, this.id)" />
+                            <p id="filetext"></p>
+                            <input type="text" name="hid_id" value="@item.ID" hidden />
+                        </form>
+                    </td>
+                    <td>
+                        <a href="@Url.MyAction(_sendtest, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = item.ID,k = ViewBag.k,start = ViewBag.start,end = ViewBag.end ,test = "test"})">
+                            <span class="btn emailall" title="測試寄信">
+                                <i class="fas fa-paper-plane"></i>
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    @Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        function change(files, pid) {
+            console.log(pid);
+            var id = pid;
+            console.log(id[1]);
+            console.log(files[0].name);
+            if (!files.length) {
+                return false;
+            }
+            console.log($('#' + pid));
+            var txt = files[0].name;
+            console.log(txt);
+            $('#filetext').text(txt);
+        }
+        $(function () {
+            $("#dt").css("width", "200px");
+            $("#start").css("width", "200px");
+            $("#end").css("width", "200px");
+
+        })
+
+        function getStatusChecked() {
+            return $('._chk:checkbox').map(function () {
+                if ($(this).is(':checked'))
+                    return $(this).attr("vv");
+            }).get().join(',');
+        }
+        function GetStatusValue() {
+            $("#chkstatus_value").val(getStatusChecked());
+            $("[name=chkStatus]").attr("disabled", $("#chkstatus_value").val() == '');
+        }
+    </script>
+}

@@ -1,0 +1,9 @@
+﻿@{
+    string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+<span id="spanCountry" title="@ViewData.TemplateInfo.FormattedModelValue">
+    <select id="@tmpName" name="@tmpName"></select>
+</span>
+    <script type="text/javascript">
+        var url = "@Url.Action("GetCounty", "Json")";
+    </script>

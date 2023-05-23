@@ -1,0 +1,78 @@
+﻿@model IPagedList<NODE>
+@{
+	Layout = "~/Views/Shared/_popupLayout.cshtml";
+	ViewBag.ContentTitle2 = "類別管理";
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "CategoryEdit";
+	string _delete = "DeleteCategory";
+}
+@section head{
+<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+				+ '&nid=@(ViewBag.NodeID)'
+				+ '&defaultPage=' + $("[name=defaultPage]").val()
+				+ '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&k1=' + $("#k1").val();
+			GoUrl(url);
+		}
+</script>
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null, new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, k1 = ViewBag.k1 })
+	</div>
+}
+
+@section bottonList{
+	<input type="submit" id="save" name="save" class="btn" value="存檔" style="visibility: hidden" />
+}
+<p class="top_bar">
+	<label class="btn_box">
+		@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+		{
+			@MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { }), "org")
+		}
+	</label>
+</p>
+@if (MyList.IsTwoPagers())
+{
+	@Pager()
+}
+<div class="tb_list_box">
+	<table class="tb_list">
+		<tr class="thead">
+			<th>物品類別</th>
+			<th>功能</th>
+		</tr>
+		@foreach (NODE m in Model)
+		{
+			<tr>
+				<td data-th="物品類別">@m.TITLE</td>
+				<td data-th="功能">
+					<div class="btn_box">
+						<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID })" title="編輯"><span class="btn"><i class="far fa-edit"></i></span></a>
+						@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+						{
+							<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, actionName = "CategoryIndex" })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+						}
+					</div>
+				</td>
+			</tr>
+		}
+	</table>
+	@Pager()
+</div>
+@section scripts{
+
+}

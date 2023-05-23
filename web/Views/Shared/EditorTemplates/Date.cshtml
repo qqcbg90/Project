@@ -1,0 +1,29 @@
+﻿@model DateTime?
+@{
+    ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+    string _placeholder = ViewData["placeholder"] != null ? ViewData["placeholder"].ToMyString() : "";
+    string _onSelect = ViewData["onSelect"] != null ? ViewData["onSelect"].ToMyString() : "";
+    string _minMax = ViewData["minMax"] != null ? ViewData["minMax"].ToMyString() : "";
+}
+@Html.TextBox(string.Empty, Model.HasValue ? Model.Value.ToDefaultString() : string.Empty, new { Style = ViewData["width"] != null ? ViewData["width"] : "", @class = "datepicker input", placeholder = _placeholder })
+<script type="text/javascript">
+    $(function () {
+        $(".datepicker").datepicker(
+            {
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy/mm/dd',
+                showAnim: 'drop',
+                //minDate: new Date()
+                //buttonImage: '@Url.Content("~/images/calendar.gif")',
+                showOn: 'focus', buttonImageOnly: false,
+                yearRange: "1952:+0"
+                @if (!_onSelect.IsNullOrEmpty())
+                {
+                    @:,onSelect: function(selectedDate) {
+                    @:$("#@(_onSelect)").datepicker("option", "@(_minMax)", selectedDate);
+                    @:}
+                }
+            });
+    });
+</script>

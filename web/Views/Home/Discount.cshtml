@@ -1,0 +1,168 @@
+﻿@model DataModel
+@{
+	bool bDECIMAL1 = (Model.DECIMAL1 ?? 1) == 1;
+
+	DateTime dtEndDate = Model.DATETIME4.Value;
+	int iY = dtEndDate.Year - 1911;
+	string sEndDate = iY.ToString() + dtEndDate.ToString("/MM/dd HH:mm:ss");
+
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+}
+
+<div class="header_content">
+	<img src="~/Images/logo.svg" />
+	<h2>得獎者回覆專區</h2>
+</div>
+@using (Html.BeginFileForm())
+{
+	@Html.AntiForgeryToken()
+	<div class="w1400 flex-shrink-0">
+		<div class="box for-store my-5 px-5 pt-3 pb-4">
+			@if (Model.DATETIME1.HasValue)
+			{				
+				@*正取-回覆時間*@
+				@*<div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+						※ 已收到您的領獎資訊，若需修改資料，可於111/9/22 23:59:59前，點選得獎通知信中的網址進行修改，謝謝您的參與。
+					</div>*@
+				@*備取1-回覆時間*@
+				<div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+					※ 已收到您的領獎資訊。<br/>
+					※ 若需修改資料，可於@(sEndDate)前，點選得獎通知信中的網址進行修改，謝謝您的參與。<br/>
+					※ 如回覆資料上有相關疑問，請於111/10/05 17:00前來電洽詢，謝謝。
+				</div>
+			}
+			else
+			{
+				<div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+					※ 資料填寫完成後，按「送出」即回覆成功。<br/>
+					※ 若需修改資料，可於@(sEndDate)前，點選得獎通知信中的網址進行修改，謝謝您的參與。<br/>
+					※ 如回覆資料上有相關疑問，請於111/10/05 17:00前來電洽詢，謝謝。
+				</div>
+			}
+			<div>
+				<h1> 獎項：@Model.CONTENT12 / @Model.CONTENT13</h1>
+			</div>
+			<div>
+				<h1> 收件人姓名： </h1>
+				<div>
+					@Html.EditorValidationFor(m => m.CONTENT1, new { @class = "form-control", placeholder = "收件人姓名" })
+				</div>
+			</div>
+			<div>
+				<h1> 寄件地址： </h1>
+				<table class="table gift-boxB">
+					<tr>
+						<th scope="col">
+							@Html.DropDownListFor(m => m.CONTENT2, ViewBag.CityInfo as SelectList, "縣市", new { @class = "form-control" })
+						</th>
+						<th scope="col">
+							<select id="CONTENT3" name="CONTENT3" data-val="true" data-val-required="*" class="form-control">
+								<option value="">鄉鎮市區</option>
+							</select>
+						</th>
+						<th scope="col">
+							@Html.EditorValidationFor(m => m.CONTENT4, new { @class = "form-control", placeholder = "地址" })
+						</th>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<h1>
+					連絡電話：
+				</h1>
+				<div>
+					@Html.EditorValidationFor(m => m.CONTENT5, new { @class = "form-control", placeholder = "(獎品寄送如有其他問題，將會與您聯繫)" })
+				</div>
+			</div>
+			@if (bDECIMAL1)
+			{
+				<h1>
+					身分證正反面(扣繳憑單需要)：
+				</h1>
+				ATTACHMENT att1 = null, att2 = null;
+				if (Model.Atts != null)
+				{
+					att1 = Model.Atts.FirstOrDefault(p => p.ORDER == 1);
+					att2 = Model.Atts.FirstOrDefault(p => p.ORDER == 2);
+				}
+				<div>
+					<h3 style="font-size:18px">
+						正面：<input type="file" id="hpf1" name="hpf1" />
+					</h3>
+					<span class="field-validation-valid" data-valmsg-for="hpf1" data-valmsg-replace="true"></span>
+					@if (att1 != null)
+					{
+						<a href="@att1.GetFile()" target="_blank" id="ahpf1">@att1.ORIGINAL_FILE_NAME</a>
+					}
+				</div>
+				<div>
+					<h3 style="font-size:18px">
+						反面：<input type="file" id="hpf2" name="hpf2" />
+					</h3>
+					<span class="field-validation-valid" data-valmsg-for="hpf2" data-valmsg-replace="true"></span>
+					@if (att2 != null)
+					{
+						<a href="@att2.GetFile()" target="_blank" id="ahpf2">@att2.ORIGINAL_FILE_NAME</a>
+					}
+				</div>
+			}
+			<br />
+			<input type="submit" id="save" value="送出" class="btn btn-primary" style="width: 100%;padding: 10px;font-size: 1.25rem;" />
+			@Html.Hidden("DECIMAL1", (Model.DECIMAL1 ?? 1).ToString("0"))
+		</div>
+	</div>
+	<br /><br /><br /><br />
+}
+
+
+@section scripts
+{
+	<script>
+		function setRequired(isAdd, sID) {
+			if (isAdd) {
+				$("#" + sID).rules("add", { required: true, messages: { required: "*必填" } });
+			}
+			else {
+				$("#" + sID).rules("remove");
+				var vClass = $("#" + sID).prop("class");
+				if (vClass != undefined && vClass.indexOf("input-validation-error") != -1) {
+					$("#" + sID).removeClass("input-validation-error");
+					$("#" + sID).next().remove();
+				}
+			}
+			//$("form").valid();
+		}
+
+		function setTown(sCity) {
+			$("#CONTENT3 option").not(":eq(0)").remove();
+			$.ajax({
+				url: "@Url.Action("GetCounty", "Json")",
+				type: 'post',
+				dataType: 'json',
+				data: { city: sCity, selected: "@Model.CONTENT3" },
+				complete: function (data) {
+					$("#CONTENT3").append(data.responseText);
+				}
+			});
+		}
+
+		$(function () {
+			setRequired(true, "CONTENT1");
+			setRequired(true, "CONTENT2");
+			setRequired(true, "CONTENT3");
+			setRequired(true, "CONTENT4");
+			setRequired(true, "CONTENT5");
+			@Html.Raw(bDECIMAL1 ? "if ($(\"#ahpf1\").length == 0 ) { setRequired(true, \"hpf1\"); }" : "")
+			@Html.Raw(bDECIMAL1 ? "if ($(\"#ahpf2\").length == 0 ) { setRequired(true, \"hpf2\"); }" : "")
+
+			if ($("#CONTENT2").val() != "") {
+				setTown($("#CONTENT2").val());
+
+			}
+			$("#CONTENT3").val("@Model.CONTENT3");
+			$("#CONTENT2").change(function () {
+				setTown($(this).val());
+			});
+		});
+	</script>
+}

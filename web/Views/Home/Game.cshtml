@@ -1,0 +1,151 @@
+﻿@{
+    bool isLogon = User.Identity.IsAuthenticated;
+    bool isStart = DateTime.Now >= new DateTime(2022, 7, 21, 12, 0, 0);
+}
+@section head{
+
+}
+@section top{
+
+}
+<div class="black_bg_game"></div>
+@Html.AntiForgeryToken()
+<div class="Game-cover">
+    <!--遊戲起始畫面lightbox-->
+    <div class="lightbox focus">
+        <!--關閉-->
+        @*<img id="close" src="/images/icon_close.png" height="23">*@
+        <div class="container">
+            <div class="row" id="sample">
+                <div class="col-md-6">
+                    <img class="main-title" src="~/Images/main-title.png" />
+                    <div class="introduce-left">
+                        <h2><i class="bi bi-star-fill"></i> 遊戲玩法 :</h2>
+                        <p>1. 登入帳號：</p>
+                        <span>使用Facebook、Gmail或會員加入進行身份認證，即可開始參加遊戲。</span>
+                        <p>2. 每日 3 次挑戰機會：</p>
+                        <span>每個帳號每日可有 3 次的挑戰機會，每次遊戲共有3個生命值，挑戰次數越多，中獎機會愈高。</span>
+
+                        <h2><i class="bi bi-star-fill"></i> 遊戲任務 :</h2>
+                        <p>1. 遊戲限時1分鐘，活動結束<b>總遊戲積分最高前3名</b>者，即可獲得加碼好禮。</p>
+                        <p>2. 超過180項好禮(萬元住宿券、餐券及客製行李箱)等你帶回家!</p>
+                    </div>
+                </div>
+                <div class="content col-md-5 offset-md-1">
+                    <div class="introduce-right">
+                        <h3>A.帶著喔熊組長闖關</h3>
+
+                        <div class="row">
+                            <div class="col-md-9 col-sm-12 col-12">
+                                <img src="~/Images/game/ohbear.png" />
+                            </div>
+                            <div class="ohbear-click col-md-3 col-sm-12 col-12 text-center">
+                                <img src="~/Images/game/mobile.svg" />
+                                <img src="~/Images/game/pc.svg" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="introduce-right">
+                        <h3>B.積分介紹</h3>
+
+                        <div class="row borderA">
+                            <div class="col-md-12">
+                                <img src="~/Images/game/badge3.png" />
+                                <img src="~/Images/game/badge2.png" />
+                                <img src="~/Images/game/badge1.png" />
+                                <span>+50分</span>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="~/Images/game/other2.png" />
+                                <span>-30分</span>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="~/Images/game/other1.png" />
+                                <span>-20分</span>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="~/Images/game/other3.png" />
+                                <span>-10分</span>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="~/Images/game/dead.png" />
+                                <span>-1生命值</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="loading" style="display:none;text-align:center;">
+                <div class="col-md-12">
+                    <p class="final-score"><span>遊戲讀取中...</span><span><img src="~/Images/game/loading.svg" alt="讀取中..." /></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="buttons text-center mt-2">
+            <a href="@Url.Action("Index")" class="back">回首頁</a>
+            <a href="javascript:startGame();" class="start">開始挑戰</a>
+        </div>
+    </div>
+
+    <div class="timing">60<i>s</i></div>
+    <div class="score">
+        <p>0</p>
+        <div class="life">
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+        </div>
+    </div>
+    <div class="w1500">
+        <div class="ohbear">
+            @*<span class="plus">+20</span>
+                <span class="minus">-20</span>
+                <span class="plus">+20</span>*@
+            <img src="~/Images/game/ohbear-normal.png" />
+        </div>
+        <div class="front">
+            <img src="~/Images/game/front1.png" />
+            <img src="~/Images/game/front2.png" />
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        if (navigator.userAgent.indexOf("Line") > -1) {
+            location.href = "https://www.2022taiwanstay.com.tw?openExternalBrowser=1";
+        }
+        $(function () {
+
+        })
+
+        function startGame() {
+            @if(!isStart)
+            {
+                @:showMsg('活動即將於12點開始!!');
+                                                                            @:return false;
+                                                                        }
+            @if(!isLogon)
+            {
+                @:login();
+                                                                            @:return false;
+                                                                        }
+            $("#sample").hide();
+            $("#loading").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("StartGame", "Home")',
+                data: { __RequestVerificationToken: $('@Html.AntiForgeryToken()').val() },
+                dataType: "html",
+                success: function (response) {
+                    $(".lightbox").removeClass("focus");
+                    $(".black_bg_game").fadeOut();
+                    $("div.Game-cover").html(response);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    GoUrl("/");
+                }
+            });
+        }
+    </script>
+}

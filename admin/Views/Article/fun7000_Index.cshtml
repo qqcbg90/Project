@@ -1,0 +1,104 @@
+﻿@model IPagedList<ARTICLE>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string _edit = "Edit";
+    string _delete = "Delete";
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            InputGo("@ViewBag.DefaultPage");
+        })
+        //select by dropdownlist
+        function SelectGo(page) {
+            $('div .pager').find('select').each(function () {
+                $(this).val(page);
+            });
+            var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&k1=' + $("[name=k1]").val()
+				+ '&start=' + $("#start").val()
+				+ '&end=' + $("#end").val();
+            GoUrl(url);
+        }
+    </script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+    <div class="pager">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null, new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, k1 = ViewBag.k1, start = ViewBag.start, end = ViewBag.end })
+    </div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+    <p class="search_box" style="display:block">
+        <label class="key"><span class="select">@Html.DropDownList("k1", ViewBag.fun7000_AT as SelectList, "分類")</span></label><br />
+        <label class="key">@MyList.KeywordInput(ViewBag.Keyword, "問題")</label>
+        <br />
+        <label class="btn_box go">@MyList.Submit()</label>
+    </p>
+    <p class="top_bar">
+        <label class="btn_box">
+            @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+            {
+                @MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { }), "org")
+            }
+        </label>
+    </p>
+    if (MyList.IsTwoPagers())
+    {
+        @Pager()}
+    <div class="tb_list_box">
+        <table class="tb_list">
+            <tr>
+                <th width="25%">上下線日期</th>
+                <th width="10%">分類</th>
+                <th>問題</th>
+                <th width="10%">顯示</th>
+                <th width="15%">功能</th>
+            </tr>
+            @foreach (ARTICLE m in Model)
+            {
+                <tr>
+                    <td data-th="上下線日期">@m.GetDateRange()</td>
+                    <td data-th="分類">@m.ARTICLE_TYPE.ToNodeTitle()</td>
+                    <td data-th="問題">@m.CONTENT1</td>
+                    <td data-th="顯示">@(m.GetDecimal1() ? "V" : "")</td>
+                    <td data-th="功能">
+                        <div class="btn_box">
+                            <a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, k1 = ViewBag.k1, start = ViewBag.start, end = ViewBag.end })" title="編輯"><span class="btn"><i class="far fa-edit"></i></span></a>
+                            @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+                            {
+                                <a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {  id = m.ID, k1 = ViewBag.k1, start = ViewBag.start, end = ViewBag.end })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+                            }
+                        </div>
+                    </td>
+                </tr>}
+        </table>
+    </div>
+    @Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            
+        })
+    </script>
+}

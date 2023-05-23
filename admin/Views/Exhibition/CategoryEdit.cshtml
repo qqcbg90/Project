@@ -1,0 +1,82 @@
+﻿@model ExhibitionCategoryModel
+@{
+	bool fun13_05_01 = ((string)ViewBag.NodeID).CheckStringValue("fun13_05_01");
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		@if (fun13_05_01)
+		{
+			<div>
+				<label>@MyHtml.RedSpan()類別</label>
+				<div>
+					<span class="select">@Html.DropDownListFor(m => m.PARENT_ID, ViewBag.performanceType as SelectList)</span>
+					@Html.ValidationMessageFor(m => m.PARENT_ID)
+				</div>
+			</div>
+		}
+		else
+		{
+			<div>
+				<label>@MyHtml.RedSpan()館別</label>
+				<div>
+					<span class="select">@Html.DropDownListFor(m => m.PARENT_ID, ViewBag.hallType as SelectList)</span>
+					@Html.ValidationMessageFor(m => m.PARENT_ID)
+				</div>
+			</div>
+		}
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.TITLE)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.TITLE)
+			</div>
+		</div>
+		@if (!fun13_05_01)
+		{
+			string sC1 = Model.CONTENT1.ToMyString();
+			<div style="display: none">
+				<label>申請類別 (複選)</label>
+				<div>
+					<label for="chk1">
+						<input type="checkbox" name="chk" id="chk1" value="1" @(!sC1.IsNullOrEmpty() && "0,1".IndexOf(sC1) != -1 ? "checked" : "") /> 審查補助
+					</label>
+					<label for="chk2">
+						<input type="checkbox" name="chk" id="chk2" value="2" @(!sC1.IsNullOrEmpty() && "0,2".IndexOf(sC1) != -1 ? "checked" : "") /> 一般租借
+					</label>
+					@Html.HiddenFor(m => m.CONTENT1)
+				</div>
+			</div>
+		}
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("#save").click(function () {
+				$("#CONTENT1").val($("[name='chk']:checked").map(function () { return $(this).val(); }).get().join(";"));
+			});
+		});
+	</script>
+}
+

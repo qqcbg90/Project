@@ -1,0 +1,144 @@
+﻿@*
+    旅宿內頁ajax
+*@
+@model DATA1
+@{
+    bool isData = Model != null;
+    int imgCount = 0;
+    int imgCount2 = 0;
+}
+<div class="hotel-lightbox">
+    <!--關閉-->
+    <img id="close" src="@Url.Content("~/images/icon_close.png")" height="23">
+    @if (isData)
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7">
+                    <div id="carouselHotel" class="carousel slide  carousel-dark" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            @foreach (var str in Model.GetImages())
+                            {
+                                if (imgCount == 0)
+                                {
+                                    <button type="button" data-bs-target="#carouselHotel" data-bs-slide-to="@imgCount" class="active" aria-current="true" aria-label="圖片 @(imgCount+1)"></button>
+                                }
+                                else
+                                {
+                                    <button type="button" data-bs-target="#carouselHotel" data-bs-slide-to="@imgCount" aria-label="圖片 @(imgCount+1)"></button>
+                                }
+                                imgCount++;
+                            }
+                            @*<button type="button" data-bs-target="#carouselHotel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#carouselHotel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                <button type="button" data-bs-target="#carouselHotel" data-bs-slide-to="2" aria-label="Slide 3"></button>*@
+                        </div>
+                        <div class="carousel-inner">
+                            @foreach (var str in Model.GetImages())
+                            {
+                                if (imgCount2 == 0)
+                                {
+                                    <div class="carousel-item active">
+                                        <img src="@str" class="d-block w-100" alt="...">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="carousel-item">
+                                        <img src="@str" class="d-block w-100" alt="...">
+                                    </div>
+                                }
+                                imgCount2++;
+                            }
+                            @*<div class="carousel-item active">
+                                    <img src="https://taiwan.taiwanstay.net.tw/twpic/66023.JPG" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="https://taiwan.taiwanstay.net.tw/twpic/90360.jpg" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="https://taiwan.taiwanstay.net.tw/twpic/90360.jpg" class="d-block w-100" alt="...">
+                                </div>*@
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselHotel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselHotel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="content col-md-5">
+                    @if ("h1".Equals(Model.NODE_ID))
+                    {
+                        <b class="category_s tourist-Inn"><img src="~/Images/tourist-Inn.png" />觀光旅館</b>
+                    }
+                    else if ("h2".Equals(Model.NODE_ID))
+                    {
+                        <b class="category_s hotel"><img src="~/Images/hotel.png" />一般旅館</b>
+                    }
+                    else
+                    {
+                        <b class="category_s homestay"><img src="~/Images/homestay.png" />民宿</b>
+                    }
+                    <h3>@Model.CONTENT1</h3>
+                    <span>@Model.CONTENT2</span>
+                    <div class="caring">
+                        提供自行車停放空間<br />
+                        提供自行車清潔、維修區域<br />
+                        @Html.Raw(Model.GetParagraphByOrder().CONTENT.ReplaceToBr())
+                    </div>
+                    <div class="contact">
+                        @if (!Model.CONTENT4.IsNullOrEmpty())
+                        {
+                            <span><i class="bi bi-geo-alt-fill"></i>@Model.CONTENT4</span>
+                        }
+                        @if (!Model.CONTENT5.IsNullOrEmpty())
+                        {
+                            <span><i class="bi bi-telephone-fill"></i>@Model.CONTENT5</span>
+                        }
+                        @if (!Model.CONTENT6.IsNullOrEmpty())
+                        {
+                            <span><i class="bi bi-printer-fill"></i>@Model.CONTENT6</span>
+                        }
+                        @if (!Model.CONTENT7.IsNullOrEmpty())
+                        {
+                            <span><i class="bi bi-house-door-fill"></i><a href="@Model.CONTENT7" target="_blank">官方網站</a></span>
+                        }
+                    </div>
+                    <div class="buttons text-center mt-2">
+                        <a href="javascript:share('@(Model.ID)');" class="share"><i class="bi bi-facebook"></i> 我要分享</a>
+                        <a href="javascript:vote('@(Model.ID)');" class="vote">我要投票</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                資料不存在!!
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(function () {
+        $(".black_bg1").fadeToggle();
+        $(".hotel-lightbox").addClass("focus");
+        var carouselMedia = document.querySelector('#carouselHotel')
+        var carousel = new bootstrap.Carousel(carouselHotel, {
+            interval: 2000,
+            wrap: true,
+            interval: false,
+        })
+        $(".hotel-lightbox #close").click(function () {
+            $(".black_bg1").fadeOut();
+            $(".hotel-lightbox").removeClass("focus");
+        });
+    })
+</script>

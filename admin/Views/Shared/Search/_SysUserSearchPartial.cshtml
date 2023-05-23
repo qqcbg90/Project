@@ -1,0 +1,33 @@
+﻿@model string
+
+<script type="text/javascript">
+    var _modal_result = ".modal_result";
+    $(function () {
+        $("#chooseSearch").click(function () {
+            $(_modal_result).html('<img src="@Url.Content("~/images/loader.gif")" /><br /> @Resource.Processing.ToString()...');
+            $(_modal_result).load('@Url.Action("SysUserSearchDialog","Json")'
+                , { userKey: $("#userKey").val(), userType: $("#userType").val() , userC1:'@Model' }
+                , function (response, status, xhr) {
+                    if (status == "error") {
+                        $(_modal_result).html('@Function.DEFAULT_ERROR');
+                    }
+                });
+        });
+    });
+</script>
+<div class="modal">
+    <div class="modal_header">@Resource.UserSearch.ToString()</div>
+    <div class="modal_search">
+		<span class="key">
+			@Html.TextBox("userKey", null, new { @class = "text", @placeholder = Resource.Keyword_SYSUSER.ToString() })<input type="button" class="sg" id="chooseSearch" />
+			<i class="fa fa-search" aria-hidden="true"></i>
+		</span>
+</div>
+    <div class="modal_result">
+
+    </div>
+    <div class="modal_footer">
+        <input type="button" class="btn check" value="@Resource.define.ToString()" />
+        <input type="button" class="btn cancel" value="@Resource.cancel.ToString()" />
+    </div>
+</div>

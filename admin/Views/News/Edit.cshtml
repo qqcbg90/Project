@@ -1,0 +1,120 @@
+﻿@model NewsModel
+@{
+    Dictionary<string, string> dict = (ViewBag.PresentationTypeSelect as SelectList).ToDictionary(p => p.Value, p => p.Text);
+
+    string presType = (string)ViewBag.presType;
+    if (!presType.IsNullOrEmpty())
+    {
+
+    }
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                @Html.LabelFor(m => m.ARTICLE_TYPE)
+            </label>
+            <div>
+                @*@foreach (SelectListItem sli in (ViewBag.PresentationTypeSelect as SelectList))
+                    {
+                        <label for="@sli.Value">
+                            <input type="radio" id="@sli.Value" name="ARTICLE_TYPE" value="@sli.Value" @(sli.Value == Model.ARTICLE_TYPE ? "checked" : "") /> @sli.Text
+                        </label>
+                    }*@
+                @*<span class="select">
+                        @Html.DropDownList("ARTICLE_TYPE", ViewBag.PresentationTypeSelect as SelectList, "呈現類型")
+                    </span>*@
+                @Html.HiddenFor(p => p.ARTICLE_TYPE)
+                <span style="color: red;background-color: yellow;padding: 3px;">@(presType.IsNullOrEmpty() ? "無" : (dict.ContainsKey(presType) ? dict[presType] : presType))</span>
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                @Html.LabelFor(m => m.DATETIME1)
+            </label>
+            <div>
+                @Html.Partial("Input/_DateStartToEndPartial", new string[] { "DATETIME1", "DATETIME2", Model.DATETIME1.ToDefaultString(), Model.DATETIME2.ToDefaultString(), "0" })
+                @Html.CheckBox("chk", Model.DATETIME2.ToString("yyyy/MM/dd") == DateTime.MaxValue.ToString("yyyy/MM/dd")) 永久公告
+            </div>
+        </div>
+        <div>
+            <label>
+                置頂
+            </label>
+            <div>
+                @Html.CheckBox("CONTENT8", Model.ORDER == 1)
+            </div>
+        </div>
+        @switch (presType)
+        {
+            case "PRESENTATION_LINK":
+                @Html.Partial("_LinkPartial", Model)
+                break;
+            case "PRESENTATION_DOWNLOAD":
+                @Html.Partial("_DownloadPartial", Model)
+                break;
+            case "PRESENTATION_YOUTUBE":
+                @Html.Partial("_YoutubePartial", Model)
+                break;
+            default:
+                @Html.Partial("_HtmlPartial", Model)
+                break;
+        }
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#chk").click(function () {
+                $("#DATETIME2").val($(this).prop("checked") ? "9999/12/31" : "");
+            });
+
+            $("input[name=ARTICLE_TYPE]").click(function () {
+                var _val = $(this).val();
+
+                if (_val == "PRESENTATION_HTML") {
+
+                } else if (_val == "PRESENTATION_LINK") {
+
+                } else if (_val == "PRESENTATION_DOWNLOAD") {
+
+                }
+            });
+
+            $("#save").click(function () {
+                //var str = "";
+                //var p1Len = CKEDITOR.instances['CONTENT'].getData().replace(/<[^>]*>/gi, '').length;
+                //if (!p1Len) {
+                //	str += "- 內容<br/>"
+                //}
+                //if (str != "") {
+                //	showMsg("請輸入以下欄位：<br/>" + str, 3);
+                //	return false;
+                //}
+            });
+        });
+    </script>
+}
+

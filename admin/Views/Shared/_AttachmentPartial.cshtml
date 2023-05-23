@@ -1,0 +1,35 @@
+﻿@model List<ATTACHMENT>
+@{
+
+}
+<div class="show_img del">
+	<ul id="FILEs" class="sortable">
+		@if (Model != null && Model.Count > 0)
+		{
+			string sURL = string.Empty;
+			foreach (ATTACHMENT atta in Model)
+			{
+				if (atta.ATT_TYPE.Equals(AttachmentType.Image.ToIntValue()))
+				{
+					sURL = Url.Content(atta.GetPic(PictureType.Medium));
+					<li style="display: inline-block;" id="@atta.ID">
+						<p>
+							<a href="@Url.MyAction("DeleteAttachment", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = atta.MAIN_ID, attid = atta.ID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end, actionName = ViewBag.ActionName })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')" class="close_bt"><i class="far fa-times-circle"></i></a>
+							<a href="@sURL" data-fancybox="images" title="點選圖片可放大檢視">
+								<img src="@sURL" style="height:100px;border: 1px solid #CCC;" />
+							</a>
+						</p>
+					</li>
+				}
+				else
+				{
+					sURL = Url.Content(atta.GetFile());
+					<li style="display: inline-block;padding-right: 20px; margin-right: 5px;min-width:300px;position: relative;"  id="@atta.ID">
+						<a href="@sURL" target="_blank" title="@atta.ORIGINAL_FILE_NAME">@atta.ORIGINAL_FILE_NAME</a>
+						<a href="@Url.MyAction("DeleteAttachment", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = atta.MAIN_ID, attid = atta.ID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end, actionName = ViewBag.ActionName })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')" class="close_bt"><i class="far fa-times-circle"></i></a>
+					</li>
+				}
+			}
+		}
+	</ul>
+</div>

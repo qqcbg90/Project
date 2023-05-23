@@ -1,0 +1,82 @@
+﻿@{
+    string _action = ViewContext.RouteData.Values["action"].ToString();
+    //string _action = Url.Action("Index");
+}
+
+@*分頁*@
+@helper Pager()
+{
+    <div class="pager">
+        @*@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null,
+        new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword })*@
+    </div>
+}
+
+@section head{
+        <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load('visualization', '1', { packages: ['corechart'] });
+    </script>
+    <script type="text/javascript">
+        var options = {
+            pointSize: 15,
+            curveType: 'function',
+            chartArea: { width: '70%', height: '70%' },
+            //series: {0:{targetAxisIndex :1,visibleInLegend: true},
+            //    1:{targetAxisIndex :1, visibleInLegend: true}},
+            title: "資料期間：test",
+            vAxis: {
+                title: "百分比(%)",
+                titleTextStyle: { bold: true, italic: false, fontSize: 15 },
+                //gridlines: { count: 10 },
+                //minValue: 0,
+                //maxValue: 100,
+                ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+            },//直
+            colors: ['#4F81BD', '#C0204D'],
+            //hAxis: { title: "月 份 別", titleTextStyle: { bold: true, italic: false, fontSize: 15 } }//橫
+        };
+        function drawVisualization() {
+            // Create and populate the data table.
+               var data = google.visualization.arrayToDataTable([
+            ['Year', '1999', '2000'],
+            ['台北', 50, 65],
+            ['高雄', 60, 55],
+            ['台中', 70, 75],
+            ['花蓮', 80, 84],
+            ['風景', 80, 84],
+            ['桃竹苗', 80, 84],
+            ['其他', 80, 84],
+            ['合計', 80, 84]
+               ]);
+            // Create and draw the visualization.
+            new google.visualization.ColumnChart(document.getElementById('line')).
+                draw(data, options);
+            //new google.visualization.ColumnChart(document.getElementById('line1')).
+            //    draw(dataI, options);
+            //new google.visualization.ColumnChart(document.getElementById('line2')).
+            //    draw(dataL, options);
+        }
+        google.setOnLoadCallback(drawVisualization);
+    </script>
+}
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+    <div id="line" style="width: 800px; height: 200px;"></div>
+    <div id="line1" style="width: 800px; height: 200px;"></div>
+
+<div id="line2" style="width: 800px; height: 200px;"></div>}
+@*網頁內容end*@
+
+@section scripts{
+   
+}

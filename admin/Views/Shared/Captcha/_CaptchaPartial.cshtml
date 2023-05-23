@@ -1,0 +1,30 @@
+﻿@{
+	string captcha = "captcha";
+	string captchaimg = "captchaimg";
+}
+<table border="0" cellpadding="5" cellspacing="2" style="margin-top: 20px;">
+	<tr>
+		<td style="vertical-align: middle;">
+			@Html.TextBox(captcha, null, new Dictionary<string, object> { { "data-val", "true" }, { "data-val-required", "*" }, { "placeholder", "Enter here" }, { "maxlength", "5" }, { "style", "height: 40px;width: 100px; text-align: center;" } })
+		</td>
+		<td style="vertical-align: middle; padding: 5px;">
+			<span id="imageDiv" style="width: 100px; height: 32px">
+				<img id="@captchaimg" src="@Url.Action("GetCaptchaImage", "Captcha")" />
+			</span>
+		</td>
+		<td style="vertical-align: middle; padding: 5px;">
+			<a href="javascript:Refresh();" title="Reset"><img src="~/images/re.png" class="re" /></a>
+			@Html.ValidationMessage(captcha, new { @class = "validation-error", @style = "color:red;" })
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+	function Refresh() {
+		$("#imageDiv").html("<img src='@Url.Content("~/images/loader.gif")' style='width: 100px;' />");
+		setTimeout(function () {
+			var i = new Image();
+			i.src = '@Url.Action("GetCaptchaImage", "Captcha")';
+			$("#imageDiv").html(i)
+		}, 500);
+	}
+</script>

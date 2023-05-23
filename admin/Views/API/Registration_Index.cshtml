@@ -1,0 +1,296 @@
+﻿@model DataModel
+@{
+    bool isG = true;
+    List<string> todolist = ViewBag.list;
+}
+
+<!-- multistep form -->
+<form id="msform">
+    <!-- progressbar -->
+    <ul id="progressbar">
+        <li class="active"><span>個人資料</span></li>
+        <li><sapn>優良事蹟-台灣觀光</sapn></li>
+        <li><span>優良事蹟-觀光防疫</span></li>
+        <li><span>事蹟照片上傳</span></li>
+        <li><span>其他資料上傳</span></li>
+    </ul>
+    <!-- fieldsets -->
+    <fieldset>
+        <h2 class="fs-title">聯絡人資料</h2>
+        @*<h3 class="fs-subtitle"></h3>*@
+        <div class="fs-profiles">
+            @if (isG)
+            {
+                <div><label>報名組別</label>個人</div>
+                <div><label>單位類別</label>觀光行銷</div>
+                <div><label>單位名稱</label>興展數位創意</div>
+                <div><label>統一編號</label>0000000000</div>
+            }
+            else
+            {
+                <div><label>姓名</label>李芯儀</div>
+                <div><label>職稱</label>軟體工程師</div>
+                <div><label>現職年資</label>1年</div>
+                <div><label>本業年資</label>1年</div>
+                <div><label>生日</label>88/06/05</div>
+            }
+            <div><label>信箱</label>qqcbg90@gmail.com</div>
+            <div><label>電話</label>0900123456</div>
+            <div><label>地址</label>新北市新莊</div>
+        </div>
+        <button type="button" name="next" class="next action-button">下一頁<i class="arrowNext"></i></button>
+    </fieldset>
+    <fieldset>
+        <h2 class="fs-title">對臺灣觀光具體事蹟或成效</h2>
+        <h3 class="fs-subtitle">
+            條列說明109-111年符合表揚辦法規定之事蹟(按民國年份由近至遠撰寫)<br />
+            範例1：111年3月籌辦8場在地好好玩小旅行，共612人參與。<br />
+            範例2：110年8月擔任交通部觀光局觀光論壇主講人，與會人數1,066人。
+        </h3>
+        <div class="fs-group">
+            <div class="form-group">
+                <span>1.</span>
+                <div>
+                    <span class="select">
+                        <select class="form-control" name="yeardob">
+                            <option>112</option>
+                            <option>111</option>
+                            <option>110</option>
+                        </select>  年
+                    </span>
+                </div>
+                <div>
+                    <span class="select">
+                        <select class="form-control" name="monthdob">
+                            <option>01</option>
+                            <option>02</option>
+                            <option>03</option>
+                            <option>04</option>
+                            <option>05</option>
+                            <option>06</option>
+                            <option>07</option>
+                            <option>08</option>
+                            <option>09</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>  月
+                    </span>
+                </div>
+            </div>
+            <div class="form-area"><textarea class="txtarea" rows="4" placeholder="111年3月籌辦8場在地好好玩小旅行，共612人參與。"></textarea></div>
+        </div>
+        <div class="fs-add">
+            <input type="button" name="add" class="add-button" value="Add" />
+        </div>
+
+        <button type="button" name="previous" class="previous action-button"><i class="arrowPre"></i>上一頁</button>
+        <button type="button" name="next" class="next action-button">下一頁<i class="arrowNext"></i></button>
+    </fieldset>
+    <fieldset>
+        <h2 class="fs-title">對觀光防疫或觀光創新作為具體事蹟或成效</h2>
+        <h3 class="fs-subtitle">
+            條列說明109-111年符合表揚辦法規定之事蹟(按民國年份由近至遠撰寫)<br />
+            範例1：111年5月開辦觀光跨領域創新工作坊，2場次共168人參與。<br />
+            範例2：109年7月飯店開始實施防疫早餐制，將早餐送至每位房客的房間。
+
+        </h3>
+        <div class="fs-group">
+            <div class="form-group">
+                <span>1.</span>
+                <div>
+                    <span class="select">
+                        <select class="form-control" name="yeardob">
+                            <option>112</option>
+                            <option>111</option>
+                            <option>110</option>
+                        </select>  年
+                    </span>
+
+                </div>
+                <div>
+                    <span class="select">
+                        <select class="form-control" name="monthdob">
+                            <option>01</option>
+                            <option>02</option>
+                            <option>03</option>
+                            <option>04</option>
+                            <option>05</option>
+                            <option>06</option>
+                            <option>07</option>
+                            <option>08</option>
+                            <option>09</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>  月
+                    </span>
+                </div>
+            </div>
+            <div class="form-area"><textarea class="txtarea" rows="4" placeholder="109年7月飯店開始實施防疫早餐制，將早餐送至每位房客的房間。"></textarea></div>
+        </div>
+        <div class="fs-add">
+            <input type="button" name="add" class="add-button" value="Add" />
+        </div>
+
+        <button type="button" name="previous" class="previous action-button"><i class="arrowPre"></i>上一頁</button>
+        <button type="button" name="next" class="next action-button">下一頁<i class="arrowNext"></i></button>
+    </fieldset>
+    <fieldset>
+        <h2 class="fs-title">事蹟照片上傳</h2>
+        <h3 class="fs-subtitle">
+            *事蹟照片至多12張*<br />
+            請於此上傳與前述事蹟相對應佐證之照片、聘書、獎狀、其他有利評選之佐證，<br />
+            如：得獎事蹟(獎狀)、進修證明、相關新聞報導等照片。 事蹟照片及相關證明請精選至多12張。
+        </h3>
+        <div class="edit_list">
+            <div>
+                <label for="">
+                    上傳圖片
+                </label>
+                <div class="img_box">
+                    <div class="input_bt">
+                        <div class="input_bt">@Html.EditorValidationFor(model => model.ATT)</div>
+                    </div>
+                    <ul class="only_jpg">
+                        @if (Model.AttList != null && Model.AttList.Count > 0)
+                        {
+                            foreach (var att in Model.AttList)
+                            {
+                                <li>
+                                  
+                                </li>
+
+                            }
+
+                        }
+                    </ul>
+
+                </div>
+            </div>
+            <div>
+                <label for="">
+                    描述
+                </label>
+                <div>
+                    描述
+                </div>
+            </div>
+            <div>
+                <label for="">
+                    年份
+                </label>
+                <div>
+                    109年
+                </div>
+            </div>
+        </div>
+
+        <div class="fs-add">
+            <input type="button" name="add" class="add-button" value="Add" />
+        </div>
+        <button type="button" name="previous" class="previous action-button"><i class="arrowPre"></i>上一頁</button>
+        <button type="button" name="next" class="next action-button">下一頁<i class="arrowNext"></i></button>
+    </fieldset>
+
+    <fieldset>
+        <h2 class="fs-title">聯絡人資料</h2>
+        @*<h3 class="fs-subtitle"></h3>*@
+        <div class="form-group"><label>姓名</label><input type="text" name="fname" placeholder="First Name" value="李芯儀" /></div>
+        <div class="form-group"><label>信箱</label><input type="text" name="email" placeholder="Email" value="qqcbg90@gmail.com" /></div>
+        <div class="form-group"><label>電話</label><input type="text" name="phone" placeholder="Phone" value="0912345619" /></div>
+        <div class="form-group"><label>地址</label><input type="text" name="address" placeholder="Address" value="新北市新莊區" /></div>
+        <button type="button" name="previous" class="previous action-button"><i class="arrowPre"></i>上一頁</button>
+        <button type="button" name="submit" class="submit-button">送出</button>
+    </fieldset>
+</form>
+
+
+@*網頁內容end*@
+
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script>
+        //jQuery time
+        var current_fs, next_fs, previous_fs; //fieldsets
+        var left, opacity, scale; //fieldset properties which we will animate
+        var animating; //flag to prevent quick multi-click glitches
+
+        $(".next").click(function () {
+            if (animating) return false;
+            animating = true;
+
+            current_fs = $(this).parent();
+            next_fs = $(this).parent().next();
+
+            //activate next step on progressbar using the index of next_fs
+            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+            //show the next fieldset
+            next_fs.show();
+            //hide the current fieldset with style
+            current_fs.animate({ opacity: 0 }, {
+                step: function (now, mx) {
+                    //as the opacity of current_fs reduces to 0 - stored in "now"
+                    //1. scale current_fs down to 80%
+                    scale = 1 - (1 - now) * 0.2;
+                    //2. bring next_fs from the right(50%)
+                    left = (now * 50) + "%";
+                    //3. increase opacity of next_fs to 1 as it moves in
+                    opacity = 1 - now;
+                    current_fs.css({
+                        'transform': 'scale(' + scale + ')',
+                        'position': 'absolute'
+                    });
+                    next_fs.css({ 'left': left, 'opacity': opacity });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                },
+                //this comes from the custom easing plugin
+                easing: 'easeInOutBack'
+            });
+        });
+
+        $(".previous").click(function () {
+            if (animating) return false;
+            animating = true;
+
+            current_fs = $(this).parent();
+            previous_fs = $(this).parent().prev();
+
+            //de-activate current step on progressbar
+            $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+            //show the previous fieldset
+            previous_fs.show();
+            //hide the current fieldset with style
+            current_fs.animate({ opacity: 0 }, {
+                step: function (now, mx) {
+                    //as the opacity of current_fs reduces to 0 - stored in "now"
+                    //1. scale previous_fs from 80% to 100%
+                    scale = 0.8 + (1 - now) * 0.2;
+                    //2. take current_fs to the right(50%) - from 0%
+                    left = ((1 - now) * 50) + "%";
+                    //3. increase opacity of previous_fs to 1 as it moves in
+                    opacity = 1 - now;
+                    current_fs.css({ 'left': left });
+                    previous_fs.css({ 'transform': 'scale(' + scale + ')', 'opacity': opacity });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                },
+                //this comes from the custom easing plugin
+                easing: 'easeInOutBack'
+            });
+        });
+
+
+    </script>
+
+}

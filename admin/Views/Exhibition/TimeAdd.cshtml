@@ -1,0 +1,36 @@
+﻿@model IEnumerable<TimeModel>
+@{
+	string sID = "${ID}";
+	string sORDER = "${ORDER}";
+	string sShowText = "${showText}";
+	string sStartTime = "${startTime}";
+	string sEndTime = "${endTime}";
+
+	bool bNO_DATA = false;
+	List<TimeModel> m = Model.ToList();
+	if (m != null)
+	{
+		TimeModel tm = m.FirstOrDefault();
+		bNO_DATA = tm != null && tm.ID.CheckStringValue("NO_DATA");
+	}
+}
+@foreach (TimeModel time in m)
+{
+	if (!bNO_DATA)
+	{
+		sID = time.ID;
+		sORDER = time.ORDER.ToString();
+		sShowText = time.STATUS.ToString();
+		sStartTime = time.DATETIME1.ToDateTimeString();
+		sEndTime = time.DATETIME2.ToDateTimeString();
+	}
+	<li id="@sID" title="@sShowText">
+		<span>@sShowText</span>
+		<a href="javascript:delTime('@sID')" title="刪除" class="close_bt"><i class="far fa-times-circle"></i></a>
+		<input type="hidden" id="TIMEs.index" name="TIMEs.index" value="@sID" />
+		<input type="hidden" id="TIMEs[@sID].ID" name="TIMEs[@sID].ID" value="@sID" />
+		<input type="hidden" id="TIMEs[@sID].ORDER" name="TIMEs[@sID].ORDER" value="@sORDER" />
+		<input type="hidden" id="TIMEs[@sID].DATETIME1" name="TIMEs[@sID].DATETIME1" value="@sStartTime" />
+		<input type="hidden" id="TIMEs[@sID].DATETIME2" name="TIMEs[@sID].DATETIME2" value="@sEndTime" />
+	</li>
+}

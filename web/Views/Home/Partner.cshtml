@@ -1,0 +1,105 @@
+﻿@model List<PLUS>
+@{
+
+}
+@section head{
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+}
+@section top{
+
+}
+<div class="Game-cover">
+    <div class="lightbox focus">
+        <div class="container">
+            <div class="row" id="loading" style="text-align:center;">
+                <div class="col-md-12">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    遊戲日期
+                                </th>
+                                <th>
+                                    建立日期
+                                </th>
+                                <th>
+                                    E-mail
+                                </th>
+                                <th>
+                                    遊戲開始
+                                </th>
+                                <th>
+                                    遊戲結束
+                                </th>
+                                <th>
+                                    分數(修正版)/回傳版
+                                </th>
+                                <th>
+                                    餘命(預設值)/回傳版
+                                </th>
+                                <th>
+                                    秒數(計算版)/回傳版
+                                </th>
+                                <th>
+                                    IP
+                                </th>
+                                <th>
+                                    Agent
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.DATETIME1.ToDefaultString()
+                                    </td>
+                                    <td>
+                                        @item.CREATE_DATE.ToDefaultStringWithTime1()
+                                    </td>
+                                    <td>
+                                        @item.CONTENT3
+                                    </td>
+                                    <td>
+                                        @item.DATETIME2.ToDefaultStringWithTime1()
+                                    </td>
+                                    <td>
+                                        @item.DATETIME3.ToDefaultStringWithTime1()
+                                    </td>
+                                    <td>
+                                        @($"{item.DECIMAL1} / {item.DECIMAL4}")
+                                    </td>
+                                    <td>
+                                        @($"{item.DECIMAL5} / {item.DECIMAL2}")
+                                    </td>
+                                    <td>
+                                        @($"{item.DECIMAL6} / {item.DECIMAL3}")
+                                    </td>
+                                    <td>
+                                        @item.CONTENT1
+                                    </td>
+                                    <td>
+                                        @item.CONTENT2
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+
+        })
+    </script>
+}

@@ -1,0 +1,113 @@
+﻿@model IQueryable<PLUS>
+@{
+    var List = Model.Where(p => p.CONTENT20 == "1").OrderBy(p => p.ORDER);
+}
+<p class="top_bar">
+    <a class="import" href="@Url.MyAction("Export",(Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = ViewBag.b1})">匯出中獎者名單</a>
+</p>
+
+<table class="table gift-boxB">
+    <thead>
+        <tr>
+            <th scope="col">獎項</th>
+            <th scope="col">得獎者</th>
+            <th scope="col">回覆時間(姓名等資料)</th>
+            <th scope="col">身份證(正)</th>
+            <th scope="col">身份證(反)</th>
+            <th scope="col">附件一</th>
+            <th scope="col">附件二</th>
+            <th scope="col">附件三</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(p => p.CONTENT20 == "1").OrderBy(p => p.ORDER))
+        {
+            List<ATTACHMENT> atts = item.ATTACHMENT.Where(p => p.ORDER <= 5).ToList();
+            ATTACHMENT att1 = null, att2 = null, att3 = null, att4 = null, att5 = null;
+            if (atts != null && atts.Count > 0)
+            {
+                att1 = atts.FirstOrDefault(p => p.ORDER == 1);
+                att2 = atts.FirstOrDefault(p => p.ORDER == 2);
+                att3 = atts.FirstOrDefault(p => p.ORDER == 3);
+                att4 = atts.FirstOrDefault(p => p.ORDER == 4);
+                att5 = atts.FirstOrDefault(p => p.ORDER == 5);
+            }
+            <tr class="eat">
+                <td scope="col">@item.CONTENT1</td>
+                <td>
+                    @item.CONTENT3
+                </td>
+                <td>
+                    @item.CONTENT2
+                </td>
+                <td>
+                    @if (att1 != null)
+                    {
+                        <a href="@att1.GetFile()" target="_blank" title="@att1.ORIGINAL_FILE_NAME">
+                            <img class="lazy" src="@att1.GetFile()" style="max-width:300px;" />
+                        </a>
+                    }
+                </td>
+                <td>
+                    @if (att2 != null)
+                    {
+                        <a href="@att2.GetFile()" target="_blank" title="@att2.ORIGINAL_FILE_NAME">
+                            <img class="lazy" src="@att2.GetFile()" style="max-width:300px;" />
+                        </a>
+                    }
+                </td>
+                <td>
+                    @if (att3 != null)
+                    {
+                        <a href="@att3.GetFile()" target="_blank" title="@att3.ORIGINAL_FILE_NAME">
+                            <img class="lazy" src="@att3.GetFile()" style="max-width:300px;" />
+                        </a>
+                    }
+                </td>
+                <td>
+                    @if (att4 != null)
+                    {
+                        <a href="@att4.GetFile()" target="_blank" title="@att4.ORIGINAL_FILE_NAME">
+                            <img class="lazy" src="@att4.GetFile()" style="max-width:300px;" />
+                        </a>
+                    }
+                </td>
+                <td>
+                    @if (att5 != null)
+                    {
+                        <a href="@att5.GetFile()" target="_blank" title="@att5.ORIGINAL_FILE_NAME">
+                            <img class="lazy" src="@att5.GetFile()" style="max-width:300px;" />
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $('.lazy').lazy();
+        });
+        
+        function changeC7(attid) {
+			$.ajax({
+				url: "@Url.Action("PicList3", "Home")",
+				type: 'post',
+				dataType: 'html',
+                data: { id: attid },
+                complete: function (data) {
+                    if ("0" == data.responseText) {
+                        alert('發生錯誤!!');
+                    }
+                    else {
+
+                    }
+				}
+			});
+		}
+    </script>
+}

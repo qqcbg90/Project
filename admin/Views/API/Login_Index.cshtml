@@ -1,0 +1,109 @@
+﻿@*
+    LogIn 
+*@
+@{
+
+}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v16.0&appId=246007157885740&autoLogAppEvents=1" nonce="Ys46lOVj"></script>
+@*<div id="g_id_onload" data-client_id="210957441864-ajeprhj8j1injb3fgbrlakrn7q1n5fd1.apps.googleusercontent.com" data-callback="onSignIn1"></div>
+<div class="g_id_signin" data-type="standard"></div>
+<a href="javascript:fb();"><img src="@Url.Content("~/Images/icon/icon_fb_bule.png")"></a>
+<br />
+<hr />
+
+<span id="GOOGLE_STATUS_1"></span>
+<span id="FB_STATUS_1"></span>*@
+
+<script>
+    //FB
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '246007157885740',
+            xfbml: true,
+            version: 'v16.0'
+        });
+        FB.AppEvents.logPageView();
+    };
+    function fb() {
+        //檢查是否登入
+        FB.getLoginStatus(function (response) {
+            if (statusChangeCallback(response)) {
+                //已登入
+                checkFB();
+            } else {
+                //先登入
+                FBLogin();
+            }
+        });
+    }
+
+    function FBLogin() {
+        isLook = true;
+
+        //if (iOS() && isAlert) {
+        //	showMsg('請先確認"阻擋彈出式視窗"功能是否關閉');
+        //	isAlert = false;
+        //}
+
+        FB.login(function (response) {
+            if (response.status === 'connected') {
+                checkFB();
+            }
+        }, { scope: 'public_profile,email' });
+
+    }
+
+    function statusChangeCallback(response) {
+        //console.log(response);
+        if (response.status === 'connected')
+            return true;
+        else
+            return false;
+    }
+    function checkFB() {
+        //console.log(loginStatus.authResponse.userID);
+        FB.api('/me?fields=id,name,email,picture', function (response) {
+            if (undefined == response.id) {
+                showMsg('現在有太多用戶，請稍後再試。 謝謝。');
+            }
+            else {
+                target = document.getElementById("FB_STATUS_1"),
+                    html = "FB資訊:<br />";
+                html += "ID: " + response.id + "<br /> ";
+                html += "會員暱稱： " + response.name + "<br /> ";
+                html += "會員頭像：" + "<img src='http://graph.facebook.com/" + response.id + "/picture?type=normal '/><br /> ";
+                html += "會員 email：" + response.email + "<br /> ";
+                target.innerHTML = html;
+            }
+        });
+
+    }
+    function parse2Json(response) {
+        if (typeof response === 'string') { return response; }
+        jsonText = JSON.stringify(response);
+        return jsonText;
+    }
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    //
+
+    // Gmail登入之後
+    function onSignIn1(response) {
+        var credential = response.credential,
+            profile = JSON.parse(decodeURIComponent(escape(window.atob(credential.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))))), // 對 JWT 進行解碼
+            target = document.getElementById("GOOGLE_STATUS_1"),
+            html = "Google資訊:<br />";
+        html += "ID: " + profile.sub + "<br /> ";
+        html += "會員暱稱： " + profile.name + "<br /> ";
+        /* html += "會員頭像：" + profile.picture + "<br /> ";*/
+        html += "會員 email：" + profile.email + "<br /> ";
+        target.innerHTML = html;
+    }
+</script>

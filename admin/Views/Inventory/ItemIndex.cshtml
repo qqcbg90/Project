@@ -1,0 +1,113 @@
+﻿@model IPagedList<NODE>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "ItemEdit";
+	string _delete = "DeleteCategory";
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+				+ '&nid=@(ViewBag.NodeID)'
+				+ '&defaultPage=' + $("[name=defaultPage]").val()
+				+ '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&k1=' + $("#k1").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null
+	   , new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, k1 = ViewBag.k1 })
+	</div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box" style="display:block">
+		<label class="key"><span class="select">@Html.DropDownList("k1", ViewBag.INVENTORY_ITEM as SelectList, "類別")</span></label><br />
+		<label class="key">@MyList.KeywordInput(ViewBag.Keyword, "標題")</label>
+		<br />
+		<label class="btn_box go">@MyList.Submit()</label>
+	</p>
+	<p class="top_bar">
+		<label class="btn_box">
+			@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+			{
+				@MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { k1 = ViewBag.k1 }), "org")
+			}
+			<a data-fancybox="print" data-type="iframe" data-ng-model="true" href="@Url.Action("CategoryIndex", new { nid = ViewBag.NodeID })" title="類別管理" class="btn org">類別管理</a>
+		</label>
+	</p>
+	if (MyList.IsTwoPagers())
+	{
+		@Pager()
+	}
+	<div class="tb_list_box">
+		<table class="tb_list">
+			<tr class="thead">
+				<th>類別</th>
+				<th>物品名稱</th>
+				<th>單位</th>
+				<th>目前數量</th>
+				<th>安全數量</th>
+				<th>開放領用申請</th>
+				<th>庫存管理</th>
+				<th>功能</th>
+			</tr>
+			@foreach (NODE m in Model)
+			{
+				<tr>
+					<td data-th="類別">@Function.GetNodeTitle(m.PARENT_ID)</td>
+					<td data-th="物品名稱">@m.TITLE</td>
+					<td data-th="單位">@m.CONTENT1</td>
+					<td data-th="目前數量">@m.CONTENT9.ToInt().ToString("#,0")</td>
+					<td data-th="安全數量">@m.ORDER.ToString("#,0")</td>
+					<td data-th="開放領用申請">@Html.Raw(m.CONTENT8.CheckStringValue("1") ? "<i class=\"fa fa-check\" style=\"color: green\"></i>" : "<i class=\"fa fa-times\" style=\"color: red\"></i>")</td>
+					<td data-th="庫存管理">
+						<div class="btn_box">
+							<a data-fancybox="print1" data-type="iframe" data-ng-model="true" href="@Url.Action("InventoryIndex", new { nid = ViewBag.NodeID, id = m.ID })" title="庫存管理"><span class="btn"><i class="far fa-edit"></i></span></a>
+						</div>
+					</td>
+					<td data-th="功能">
+						<div class="btn_box">
+							<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, k1 = ViewBag.k1 })" title="編輯"><span class="btn"><i class="far fa-edit"></i></span></a>
+							@*@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+								{
+									<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {  id = m.ID, k1 = ViewBag.k1, actionName = "ItemIndex" })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+								}*@
+						</div>
+					</td>
+				</tr>
+			}
+		</table>
+		@Pager()
+	</div>
+}
+
+@*網頁內容end*@
+
+@section scripts{
+
+}

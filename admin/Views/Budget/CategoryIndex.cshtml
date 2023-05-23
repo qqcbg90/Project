@@ -1,0 +1,121 @@
+﻿@model IPagedList<NODE>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "CategoryEdit";
+	string _delete = "DeleteCategory";
+
+	int TreeLevel = ViewBag.TreeLevel ?? 0;
+}
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+				+ '&nid=@(ViewBag.NodeID)'
+				+ '&defaultPage=' + $("[name=defaultPage]").val()
+				+ '&k=' + EncodeParameter($("[name=k]").val());
+			GoUrl(url);
+		}
+	</script>
+}
+
+@*@section bottonList{
+		@if (((string)ViewBag.Sup).IsNullOrEmpty())
+		{
+			<span class="select">
+				@Html.DropDownList("y", ViewBag.YearSelect as SelectList)
+			</span>
+			<label class="btn_box go">
+				@MyList.Submit()
+			</label>
+		}
+		else
+		{
+			<label class="btn_box go">
+				@MyHtml.Button("回上層", Url.MyAction("CategoryIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { y = ViewBag.y, pre = ViewBag.pre }), "gray")
+			</label>
+		}
+	}*@
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null,
+	   new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, y = ViewBag.y, pre = ViewBag.pre, cur = ViewBag.cur })
+	</div>
+}
+<p class="top_bar">
+	<label class="btn_box">
+		@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+		{
+			if (TreeLevel < 3)
+			{
+				@MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { y = ViewBag.y, pre = ViewBag.pre, cur = ViewBag.cur }), "org")
+				}
+			@MyHtml.Button("回上層", Url.MyAction("CategoryIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { y = ViewBag.y, pre = ViewBag.pre }), "gray")
+		}
+	</label>
+</p>
+@if (MyList.IsTwoPagers())
+{
+	@Pager()
+}
+<div class="tb_list_box">
+	<div style="margin-bottom: 15px;">@Html.Raw((string)ViewBag.Sup)</div>
+	<table class="tb_list">
+		<tr class="thead">
+			<th>排序</th>
+			<th>選單名稱</th>
+			<th>功能</th>
+			@if (TreeLevel < 3)
+			{
+				<th>下層管理</th>
+			}
+		</tr>
+		@foreach (NODE m in Model)
+		{
+			<tr>
+				<td data-th="排序">@m.ORDER</td>
+				<td data-th="選單名稱">@m.TITLE</td>
+				<td data-th="功能">
+					<div class="btn_box">
+						<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, y = m.ORDER, pre = ViewBag.pre, cur = ViewBag.cur })" title="編輯"><span class="btn"><i class="far fa-edit"></i></span></a>
+						@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+						{
+							<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, y = m.ORDER, pre = ViewBag.pre, cur = ViewBag.cur })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+						}
+					</div>
+				</td>
+				@if (TreeLevel < 3)
+				{
+					<td data-th="下層管理">
+						@if (!m.URL.IsNullOrEmpty() && m.URL.Equals("1"))
+					{
+							<div class="btn_box">
+								<a href="@Url.MyAction("CategoryIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { y = m.ORDER, pre = m.ID, cur = m.ID })" title="類別管理"><span class="btn org"><i class="fas fa-edit"></i></span></a>
+							</div>
+					}
+					else
+					{
+							@MyHtml.RedP("無")
+					}
+					</td>
+				}
+			</tr>
+		}
+	</table>
+	@if (!ViewBag.all)
+	{
+		@Pager()
+	}
+</div>
+@section scripts{
+
+}

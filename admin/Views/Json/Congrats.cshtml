@@ -1,0 +1,24 @@
+﻿@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+<div id="step3" class="step_sp">
+    <div>
+        <p>
+            @Html.Raw(Resource.QUIZ_MSG3)
+        </p>
+        <div class="In_btn_box">
+            <div class="btn_box">
+				<input type="button" id="btnStart" value="@Resource.DownloadCertificate" class="btn M" onclick="window.location.href='@Url.Action("Index", "Questionnaire", new { nid = "Questionnaire" })';" />
+                <input type="button" id="btnStart" value="@Resource.QUIZ_MSG4" class="btn M" onclick="window.location.href='@Url.Action("Index", "Activity", new { nid = "Activity" })';" />
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,106 @@
+﻿@model ARTICLE
+@{
+    List<ATTACHMENT> atts = Model.GetAttachments("1");
+    List<ATTACHMENT> pics = Model.GetAttachments();
+}
+
+@*<div class="wrap height_wrap">
+    <h1 id="page1_title">@Model.GetValueOnLang()</h1>
+    <div style="display: flex; align-items: center;flex-wrap: wrap;">
+        <div>
+            <img src="@Url.Content("~/images/icon/icon_time.png")" height="12" style="margin-right: 8px;">
+            <h5 id="page1_date">@(Resource.view02)：@Model.GetDateRange()</h5>
+        </div>
+    </div>
+</div>*@
+<div class="page1-1_banner">
+    <div class="owl-carousel owl-theme owl-loaded owl-drag">
+        <!--圖片--><!--控制待討論-->
+        @foreach (var item in pics)
+        {
+            <div class="item_banner">
+                <a>
+                    <img src="@item.GetPic()" />
+                </a>
+            </div>
+        }    
+    </div>
+    <!--圖片控制按鈕-->
+    <div class="wrap banner_control" id="control_buttons"></div>
+</div>
+
+<div class="wrap page1-1_content">
+    <!--貼文內容-->
+    <div class="page1-1_content_part1">
+        <!--標題-->
+        <h1 id="page1_title">@Model.GetValueOnLang()</h1>
+        <div style="display: flex; align-items: center;flex-wrap: wrap;">
+            <div>
+                <img src="@Url.Content("~/images/icon/icon_time.png")" height="12" style="margin-right: 8px;">
+                <h5 id="page1_date">@(Resource.view02)：@Model.GetDateRange()</h5>
+            </div>
+        </div>
+        @Html.Raw(Model.GetValueOnLang(4))
+    </div>
+    <!--標籤與其它公告-->
+    <div class="page1-1_content_part2">
+        @*<div class="page1-1_content_label">
+                <div style="display: flex; align-items: center;">
+                    <h3 style="color: #545454;">熱門</h3><h3 style="color: #B7940A;">標籤</h3>
+                    <img src="image/icon/icon_point.png" height="20" style="margin-left: 16px;">
+                    <img src="image/icon/icon_hot.png" height="20" style="margin-left: 16px;">
+                </div>
+                <div style="display: flex; flex-wrap: wrap;">
+                    <div class="label">五倍券</div>
+                    <div class="label">紅利點數</div>
+                    <div class="label">優惠方案</div>
+                    <div class="label">桃園市政府</div>
+                </div>
+            </div>*@
+        @Html.Action("GetADS")
+    </div>
+</div>
+
+<!--------------------------------->
+<!---------返回上一頁在這裡--------->
+<!--------------------------------->
+
+<div style="display: flex; justify-content: center;"><button onclick="javascript: back();" class="btn_back">@Resource.back1</button></div>
+
+@section scripts{
+<script>
+        $(function () {
+            $(".owl-carousel").owlCarousel({
+                items: 1,
+                loop: true,
+                margin: 10,
+                dots:false,
+                autoplay: true,
+                autoplaySpeed: 800,
+                autoplayHoverPause: true,
+                center: true,
+                navText: [
+                    "<img src='@Url.Content("~/images/icon/icon_arrow_transparent.png")'>", 
+                    "<img src='@Url.Content("~/images/icon/icon_arrow2_transparent.png")'>"
+                ],
+                responsive: {
+                    0: {
+                        stagePadding: 0,
+                    },
+                    768: {
+                        stagePadding: 80,
+                        nav: false,
+                    },
+                    1000: {
+                        nav: true,
+                        stagePadding: 250,
+                    },
+                    1600: {
+                        nav: true,
+                        stagePadding: 460,
+                    }
+                }
+            });
+        })
+</script>
+}

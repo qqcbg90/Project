@@ -1,0 +1,141 @@
+﻿@{
+
+}
+
+@section head{
+@Styles.Render("~/Content/fullcalendar/fullcalendar.css")
+@Scripts.Render("~/Content/fullcalendar/moment.min.js"
+    , "~/Content/fullcalendar/fullcalendar.min.js"
+    , "~/Content/fullcalendar/lang-all.js")
+<script>
+    $(function () {
+        SetCalendar();
+    })
+    function SetCalendar() {
+        $('#calendar').fullCalendar({
+            events: [
+                {
+                    title: '08:00\n展演廳施工不外借',
+                    start: '2020-03-10',
+                },
+                {
+                    title: '08:00\n展演廳施工不外借',
+                    start: '2020-04-01',
+                },
+                {
+                    title: '08:00\n展演廳施工不外借',
+                    start: '2020-03-16',
+                },
+                {
+                    title: '08:00\n展演廳施工不外借',
+                    start: '2020-03-17',
+                },
+                {
+                    title: '08:00\n展演廳施工不外借',
+                    start: '2020-03-01',
+                },
+   {
+       title: '08:00\n展演廳施工不外借',
+       start: '2020-03-18',
+   },
+   {
+       title: '08:30-10:00\n公務電動機車',
+       start: '2020-03-18',
+       backgroundColor: 'rgba(100,100,100,0.5)',
+   },
+   {
+       title: '09:00-17:00\n中壢國小美術班第23屆畢業暨成果展(第1展覽室)',
+       start: '2020-03-24',
+       textColor: 'black',
+       borderColor: 'rgba(0,0,0,0)',
+       backgroundColor: 'LightPink'
+   },
+   {
+       title: '11:00-19:00\n「繁星遷徙之境」特展(展覽空間)',
+       start: '2020-04-03',
+       textColor: 'black',
+       borderColor: 'rgba(0,0,0,0)',
+       backgroundColor: 'LightPink'
+   },
+   {
+       title: '09:30-12:00\n公務機車(038-LBR)',
+       start: '2020-03-25',
+       backgroundColor: 'rgba(100,100,100,0.5)'
+   },
+    {
+        title: '19:00-20:30\n主題放映-搶救小花象（普）(放映廳)',
+        start: '2020-03-28',
+        textColor: 'black',
+        borderColor: 'rgba(0,0,0,0)',
+        backgroundColor: 'LightPink'
+    }
+   // etc...
+            ],
+            header: {
+                left: 'prev next',
+                center: 'title',
+                right: 'prev next'
+            },
+            buttonText: {
+                //prev: '< 上一週',
+                //next: '下一週 >'
+            },
+            //defaultDate: '@ViewBag.StartDate',
+            firstDay: 1,
+            //defaultView: 'agendaWeek',
+            lang: 'zh-tw',
+            allDaySlot: false,
+            minTime: "09:00:00",
+            maxTime: "20:00:00",
+            height: 768,
+            timeFormat: 'H:mm',
+            axisFormat: 'H:mm',
+            eventClick: function (calEvent, jsEvent, view) {
+                $("#dialog-form").dialog("open");
+                @*GoUrl("@Url.Action("Edit", new { nid = ViewBag.NodeID })"
+                    + "&id=" + calEvent.id
+                    + "&meetingRoomType=" + $("#meetingRoomType").val()
+                    + "&PDate=" + $("#PDate").val());*@
+                //alert('Event: ' + calEvent.title);
+                //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                //alert('View: ' + view.name);
+                //// change the border color just for fun
+                $(this).css('border-color', 'red');
+            },
+            eventRender: function (event, element) {
+                //alert(event.title);
+                //element.find('.fc-content').append('<input type="button" value="下午" class="btn3"/>');
+                element.find('.fc-content').append('<span style="float:right"><i class="fa fa-pencil-square-o"></i><a href="javascript:test()"><i class="fa fa-trash-o"></i></a></span>');
+                //element.find('.fc-event-inner').append("<p>" + event.description + "</p>");
+                if (event.innerHtml != null) {
+                    element.find('.fc-event-inner').append(event.innerHtml);
+                }
+                //$('.fa-pencil-square-o').click(function () {
+                //    alert('test');
+                //});
+            }
+        })
+
+            
+    }
+    </script>
+
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+<div class="two_box">
+    <div class="box_box helf">
+        <div id='calendar'></div>
+    </div>
+</div>
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

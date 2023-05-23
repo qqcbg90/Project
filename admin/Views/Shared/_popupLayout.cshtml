@@ -1,0 +1,80 @@
+﻿@{
+	Layout = null;
+
+	string CT = (string)ViewBag.ContentTitle;
+	string CT2 = (string)ViewBag.ContentTitle2;
+	string CT3 = (string)ViewBag.ContentTitle3;
+	ViewBag.PageTitle = CT + (CT2.IsNullOrEmpty() ? "" : " - " + CT2) + (CT3.IsNullOrEmpty() ? "" : " - " + CT3);
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="@Url.Content("~/favicon.ico")" rel="shortcut icon" type="image/x-icon">
+	<link href="@Url.Content("~/Content/reset.css")" rel="stylesheet" />
+	<link href="@Url.Content("~/Content/style.css")" rel="stylesheet" />
+	<link href="@Url.Content("~/Content/font-awesome.css")" rel="stylesheet" />
+	<script src="@Url.Content("~/Scripts/jquery-3.4.1.js")"></script>
+	<script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.js")"></script>
+	<link href="@Url.Content("~/Content/toastmessage/css/jquery.toastmessage.css")" rel="stylesheet" />
+	<script src="@Url.Content("~/Content/toastmessage/jquery.toastmessage.js")"></script>
+	<link href="@Url.Content("~/Content/jquery-ui-themes/lightness/jquery-ui.css")" rel="stylesheet" />
+	<script src="@Url.Content("~/Scripts/JQueryDatePickerTW.js")"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/jqueryPlugin.js")"></script>
+	<script src="@Url.Content("~/Scripts/custom.js")"></script>
+	<title>@ViewBag.PageTitle</title>
+	<style type="text/css">
+		body {
+			background: #f9f9f9;
+		}
+
+		.menuBar {
+			text-align: right;
+			background: #F1ECE6;
+			color: #FFF;
+			border-radius: 3px;
+			padding: 10px;
+		}
+
+			.menuBar .btn {
+				padding: 10px;
+				margin-left: 5px;
+				text-decoration: none;
+				border-radius: 3px;
+				background: #6c4c3a;
+				border: none;
+				cursor: pointer;
+				color: #FFF;
+				font-weight: 500;
+				font-size: 0.9375rem;
+				transition: background 0.15s ease-out;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+			}
+	</style>
+	@RenderSection("head", required: false)
+</head>
+<body>
+	<div style="padding: 10px;">
+		@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName
+				, new { nid = ViewBag.NodeID, page = ViewBag.page, ViewBag.defaultPage, id = ViewBag.ID, gid = ViewBag.GID, start = ViewBag.start, ViewBag.end, y = ViewBag.y, pre = ViewBag.pre, cur = ViewBag.cur }
+				, FormMethod.Post, new { enctype = "multipart/form-data" }))
+		{
+			<div class="menuBar">
+				<p style="float: left;color:#6c4c3a;margin: 10px 0;">
+					@ViewBag.PageTitle
+				</p>
+				@RenderSection("bottonList", required: false)
+				<a href="javascript:void(0)" onclick="javascript:parent.jQuery.fancybox.close();" class="btn">關閉</a>
+			</div>
+			@RenderBody()
+		}
+	</div>
+	@RenderSection("scripts", required: false)
+	@Html.Raw(TempData[Function.TEMPDATA_MESSAGE_KEY])
+</body>
+</html>

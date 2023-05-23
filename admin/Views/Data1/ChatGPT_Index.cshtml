@@ -1,0 +1,80 @@
+﻿@{
+
+}
+
+@section featured_top{
+    <div class="black_bg"></div>
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+    <div class="chat-container">
+        <div class="chat-box">
+            <textarea class="chat-input" name="prompt" placeholder="Type your message here... Or description of the picture...">@ViewBag.prompt</textarea>
+            <button class="send-button" name="action" value="chat"><i class="fas fa-paper-plane"></i></button>
+            <button class="send-button" name="action" value="image"><i class="fas fa-images"></i></button>
+        </div>
+    </div>
+    <br />
+    <hr />
+
+}
+@if (ViewBag.Response != null)
+{
+    <div class="chat-container">
+        <div class="chat-box" style="width:80%">
+            <p class="chat-input">ChatGPT:<br />@ViewBag.Response</p>
+        </div>
+    </div>
+}
+@if (ViewBag.imageurl != null)
+{
+    <div class="chat-container">
+        <div class="chat-box">
+            <img src="@ViewBag.imageurl" style="width:500px;" alt="Generated Image" />
+        </div>
+
+    </div>
+}
+<!--<div class="chat-container">
+    <div class="chat-box">
+        <div class="gcse-search"></div>-->
+@*這邊新增https://programmablesearchengine.google.com/controlpanel/create*@
+<!--</div>
+</div>-->
+<div class="chat-container">
+    <div class="chat-box">
+        <div class="fb-comments" data-href="http://192.168.0.72:85/admin/Data1/ChatGPT_Index?nid=Activities&amp;defaultPage=15" data-width="" data-numposts="5">
+        </div>
+    </div>
+</div>
+<div class="fb-login-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="true" data-use-continue-as="true"></div>
+<div id="fb-root"></div>
+
+
+@*網頁內容end*@
+
+@section scripts{
+    @*<script async src="https://cse.google.com/cse.js?cx=1016f26489a8e44e2"></script>*@
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v16.0" nonce="4w0V2gdE"></script>
+    <script>
+        $(function () {
+            const textarea = document.querySelector('.chat-input');
+
+            textarea.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+        })
+    </script>
+}
+

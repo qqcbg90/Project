@@ -1,0 +1,44 @@
+﻿@model List<string>
+@{
+
+}
+<div class="wrapper">
+    <div class="header_content">
+        <img src="~/Images/main2.png" />
+        <h2>匯入</h2>
+    </div>
+    <div class="hotel-list mb-5 mt-5">
+        <div class="w1500 flex-shrink-0">
+            <div class="box my-5 px-5 pt-5 pb-5">
+                @using (Html.BeginFileForm((Dictionary<string, string>)ViewBag.DefaultRouteValues))
+                {
+                    <div class="In">
+                        <p class="input"><input type="file" name="excel" accept=".xls" /></p>
+                        <div class="btn_box">
+                            <input type="submit" name="updateImport" value="匯入" class="btn go form-control" />
+                        </div>
+                    </div>
+                }
+                <br /><br />
+                @if (Model != null && Model.Count > 0)
+                {
+                    <div>
+                        @foreach (var str in Model)
+                        {
+                            <p>@str</p>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+
+        })
+    </script>
+}

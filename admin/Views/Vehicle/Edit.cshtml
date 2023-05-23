@@ -1,0 +1,161 @@
+﻿@model VehicleApplyModel
+@{
+	bool IsAdd = (bool)ViewBag.IsAdd;
+	string NodeID = ViewBag.NodeID;
+	bool IsAudit = NodeID.CheckStringValue("fun06") || NodeID.CheckStringValue("fun12_03");
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		@if (!IsAdd)
+		{
+			<div>
+				<label>
+					@MyHtml.RedSpan()
+					申請單編號
+				</label>
+				<div>
+					@Html.DisplayFor(m => m.ID)
+				</div>
+			</div>
+			<div>
+				<label>
+					@MyHtml.RedSpan()
+					申請時間
+				</label>
+				<div>
+					@Html.DisplayFor(m => m.CREATE_DATE)
+				</div>
+			</div>
+		}
+		<div>
+			<label>水環境巡守隊</label>
+			<div style="color:blue;">桃園區 忠義里水環境巡守隊</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				巡檢日期
+			</label>
+			<div>
+				@Html.Partial("Input/_TimeStartToEndPartial", new string[] { "DATETIME1", "DATETIME2", Model.DATETIME1.ToDefaultStringWithTime(), Model.DATETIME2.ToDefaultStringWithTime(), "1" })
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				巡檢範圍
+			</label>
+			<div>
+				<span class="select">
+					@Html.DropDownListFor(m => m.ARTICLE_TYPE, ViewBag.CorporateFleetVehicle as SelectList, "請選擇")
+				</span>
+				@Html.ValidationMessageFor(m => m.ARTICLE_TYPE)
+			</div>
+		</div>
+		<div>
+			<label>
+				巡檢範圍說明
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT4)
+			</div>
+		</div>
+		<div>
+			<label>
+				動員人數
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT2, new { htmlAttr = new { placeholder = "", title = "" } })
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				清理狀態
+			</label>
+			<div>
+				<input type="radio" name="clean" id="clean1" value="0" checked=""><label for="clean1">已清理</label>
+				<input type="radio" name="clean" id="clean2" value="1"><label for="clean2">未清理</label>
+				<input type="radio" name="clean" id="clean3" value="2"><label for="clean3">無髒亂</label>
+				<div style="width:100%">
+					<div id="clean2mag" style="display:none;" class="alert info">
+						如發現河面上垃圾請通報水務局03-3033688#3340 <br>河岸上垃圾請通報各區中隊 發現重大污染事項或偷排請通報0800-066-666<br>通報表單請填妥後回傳，水巡守隊管理員
+					</div>
+					<table style="margin-top:15px;">
+						<tbody>
+							<tr><td colspan="2" style="font-weight:bold;">事業廢棄物清理監測</td></tr>
+							<tr>
+								<td align="left">清理地點</td>
+								<td align="left" style="width:50%;">
+								<input type="text" value="" id="kpiaddress" style="width:100%;margin:5px 0;">
+								</td>
+							</tr>
+							<tr>
+							<td style="background-color:#FFF" align="left">1.一般垃圾 </td>
+							<td align="left"><input type="text" value="0" id="kpiF1" style="width:50%;margin:5px 0;"> kg</td></tr>
+							<tr>
+							<td style="background-color:#FFF" align="left">2.資源回收類(不含寶特瓶) </td>
+							<td align="left"><input type="text" value="0" id="kpiF2" style="width:50%;margin:5px 0;"> kg</td></tr>
+							<tr>
+							<td style="background-color:#FFF" align="left">2-1.寶特瓶 </td>
+							<td align="left"><input type="text" value="0" id="kpiA1" style="width:50%;margin:5px 0;"> 個</td></tr>
+							<tr>
+							<td style="background-color:#FFF" align="left">3.事業廢棄物</td>
+							<td align="left"><input type="text" value="0" id="kpiA2" style="width:50%;margin:5px 0;"> kg</td></tr>
+							<tr>
+								<td style="background-color:#FFF" align="left">4.其他 </td>
+								<td align="left"><input type="text" value="0" id="kpiF7" style="width:50%;margin:5px 0;"> kg</td>
+							</tr>
+							<tr>
+								<td style="background-color:#FFF" align="left">總重</td>
+								<td align="left"><input type="text" value="0" id="kpiTotal" style="width:50%;margin:5px 0;" disabled=""> kg</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = false, iDescType = 1 })
+		<div>
+			<label>@MyHtml.RedSpan()照片上傳</label>
+			<div class="up_img">
+				<input type="file" name="HPF" accept="@Function.DEFAULT_FILEUPLOAD_EXT" /><br />
+			</div>
+		</div>
+
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("input[name='ORDER']").click(function () {
+				var val = $(this).val();
+				if (val == "2") {
+					setRequired(true, "CONTENT10");
+				} else {
+					setRequired(false, "CONTENT10");
+				}
+			});
+		});
+	</script>
+}
+

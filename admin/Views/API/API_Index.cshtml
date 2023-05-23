@@ -1,0 +1,108 @@
+﻿
+@{
+    string gpt = "ChatGPT_Index";
+    string Weather = "Weather_Index";
+    string tomato = "Tomato_Index";
+    string sql = "Sql_Index";
+    string crawler = "Crawler_Index";
+    string form = "Registration_Index";
+}
+
+@section head{
+    <script type="text/javascript">
+       
+    </script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="tb_list_box">
+        <table class="tb_list">
+            <tr class="thead">
+                <th>
+                    ChatGPT
+                </th>
+                <th>
+                    Weather
+                </th>
+                <th>
+                    SQL
+                </th>
+                <th>
+                    Pomodoro
+                </th>
+                <th>
+                    web crawler
+                </th>
+
+            </tr>
+            <tr>
+                <td>
+                    <a href="@Url.MyAction(gpt, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {})">
+                        <img src="~/Images/icon/chatgpt-icon.png" style="width:50px;">
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.MyAction(Weather, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {})">
+                        <img src="~/Images/Weathericon.png" style="width:50px;">
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.MyAction(sql, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {})">
+                        <img src="~/Images/icon/sql-server.svg" style="width:50px;">
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.MyAction(tomato, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {})">
+                        <img src="~/Images/tomato.png" style="width:60px;">
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.MyAction(crawler, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {})">
+                        <img src="~/Images/icon/網路爬蟲.png" style="width:50px;">
+                    </a>
+                </td>
+
+            </tr>
+            <tr class="thead">
+                <th>
+                    Form
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            
+            <tr>
+                <td>
+                    <a href="@Url.MyAction(form, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {})">
+                        <img src="~/Images/icon/form.png" style="width:50px;">
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+        })
+    </script>
+}

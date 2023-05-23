@@ -1,0 +1,83 @@
+﻿@model List<NODE>
+@{
+	Layout = null;
+	int iORDER = 1;
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="@Url.Content("~/favicon.ico")" rel="shortcut icon" type="image/x-icon">
+	<link href="@Url.Content("~/Content/reset.css")" rel="stylesheet" />
+	<link href="@Url.Content("~/Content/style.css")" rel="stylesheet" />
+	<link href="@Url.Content("~/Content/font-awesome.css")" rel="stylesheet" />
+	<script src="@Url.Content("~/Scripts/jquery-3.4.1.js")"></script>
+	<script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.js")"></script>
+	<link href="@Url.Content("~/Content/toastmessage/css/jquery.toastmessage.css")" rel="stylesheet" />
+	<script src="@Url.Content("~/Content/toastmessage/jquery.toastmessage.js")"></script>
+	<title>類別管理</title>
+	<style type="text/css">
+		.menuBar {
+			text-align: right;
+			background: #F1ECE6;
+			color: #FFF;
+			border-radius: 3px;
+			padding: 10px;
+		}
+
+			.menuBar .btn {
+				padding: 10px;
+				margin-left: 5px;
+				text-decoration: none;
+				border-radius: 3px;
+				background: #6c4c3a;
+				border: none;
+				cursor: pointer;
+				color: #FFF;
+				font-weight: 500;
+				font-size: 0.9375rem;
+				transition: background 0.15s ease-out;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+			}
+	</style>
+</head>
+<body>
+	<div style="padding: 10px;">
+		@using (Html.BeginForm())
+		{
+			@Html.AntiForgeryToken()
+			<div class="menuBar" style="text-align: right;">
+				<input type="submit" id="save" name="save" class="btn" value="存檔" />
+				<a href="javascript:void(0)" onclick="javascript:parent.jQuery.fancybox.close();" class="btn">關閉</a>
+			</div>
+			<ul style="width: 100%">
+				@foreach (NODE n in Model)
+				{
+					<li style="display: block;margin: 10px 5px;min-width:250px;">
+						@Html.Hidden("Model.index", n.ID)
+						@Html.Hidden("Model[" + n.ID + "].ID", n.ID)
+						<span style="color: orangered; margin-right: 5px;">@iORDER</span>
+						@Html.TextBox("Model[" + n.ID + "].TITLE", n.TITLE, new { maxlength = 50, style = "width: 90%", title = n.TITLE })
+						<a href="@Url.MyAction("DeleteType", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = n.ID })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')">
+							<i class="fa fa-times" style="font-size: x-large;color: #dd4b39;text-shadow: 2px 2px 2px #CCC;"></i>
+						</a>
+					</li>
+					iORDER++;
+				}
+			</ul>
+		}
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<script>
+		$(function () {
+			@Html.Raw((bool)ViewBag.Close ? "parent.jQuery.fancybox.close();parent.submitForm();" : "")
+		});
+	</script>
+	@Html.Raw(TempData[Function.TEMPDATA_MESSAGE_KEY])
+</body>
+</html>

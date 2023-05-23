@@ -1,0 +1,25 @@
+﻿@model List<ATTACHMENT>
+@{
+
+}
+<div class="page_main" style="background-image: url(@Url.Content("~/images/pagebg_12.jpg")">
+    <div class="wrap" style="display: contents;">
+        <!--標題-->
+        <div class="main_title">
+                <h1 class="page_title">@ViewBag.b1</h1>
+            </div>
+    </div>
+</div>
+<div class="wrap pageZ-4">
+    <!--列表-->
+        @foreach (var item in Model)
+        {
+            <div class="pageZ-4_item">
+                <a href="@item.GetValueOnLang(1)" target="_blank"><img src="@item.GetPic(PictureType.Medium)"></a>
+                <p>@item.GetValueOnLang()</p>
+            </div>
+        }
+</div>
+@section scripts{
+
+}

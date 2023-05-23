@@ -1,0 +1,183 @@
+﻿@model DATA1
+@{
+    List<ATTACHMENT> atts = Model.GetAttachments("1");
+    List<ATTACHMENT> pics = Model.GetAttachments();
+    @*<link href="@Url.Content("~/Content/owl.carousel2/owl.carousel.min.css")" type="text/css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/owl.carousel2/owl.theme.default.css")" type="text/css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>*@
+}
+
+@*<div class="wrap">
+    <h1 id="page1_title">@Model.GetValueOnLang()</h1>
+    <div style="display: flex; align-items: center;flex-wrap: wrap; width: 80%;">
+        <div>
+            <img src="@Url.Content("~/images/icon/icon_time.png")" height="12" style="margin-right: 8px;">
+            <h5 id="page1_date">@Model.GetValueOnLang(5)</h5>
+        </div>
+        <div style="margin-right: 48px;display: flex;align-items: flex-start;">
+            <img src="@Url.Content("~/images/icon/icon_location_black.png")" height="12" style="margin-right: 8px;padding-top: 7px;">
+            <h5>@Model.GetValueOnLang(2)</h5>
+        </div>
+        <div>
+            <img src="@Url.Content("~/images/icon/icon_web.png")" height="12" style="margin-right: 8px;">
+            <h5>@Model.GetValueOnLang(3)</h5>
+        </div>
+    </div>
+</div>*@
+<div class="heightBox"></div>
+<div class="page1-1_banner">
+    <div class="owl-carousel owl-theme owl-loaded owl-drag toppic">
+        <!--圖片--><!--控制待討論-->
+        @foreach (var item in pics)
+        {
+            <div class="item_banner">
+                <a>
+                    <img src="@item.GetPic()" />
+                </a>
+            </div>
+        }    
+    </div>
+    <!--圖片控制按鈕-->
+    @*<div class="wrap banner_control" id="control_buttons"></div>*@
+</div>
+
+<div class="wrap page1-1_content ">
+    <!--貼文內容-->
+    <div class="page1-1_content_part1 noborder">
+        <h1 id="page1_title">@Model.GetValueOnLang()</h1>
+        @Html.Raw(Model.GetValueOnLang(6))
+
+        <ul class="inform">
+            @if (!Model.CONTENT6.IsNullOrEmpty())
+            {
+                <li>
+                    <img src="@Url.Content("~/images/icon/icon_tel.png")" height="12" style="margin-right: 8px;">
+                    <h5 id="page1_phone">@Model.CONTENT6</h5>
+                </li>
+            }
+            @if (!Model.GetValueOnLang(2).IsNullOrEmpty())
+            {
+                <li>
+                    <img src="@Url.Content("~/images/icon/icon_location_black.png")" height="12">
+                    <h5>@Model.GetValueOnLang(2)</h5>
+                </li>
+            }
+            @if (!Model.GetValueOnLang(5).IsNullOrEmpty())
+            {
+                <li>
+                    <img src="@Url.Content("~/images/icon/icon_time.png")" height="12">
+                    <h5 id="page1_date">@Model.GetValueOnLang(5)</h5>
+                </li>
+            }
+            @if (!Model.GetValueOnLang(3).IsNullOrEmpty())
+            {
+                <li class="website">
+                    <img src="@Url.Content("~/images/icon/icon_web.png")" height="12">
+                    <a href="@Model.GetValueOnLang(3)" target="_blank">
+                        <h5>@Resource.Company_CONTENT11</h5>
+                    </a>
+                </li>
+            }
+            @if (!Model.CONTENT9.IsNullOrEmpty())
+            {
+                <li class="media">
+                    <a href="@Model.CONTENT9" target="_blank">
+                        <i class="fab fa-facebook-square"> </i>
+                        facebook @(Resource.Company_CONTENT11)
+                    </a>
+                </li>
+            }
+            @if (!Model.CONTENT10.IsNullOrEmpty())
+            {
+                <li class="media">
+                    <a href="@Model.CONTENT10" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                        instergram @(Resource.Company_CONTENT11)
+                    </a>
+                </li>
+            }
+            
+            
+            
+        </ul>
+    </div>
+    <!--標籤與其它公告-->
+    <div class="page1-1_content_part2">
+        @*<div class="page1-1_content_label">
+                <div style="display: flex; align-items: center;">
+                    <h3 style="color: #545454;">熱門</h3><h3 style="color: #B7940A;">標籤</h3>
+                    <img src="image/icon/icon_point.png" height="20" style="margin-left: 16px;">
+                    <img src="image/icon/icon_hot.png" height="20" style="margin-left: 16px;">
+                </div>
+                <div style="display: flex; flex-wrap: wrap;">
+                    <div class="label">五倍券</div>
+                    <div class="label">紅利點數</div>
+                    <div class="label">優惠方案</div>
+                    <div class="label">桃園市政府</div>
+                </div>
+            </div>*@
+        @Html.Action("GetADS")
+    </div>
+</div>
+
+<!--------------------------------->
+<!---------返回上一頁在這裡--------->
+<!--------------------------------->
+
+@Html.Partial("_DetailLinkPartial", Model)
+<div style="display: flex; justify-content: center; ">
+    <button onclick="javascript: back();" class="btn_back detail_back">@Resource.back1</button>
+</div>
+
+@section scripts{
+<script>
+        $(function () {
+            @*$(".toppic").owlCarousel({
+                items: 1,
+                loop: true,
+                margin: 10,
+                nav: true,
+                autoPlay: true,
+                autoPlayTimeout: 800,
+                singleItem: true,
+                afterInit: function (elem) {
+                    var that = this
+                    that.owlControls.prependTo('#control_buttons')
+                },
+                pagination: false,
+                navigation: true,
+                navigationText: ["<img src='@Url.Content("~/images/icon/icon_arrow_transparent.png")'>", "<img src='@Url.Content("~/images/icon/icon_arrow2_transparent.png")'>"],
+            });*@
+
+            $(".toppic").owlCarousel({
+                items: 1,
+                loop: true,
+                margin: 10,
+                dots:false,
+                autoplay: true,
+                autoplaySpeed: 800,
+                autoplayHoverPause: true,
+                center: true,
+                navText: [
+                    "<img src='@Url.Content("~/images/icon/icon_arrow_transparent.png")'>", 
+                    "<img src='@Url.Content("~/images/icon/icon_arrow2_transparent.png")'>"
+                ],
+                responsive: {
+                    0: {
+                        stagePadding: 0,
+                    },
+                    768: {
+                        stagePadding: 80,
+                    },
+                    1000: {
+                        stagePadding: 250,
+                    },
+                    1600: {
+                        stagePadding: 460,
+                    }
+                }
+            });
+
+        })
+</script>
+}

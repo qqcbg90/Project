@@ -1,0 +1,122 @@
+﻿@model ArticleModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        @*<div>
+            <label>
+                置頂
+            </label>
+            <div>
+                @Html.CheckBoxFor(m => m.Bool_DECIMAL1)
+            </div>
+        </div>*@
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                上下線日期
+            </label>
+            <div>
+                @Html.Partial("Input/_DateStartToEndPartial", new string[] { "DATETIME1", "DATETIME2", Model.DATETIME1.ToDefaultString(), Model.DATETIME2.ToDefaultString(), "1" })
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                標題
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT1)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文標題
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT11, new { htmlAttr = new { placeholder = "未填表示英文版不出現" } })
+            </div>
+        </div>
+        <div>
+            <label>
+                網址
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT2)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文網址
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT12)
+            </div>
+        </div>
+        <div>
+            <label>
+                影片連結
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT3)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文影片連結
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT13)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                內容
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.PH0)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文內容
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.PH1)
+            </div>
+        </div>
+        @Html.Partial("_ModelAttachmentPartial", Model)
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            setRequired(true, 'DATETIME1');
+            setRequired(true, 'PH0');
+            $("#save").click(function () {
+            });
+        });
+    </script>
+}
+

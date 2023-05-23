@@ -1,0 +1,586 @@
+﻿@model AudienceSurveyModel
+@{
+	List<string> OPTs = new List<string>();
+	int idx = 0;
+}
+
+@section head{
+	<style type="text/css">
+		.select_opt {
+			width: 100%;
+		}
+
+			.select_opt > li {
+				display: inline-block;
+				padding-right: 15px;
+			}
+	</style>
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>活動名稱</label>
+			<div style="font-weight: bold;">@Html.DisplayFor(m => m.ExhibitionInfo1)</div>
+		</div>
+		<div>
+			<label>入場方式</label>
+			<div style="font-weight: bold;">@Html.DisplayFor(m => m.ExhibitionInfo2)</div>
+		</div>
+		<div>
+			<label>主辦類型</label>
+			<div style="font-weight: bold;">@Html.DisplayFor(m => m.ExhibitionInfo3)</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				活動日期
+			</label>
+			<div>
+				@Html.DropDownListFor(m => m.DATETIME1, ViewBag.DateList as SelectList)
+			</div>
+		</div>
+		<div style="background-color: lightblue;">
+			※ 基本資料
+		</div>
+		<div>
+			<label>
+				E-mail
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT1)
+			</div>
+		</div>
+		<div>
+			<label>
+				居住地
+			</label>
+			<div>
+				@{
+					OPTs = new List<string>() { "桃園市", "新北市", "臺北市", "竹苗地區", "其他縣市" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT31">
+								<input type="radio" name="CONTENT31" value="@OPTs[i]" @(Model.CONTENT31 != null && Model.CONTENT31.Equals(OPTs[i]) ? "checked" : "")> @OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<div>
+			<label>
+				性別
+			</label>
+			<div>
+				@{
+					OPTs = new List<string>() { "男", "女" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT32">
+								<input type="radio" name="CONTENT32" value="@idx" @(Model.CONTENT32 != null && Model.CONTENT32.Equals(idx.ToString()) ? "checked" : "")> @OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<div>
+			<label>
+				婚姻狀況
+			</label>
+			<div>
+				@{
+					OPTs = new List<string>() { "未婚", "已婚" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT33">
+								<input type="radio" name="CONTENT33" value="@i" @(Model.CONTENT33 != null && Model.CONTENT33.Equals(i.ToString()) ? "checked" : "")> @OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<div>
+			<label>
+				年齡
+			</label>
+			<div>
+				@{
+					OPTs = new List<string>() { "1.20歲(含)以下", "2.21~30歲", "3.31~40歲", "4.41~50歲", "5.51~60歲", "6.61歲以上" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT34">
+								<input type="radio" name="CONTENT34" value="@idx" @(Model.CONTENT34 != null && Model.CONTENT34.Equals(idx.ToString()) ? "checked" : "")> @OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<div>
+			<label>
+				學歷
+			</label>
+			<div>
+				@{
+					OPTs = new List<string>() { "1.國小及以下", "2.國中", "3.高中(職)", "4.專科", "5.大學", "6.碩士", "7.博士" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT35">
+								<input type="radio" name="CONTENT35" value="@idx" @(Model.CONTENT35 != null && Model.CONTENT35.Equals(idx.ToString()) ? "checked" : "")> @OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<div>
+			<label>
+				職業
+			</label>
+			<div>
+				@{
+					OPTs = new List<string>() { "1.農業", "2.貿易", "3.製造", "4.金融", "5.服務", "6.資訊", "7.醫療", "8.傳播", "9.自由業", "10.軍人", "11.教師", "12.公務員", "13.學生", "14.宗教", "15.藝術", "16.家管", "17.其它" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT36">
+								<input type="radio" name="CONTENT36" value="@idx" @(Model.CONTENT36 != null && Model.CONTENT36.Equals(idx.ToString()) ? "checked" : "")> @OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT36_OTH, new { htmlAttr = new { placeholder = "其它", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<div style="background-color: lightblue;">
+			※ 意見調查
+		</div>
+		<!--Q1 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			一、請問您是從何處得知此次演出/展覽訊息？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "1.親朋好友介紹", "2.主題很吸引人", "3.有免費門票", "4.陪別人去看", "5.娛樂活動消費", "6.舒壓",
+						"7.喜愛藝文活動", "8.喜歡臨場感", "9.覺得作品好", "10.展演設施環境好", "11.票價折扣優惠", "12.其它" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT4_@idx">
+								<input type="checkbox" name="CONTENT4" value="@idx" @(Model.CONTENT4 != null && Model.CONTENT4.Contains(idx.ToString()) ? "checked" : "")> @OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT4_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q1 End-->
+		<!--Q2 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			二、請問您是從何處得知此次演出訊息？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "海報", "節目DM", "本中心網站、FB、電子報", "其它網路平台", "本局藝文摺頁", "兩廳院或年代售票系統月刊",
+						"平面媒體(報紙、雜誌)", "電子媒體(電台、電視、廣播)", "師長朋友推薦", "到了館舍才得知", "市府LINE", "其它" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT5_@idx">
+								<input type="checkbox" name="CONTENT5" value="@idx" @(Model.CONTENT5 != null && Model.CONTENT5.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT5_OTH, new { htmlAttr = new { placeholder = "其它", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q2 End-->
+		<!--Q3 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			三、您對今天的演出活動整體表現是否滿意？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常滿意", "滿意", "尚可", "不滿意", "很不滿意" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT6_@idx">
+								<input type="radio" name="CONTENT6" value="@idx" @(!Model.CONTENT6.IsNullOrEmpty() && Model.CONTENT6.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q3 End-->
+		<!--Q4 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			四、您較滿意今天演出哪些方面？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "演出技巧", "劇情", "配樂", "服裝設計", "舞台效果", "燈光效果", "音響效果", "演出整體表現", "其它" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT7_@idx">
+								<input type="checkbox" name="CONTENT7" value="@idx" @(Model.CONTENT7 != null && Model.CONTENT7.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT7_OTH, new { htmlAttr = new { placeholder = "其它", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q4 End-->
+		<!--Q5 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			五、您覺得本中心服務人員提供之解說及服務是否滿意？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常滿意", "滿意", "尚可", "不滿意", "很不滿意" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT8_@idx">
+								<input type="radio" name="CONTENT8" value="@idx" @(!Model.CONTENT8.IsNullOrEmpty() && Model.CONTENT8.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q5 End-->
+		<!--Q6 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			六、您對本中心的整體環境整潔是否滿意？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常滿意", "滿意", "尚可", "不滿意", "很不滿意" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT9_@idx">
+								<input type="radio" name="CONTENT9" value="@idx" @(!Model.CONTENT9.IsNullOrEmpty() && Model.CONTENT9.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q6 End-->
+		<!--Q7 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			七、您對到本中心之交通及停車便利性是否滿意？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常滿意", "滿意", "尚可", "不滿意", "很不滿意" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT10_@idx">
+								<input type="radio" name="CONTENT10" value="@idx" @(!Model.CONTENT10.IsNullOrEmpty() && Model.CONTENT10.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q7 End-->
+		<!--Q8 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			八、您對本中心的入場動線及引導標誌是否滿意？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常滿意", "滿意", "尚可", "不滿意", "很不滿意" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT11">
+								<input type="radio" name="CONTENT11" value="@idx" @(!Model.CONTENT11.IsNullOrEmpty() && Model.CONTENT11.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q8 End-->
+		<!--Q9 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			九、您對本中心的空間規劃與佈置是否滿意？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常滿意", "滿意", "尚可", "不滿意", "很不滿意" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT12">
+								<input type="radio" name="CONTENT12" value="@idx" @(!Model.CONTENT12.IsNullOrEmpty() && Model.CONTENT12.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q9 End-->
+		<!--Q10 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十、您對本中心的整體印象如何？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常滿意", "滿意", "尚可", "不滿意", "很不滿意" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT13">
+								<input type="radio" name="CONTENT13" value="@idx" @(!Model.CONTENT13.IsNullOrEmpty() && Model.CONTENT13.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q10 End-->
+		<!--Q11 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十一、您過去一年曾在本中心觀賞幾次表演活動？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "第一次", "第二~三次", "第四~五次", "六次以上" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT14">
+								<input type="radio" name="CONTENT14" value="@idx" @(!Model.CONTENT14.IsNullOrEmpty() && Model.CONTENT14.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q11 End-->
+		<!--Q12 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十二、您過去一年購買表演活動的每場平均門票花費？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "0元", "1~500元", "501~1000元", "1001~1500元", "1501~2000元", "2001~2500元", "2501~3000元", "3001元以上" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT15">
+								<input type="radio" name="CONTENT15" value="@idx" @(!Model.CONTENT15.IsNullOrEmpty() && Model.CONTENT15.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q12 End-->
+		<!--Q13 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十三、您對於展演中心整體服務當中哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "活動印象", "活動內容", "演出時段", "服務態度", "環境設施", "演出者/策展人", "售票與否", "其它" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT16_@idx">
+								<input type="checkbox" name="CONTENT16" value="@idx" @(Model.CONTENT16 != null && Model.CONTENT16.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT16_OTH, new { htmlAttr = new { placeholder = "其它", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q13 End-->
+		<!--Q14 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十四、您希望本中心多舉辦哪些類型的表演節目/展覽？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "音樂", "舞蹈", "現代戲劇", "傳統戲曲", "親子節目", "其它" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT17_@idx">
+								<input type="checkbox" name="CONTENT17" value="@idx" @(Model.CONTENT17 != null && Model.CONTENT17.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT17_OTH, new { htmlAttr = new { placeholder = "其它", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q14 End-->
+		<!--Q15 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十五、您是否有意願加入本中心會員？
+		</div>
+		<div>
+			<div>
+				若您願意，請填寫會員資訊寄送方式：（寄送方式兩項擇一填寫即可）
+				<span style="width: 100%;margin: 5px 0;">E-mail：@Html.EditorValidationFor(m => m.CONTENT2)</span>
+				通訊地址：@Html.EditorValidationFor(m => m.CONTENT3)
+			</div>
+		</div>
+		<!--Q15 End-->
+		<!--Q16 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十六、意見與建議
+		</div>
+		<div>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT110)
+			</div>
+		</div>
+		<!--Q16 End-->
+		@Html.ValidationSummary(true)
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(true)</div>
+					}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("[name$=OTH]").blur(function () {
+				var vName = $(this).prop("name");
+				var vPerfix = vName.replace(/_OTH/g, '');
+				var vVal = $.trim($(this).val());
+				var vLen = $("[name=" + vPerfix + "]").length;
+				if (vVal != "") {
+					$("[name=" + vPerfix + "]:eq(" + (vLen - 1) + ")").prop("checked", true);
+				} else {
+					$("[name=" + vPerfix + "]:eq(" + (vLen - 1) + ")").prop("checked", false);
+				}
+			});
+
+			$("#save").click(function () {
+				/*var err = "";
+				$(".select_opt").each(function () {
+					var vLen = $(this).find("[name^=CONTENT]:checked").length;
+					if (vLen == 0) {
+						err += "- " + $(this).parent().parent().prev().text() + "<br />";
+					}
+				});
+				if (err != "") {
+					showMsg("以下問題尚未作答：<br/>" + err, 3);
+					return false;
+				*/
+			});
+		});
+	</script>
+}
+

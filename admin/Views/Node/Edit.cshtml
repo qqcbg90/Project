@@ -1,0 +1,105 @@
+﻿@model NodeModel
+@{
+	bool IsAdd = (bool)ViewBag.IsAdd;
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	<div class="edit_list">
+		<div>
+			<label>@Html.LabelFor(m => m.ID)</label>
+			<div>
+				@if (IsAdd)
+				{
+					@Html.EditorValidationFor(m => m.ID)
+				}
+				else
+				{
+					@Html.DisplayFor(m => m.ID)
+				}
+			</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()@Html.LabelFor(m => m.TITLE)</label>
+			<div>@Html.EditorValidationFor(m => m.TITLE)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.URL)</label>
+			<div>@Html.EditorValidationFor(m => m.URL)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.PARENT_ID)</label>
+			<div>@Html.EditorValidationFor(m => m.PARENT_ID)</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()@Html.LabelFor(m => m.ORDER)</label>
+			<div>@Html.EditorValidationFor(m => m.ORDER)</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()@Html.LabelFor(m => m.ENABLE)</label>
+			<div>@Html.EditorValidationFor(m => m.ENABLE)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT1)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT1)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT2)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT2)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT3)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT3)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT4)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT4)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT5)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT5)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT6)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT6)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT7)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT7)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT8)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT8)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT9)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT9)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT10)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT10)</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">
+		@MyHtml.EditButton()
+	</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

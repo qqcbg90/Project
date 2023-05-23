@@ -1,0 +1,106 @@
+﻿@model IPagedList<ARTICLE>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "VehicleRepairEdit";
+	string _delete = "VehicleRepairDelete";
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page +
+				'&nid=@(ViewBag.NodeID)' +
+				'&defaultPage=' + $("[name=defaultPage]").val() +
+				'&k=' + EncodeParameter($("[name=k]").val()) +
+				'&start=' + $("#start").val() + '&end=' + $("#end").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null
+	   , new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, pid = ViewBag.ParentID, start = ViewBag.start, end = ViewBag.end })
+	</div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box" style="display:block">
+		@Html.Partial("Input/_DateStartToEndPartial", new string[] { "start", "end", (string)ViewBag.start, (string)ViewBag.end, "1" })
+		<label class="btn_box go">
+			@MyList.Submit()
+			@if (Model != null && Model.Count > 0)
+			{
+				<a data-fancybox="print" data-type="iframe" data-ng-model="true" href="@Url.Action((string)ViewBag.ActionName, new { nid = ViewBag.NodeID, pid = ViewBag.ParentID, start = ViewBag.start, end = ViewBag.end, print = 1 })" title="列印"><input type="button" value="列印" class="btn" /></a>
+			}
+			@MyHtml.Button("回上頁", Url.MyAction("VehicleIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { }), "gray")
+		</label>
+	</p>
+	<p class="top_bar">
+		<label class="btn_box">
+			@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+			{
+				@MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { pid = ViewBag.ParentID, start = ViewBag.start, end = ViewBag.end }), "org")
+			}
+		</label>
+	</p>
+	if (MyList.IsTwoPagers())
+	{
+		@Pager()
+	}
+	<div class="tb_list_box">
+		<table class="tb_list">
+			<tr class="thead">
+				<th>保修日期</th>
+				<th>保修項目</th>
+				<th>功能</th>
+			</tr>
+			@foreach (var m in Model)
+				{
+				<tr>
+					<td data-th="保修日期">@m.DATETIME1.Value.ToString("yyyy/MM/dd")</td>
+					<td data-th="保修項目">@m.CONTENT1</td>
+					<td data-th="功能">
+						<div class="btn_box">
+							<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { pid = m.NODE_ID, id = m.ID, start = ViewBag.start, end = ViewBag.end })" title="編輯">
+								<span class="btn"><i class="far fa-edit"></i></span>
+							</a>
+							@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+							{
+								<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {  pid = m.NODE_ID, id = m.ID, start = ViewBag.start, end = ViewBag.end })" title="刪除">
+									<span class="btn red"><i class="far fa-trash-alt"></i></span>
+								</a>
+							}
+						</div>
+					</td>
+				</tr>
+				}
+		</table>
+	</div>
+	@Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}

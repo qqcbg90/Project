@@ -1,0 +1,10 @@
+﻿@{
+	string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+@foreach (SexType sex in Enum.GetValues(typeof(SexType)))
+{
+	<label for="@tmpName">
+		@(sex.ToIntValue() == SexType.Female.ToIntValue() ? " " : "")
+		@Html.RadioButton(string.Empty, sex.ToIntValue(), sex.ToIntValue() == ViewData.TemplateInfo.FormattedModelValue.ToString(), new { id = "sex_" + sex.ToIntValue() })@sex.GetDescription()
+	</label>
+}

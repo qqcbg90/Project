@@ -1,0 +1,61 @@
+﻿@model NodeModel
+
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	<div class="edit_list">
+		<div>
+			<label>@Html.LabelFor(model => model.Node_Id)</label>
+			<div>@Html.EditorValidationFor(model => model.Node_Id)</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()@Html.LabelFor(model => model.Title)</label>
+			<div>@Html.EditorValidationFor(model => model.Title)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(model => model.Url)</label>
+			<div>@Html.EditorValidationFor(model => model.Url)</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(model => model.ParentId)</label>
+			<div>@Html.EditorValidationFor(model => model.ParentId)</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()@Html.LabelFor(model => model.Order)</label>
+			<div>@Html.EditorValidationFor(model => model.Order)</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()@Html.LabelFor(model => model.Enable)</label>
+			<div>@Html.EditorValidationFor(model => model.Enable)</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()@Html.LabelFor(model => model.CONTENT2)</label>
+			<div>@Html.EditorValidationFor(model => model.CONTENT2)</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">
+		@MyHtml.EditButton()
+	</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

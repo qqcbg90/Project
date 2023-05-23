@@ -1,0 +1,103 @@
+﻿@model PagedList<DataModel>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+}
+
+@section featured_top{
+    <div class="black_bg"></div>
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            InputGo("@ViewBag.DefaultPage");
+        })
+        //select by dropdownlist
+        function SelectGo(page) {
+            $('div .pager').find('select').each(function () {
+                $(this).val(page);
+            });
+            var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=@(ViewBag.k)'
+				+ '&k1=' + $("[name=k1]").val()
+                + '&k2=' + $("[name=k2]").val()
+                + '&k3=' + $("[name=k3]").val()
+                + '&k4=' + $("[name=k4]").val()
+				+ '&start=' + $("#start").val()
+				+ '&end=' + $("#end").val();
+            GoUrl(url);
+        }
+    </script>
+}
+
+@section featured{
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+    <div class="pager">
+        <div class="pager">
+            @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null,
+                              new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.k, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end })
+        </div>
+    </div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+    <span class="quote"> 引用自  <a href="https://partystar.media/fest">"一起追星去 Party Star Media 台灣看團潮"</a></span>
+    <div class="tb_list_box">
+        <table class="tb_list">
+            <tr class="thead">
+                <th>
+                    Month
+                </th>
+                <th style="text-align: left;">
+                    Date
+                </th>
+                <th style="text-align: left;">
+                    Links
+                </th>
+                <th width="30%">
+                    
+                </th>
+                <th width="30%">
+                   
+                </th>
+            </tr>
+            @foreach (var item in Model.Where(m => !string.IsNullOrEmpty(m.CONTENT1)).Skip(3))
+            {
+                <tr>
+                    <td>
+                        @item.CONTENT3
+                    </td>
+                    <td style="text-align: left;">
+                        @item.CONTENT4
+                    </td>
+                    <td style="text-align: left;">
+                        <a href="@item.CONTENT2">@item.CONTENT1</a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    @Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+
+        })
+    </script>
+}
+

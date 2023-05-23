@@ -1,0 +1,144 @@
+﻿@{
+    DateTime _end = new DateTime(2022, 12, 31, 18, 0, 0);
+    bool isEnd = false;
+    isEnd = DateTime.Now > _end;
+}
+@section head
+{
+    @Styles.Render("~/Content/jquery-ui-themes/lightness/jquery-ui.css")
+    <style>
+        .ui-autocomplete-loading {
+            background: white url("images/loader.gif") right center no-repeat;
+        }
+    </style>
+}
+<div class="header_content">
+    <img src="~/Images/logo2.svg" />
+    <h2>住宿拍照上傳</h2>
+</div>
+<div class="w1400 flex-shrink-0">
+    @if (isEnd)
+    {
+        <div class="box for-store my-5 px-5 pt-3 pb-4">
+            <div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+                ※ 活動日期已過
+            </div>
+        </div>
+    }
+    else
+    {
+        using (Html.BeginFileForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="box for-store my-5 px-5 pt-3 pb-4">
+                <div style="color:#CC0000;background:yellow;padding: 5px;font-size:1rem;">
+                    ※ 請輸入合法旅宿標章的登記證字號、住宿日期(已上傳過之日期即不顯示)、合法旅宿標章照片<br />
+                    ※ 請於111/12/31 18:00前上傳資料，謝謝。
+                </div>
+                <div>
+                    <h1>標章證號：<span style="color:#ff8d00" id="c2name"></span> </h1>
+                    <div class="ui-widget">
+                        <input class="form-control" data-val="true" data-val-required="*" id="c2" maxlength="500" name="c2" placeholder="請輸入標章證號" type="text" value="" autocomplete="off" />
+                        <span class="field-validation-valid" data-valmsg-for="c2" data-valmsg-replace="true"></span>
+                        <span class="notice">輸入範例：花蓮縣旅館011號  |  觀光旅館範例：交觀宿字第1508號  |  民宿範例：臺東縣民宿191號，也可直接輸入證號</span>
+                    </div>
+                   
+                </div>
+                <div>
+                    <h1> 住宿日期： </h1>
+                    <div>
+                        @Html.DropDownList("c1", ViewBag.dateSelect as SelectList, new { @class = "form-control" })
+                    </div>
+                    @*<table class="table gift-boxB">
+                            <tr>
+                                <th scope="col">
+                                    @Html.DropDownList("c1", ViewBag.dateSelect as SelectList, new { @class = "form-control" })
+                                </th>
+                            </tr>
+
+                        </table>*@
+                </div>
+                <div>
+                    <h1>
+                        照片上傳：
+                    </h1>
+                    <div>
+                        <input type="file" name="pics" accept="image/*" targetID="preview_my_img" onchange="readURL(this)" />
+                        <br /><br />
+                        <img id="preview_my_img" class="preview_my_img" src="~/Images/hotelpic.png" title="照片預覽" />
+                    </div>
+                    <br />
+                    <input type="submit" id="sendpic" value="我要上傳" class="btn btn-warning" style="width: 100%;padding: 10px;font-size: 1.25rem;" />
+                </div>
+            </div>
+
+        }
+    }
+</div>
+
+
+
+
+@section scripts
+{
+    <script>
+        if (navigator.userAgent.indexOf("Line") > -1) {
+            location.href = "@(Function.DEFAULT_ROOT_HTTP)pic?openExternalBrowser=1";
+        }
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var imageTagID = input.getAttribute("targetID");
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = document.getElementById(imageTagID);
+                    img.setAttribute("src", "#")
+                    img.setAttribute("src", e.target.result)
+                    img.style.display = "inline-block";
+
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+
+        }
+        $(function () {
+            $("#sendpic").click(function () {
+                if ($("#c2").val() == '') {
+                    showMsg("標章證號未輸入");
+                    return false;
+                }
+                var _c2name = $("#c2name").html();
+                if (_c2name == '' || _c2name == '旅宿不存在') {
+                    showMsg("標章證號輸入錯誤");
+                    return false;
+                }
+                if ($("#c1").val() == null) {
+                    showMsg("住宿日期未輸入");
+                    return false;
+                }
+                if ($("[name=pics]").get(0).files.length == 0) {
+                    showMsg("照片未上傳");
+                    return false;
+                }
+
+                $.blockUI({ message: '<h1>上傳中，請稍等...</h1>' });
+            });
+            $("#c2").autocomplete({
+                source: "@Url.Action("GetC2Name", "Json")",
+                minLength: 2,
+                select: function (event, ui) {
+                    $("#c2name").html(ui.item.label);
+                    if ($("[name=pics]").get(0).files.length == 0) {
+                        if (ui.item.value.indexOf("民宿") > -1) {
+                            $("#preview_my_img").attr("src", "@(Url.Content("~/images/hotelpic.png"))");
+                        }
+                        else {
+                            $("#preview_my_img").attr("src", "@(Url.Content("~/images/hotelpic.png"))");
+                        }
+                    }
+                }
+            });
+
+		});
+    </script>
+}

@@ -1,0 +1,116 @@
+﻿@model IQueryable<ATTACHMENT>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string _edit = "Edit";
+    string _delete = "DeleteAttachment";
+
+    bool IsMarquee = (bool)ViewBag.IsMarquee;
+    bool LinkNotRequired = (bool)ViewBag.LinkNotRequired;
+    string typeName = IsMarquee ? "文字" : "圖片";
+    int iORDER = 1;
+
+    string NodeID = (string)ViewBag.NodeID;
+}
+
+@section head{
+
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*網頁內容start*@
+<p class="top_bar">
+	<label class="btn_box">
+		@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+		{
+			@MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { }), "org")
+		}
+	</label>
+	<span class="colortxt_red" style="margin-left: 10px;">
+		直接拖拉可改變排序，存檔後可儲存排序結果。
+	</span>
+</p>
+<div class="tb_list_box">
+	<p class="say">
+		目前共 @Model.Count() 筆資料
+	</p>
+	<table border="0" style="width: 100%" cellpadding="0" cellspacing="0" class="tb_list">
+		<tr class="thead">
+			<th width="10%">排序</th>
+			@if (!IsMarquee)
+			{
+				<th width="20%">@(typeName)</th>
+			}
+			<th width="@(IsMarquee ? "55%" : "30%")">@(typeName)說明</th>
+			<th width="30%">上下線日期</th>
+			<th width="10%">功能</th>
+		</tr>
+	</table>
+	<ul class="sortable">
+		@foreach (ATTACHMENT m in Model)
+		{
+			<li class="ui-state-default" id="@m.ID" style="margin: 5px 0;">
+				<table border="0" style="width: 100%" cellpadding="0" cellspacing="0" class="tb_list">
+					<tr>
+						<td data-th="排序" width="10%">@iORDER</td>
+						@if (!IsMarquee)
+						{
+							<td data-th="@(typeName)" width="20%">
+								<img src="@Url.Content(m.GetPic(PictureType.Small))" style="max-width:120px;" />
+							</td>
+						}
+						<td data-th="@(typeName)說明" width="@(IsMarquee ? "55%" : "30%")">@m.DESCRIPTION</td>
+                        <td data-th="上下線日期" width="30%">@(string.Format(Function.DEFAULT_FORMAT_DATE_RANGE, m.CONTENT9, m.CONTENT10))</td>
+						<td data-th="功能" width="10%">
+							<div class="btn_box">
+								<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, k1 = ViewBag.k1 })" title="編輯"><span class="btn"><i class="far fa-edit"></i></span></a>
+								@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+								{
+									<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {  attid = m.ID, really = true, actionName = "Index" })" title="刪除" onclick="return confirm('確定要刪除嗎？')"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+								}
+							</div>
+						</td>
+					</tr>
+				</table>
+			</li>iORDER++;
+		}
+	</ul>
+</div>
+@using (Html.BeginForm())
+{
+	if (Model != null && Model.Count() > 0)
+	{
+		<p class="top_bar">
+			<label class="btn_box">
+				<input type="submit" value="存檔" title="存檔" class="btn org" id="save" />
+			</label>
+		</p>
+		@Html.Hidden("lsID")
+		@Html.Hidden("k1")
+	}
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$(".sortable").sortable({
+				connectWith: "ul",
+				update: function (event, ui) {
+					var lsID = $(".sortable>li:not(:first-child)").map(function () { return $(this).prop("id"); }).get().join(";");
+					$("#lsID").val(lsID);
+				}
+			}).disableSelection();
+
+			//$("select[name=k1]").change(function () {
+			//	$("input[name=k1]").val($(this).val());
+			//});
+		});
+	</script>
+}

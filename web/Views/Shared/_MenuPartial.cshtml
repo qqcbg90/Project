@@ -1,0 +1,16 @@
+﻿@*
+    Menu 通用Partial
+*@
+@{ 
+    bool isLogon = User.Identity.IsAuthenticated;
+    string _memberUrl = isLogon ? Url.Action("Member") : "javascript:$(\"#login, .burger #login\").click();";
+}
+<ul>
+    <li><a href="@Url.Action("News")"><p class="@ViewBag.current1">@Resource.menu01</p></a></li>
+    <li><a href="@Url.Action("Environmental")"><p class="@ViewBag.current2">@Resource.menu02</p></a></li>
+    <li><a href="@Url.Action("TouristSpot")"><p class="@ViewBag.current3">@Resource.menu03</p></a></li>
+    <li><a href="@Url.Action("Tourism")"><p class="@ViewBag.current4">@Resource.menu04</p></a></li>
+    @*<li><a href="@Url.Action("Popular")"><p class="@ViewBag.current5">@Resource.menu05</p></a></li>*@
+    <li><a href="@Url.Action("ExchangeList")"><p class="@ViewBag.current6">@Resource.menu06</p></a></li>
+    <li><a href="@_memberUrl"><p class="@ViewBag.current7">@Resource.menu07</p></a></li>
+</ul>

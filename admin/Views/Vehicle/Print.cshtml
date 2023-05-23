@@ -1,0 +1,196 @@
+﻿@model VehicleApplyModel
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon">
+	<title>公務汽車申請單_@Html.DisplayFor(m => m.ID)</title>
+</head>
+<body>
+	<div class="noPrint" id="noArea" style="text-align: right;">
+		<a href="javascript:printPage();" rel="external nofollow" target="_self" class="btn">列印</a>
+		<a href="javascript:void(0)" onclick="javascript:parent.jQuery.fancybox.close();" class="btn">關閉</a>
+	</div>
+	<div class="Print" id="printArea">
+		<style type="text/css">
+			body {
+				font-family: 新細明體;
+			}
+
+			h1 {
+				font-size: 28px;
+				color: #000;
+				font-weight: bold;
+				height: 20px;
+				text-align: center;
+			}
+
+			table {
+				width: 100%;
+			}
+
+				table th, table td {
+					padding: 8px;
+				}
+
+				table th {
+					text-align: center;
+					width: 16%;
+				}
+
+			.tbBorder {
+				border-collapse: collapse;
+			}
+
+				.tbBorder tr {
+					border-collapse: collapse;
+					border: 1px solid #000;
+				}
+
+			.tbDesc {
+				text-align: left;
+				vertical-align: baseline;
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+
+			.noPrint {
+				text-align: right;
+				background: #F1ECE6;
+				color: #FFF;
+				border-radius: 3px;
+				padding: 20px 10px;
+			}
+
+				.noPrint .btn {
+					padding: 10px;
+					margin-left: 5px;
+					text-decoration: none;
+					border-radius: 3px;
+					background: #6c4c3a;
+					border: none;
+					cursor: pointer;
+					color: #FFF;
+					font-weight: 500;
+					font-size: 0.9375rem;
+					transition: background 0.15s ease-out;
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					appearance: none;
+				}
+		</style>
+		<style media="print" type="text/css">
+			.noPrint {
+				display: none;
+			}
+		</style>
+		<h1>【桃園市政府藝文設施管理中心公務汽車申請單】</h1>
+
+		<table border="0" cellspacing="0" class="tbDesc">
+			<tr>
+				<td>申請單編號：</td>
+				<td>@Html.DisplayFor(m => m.ID)</td>
+				<td>申請時間：</td>
+				<td>@Html.DisplayFor(m => m.CREATE_DATE)</td>
+			</tr>
+		</table>
+
+		<table border="1" class="tbBorder">
+			<tr>
+				<th>申請單位</th>
+				<td>@Html.DisplayFor(m => m.CONTENT11)</td>
+				<th>申請人</th>
+				<td>@Html.DisplayFor(m => m.CONTENT12)</td>
+				<th>聯絡電話</th>
+				<td>@Html.DisplayFor(m => m.CONTENT4)</td>
+			</tr>
+			<tr>
+				<th>起訖地點</th>
+				<td colspan="3">
+					從「@Html.DisplayFor(m => m.CONTENT2)」到「@Html.DisplayFor(m => m.CONTENT3)」
+				</td>
+				<th>乘車人數</th>
+				<td>@Html.DisplayFor(m => m.DECIMAL1)</td>
+			</tr>
+			<tr>
+				<th>用車事由</th>
+				<td colspan="5">
+					@Html.DisplayFor(m => m.CONTENT1)
+				</td>
+			</tr>
+			<tr>
+				<th rowspan="2">使用時間</th>
+				<td colspan="5">
+					@Model.DATETIME1.ToString("yyyy/MM/dd HH:mm") 起
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5">
+					@Model.DATETIME2.ToString("yyyy/MM/dd HH:mm") 止
+				</td>
+			</tr>
+			<tr>
+				<th>擬申派公務車輛種類</th>
+				<td colspan="5">
+					@Function.GetNodeTitle(Model.ARTICLE_TYPE)
+				</td>
+			</tr>
+			<tr>
+				<th>備註</th>
+				<td colspan="5">
+					@Html.DisplayFor(m => m.CONTENT5)
+				</td>
+			</tr>
+		</table>
+
+		<table border="0" cellspacing="0" class="tbDesc">
+			<tr>
+				<td>申請人：</td>
+				<td>@Function.GetSysUserName(Model.CREATER)</td>
+				<td>申請人主管：</td>
+				<td>@Html.DisplayFor(m => m.CONTENT16)</td>
+			</tr>
+			<tr>
+				<td>承辦人：</td>
+				<td>@Html.DisplayFor(m => m.CONTENT15)</td>
+				<td>單位主管：</td>
+				<td>@Html.DisplayFor(m => m.CONTENT14)</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		var getExplorer = (function () {
+			var explorer = window.navigator.userAgent,
+			compare = function (s) { return (explorer.indexOf(s) >= 0); },
+			ie11 = (function () { return ("ActiveXObject" in window) })();
+			if (compare("MSIE") || ie11) { return 'IE'; }
+			else if (compare("Firefox") && !ie11) { return 'Firefox'; }
+			else if (compare("Chrome") && !ie11) { return 'Chrome'; }
+			else if (compare("Opera") && !ie11) { return 'Opera'; }
+			else if (compare("Safari") && !ie11) { return 'Safari'; }
+		})();
+
+		function printPage() {
+			if (getExplorer == "IE") {
+				var divToPrint = document.getElementById("printArea");
+				var newWin = window.open();
+				var content = "<html>" +
+					"<head><title>公務汽車申請單_@Html.DisplayFor(m => m.ID)</title></head>" +
+					"<body><style type='text/css'>.noPrint { display: none; }</style>" + document.body.innerHTML + "</body>" +
+					"</html>";
+				newWin.document.write(content);
+				newWin.document.close();
+				newWin.print();
+				newWin.close();
+			} else {
+				window.print();
+			}
+			parent.jQuery.fancybox.close();
+		}
+	</script>
+</body>
+</html>

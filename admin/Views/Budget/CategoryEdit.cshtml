@@ -1,0 +1,97 @@
+﻿@model BudgetSubjectModel
+@{
+	int TreeLevel = ViewBag.TreeLevel ?? 0;
+}
+@section head{
+
+}
+
+@*@section bottonList{
+		<input type="submit" class="btn" value="存檔" style="visibility: hidden;" />
+	}*@
+@Html.HiddenFor(m => m.PARENT_ID)
+<div class="edit_list" id="app1">
+	@if (!Model.PARENT_ID.Equals("BUDGET_ITEM"))
+	{
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				上層名稱
+			</label>
+			<div>
+				@Html.DisplayFor(model => model.PARENT_TEXT)
+			</div>
+		</div>
+	}
+	<div>
+		<label>
+			@MyHtml.RedSpan()
+			選單名稱
+		</label>
+		<div>
+			@Html.EditorValidationFor(model => model.TITLE)
+		</div>
+	</div>
+	<div>
+		<label>
+			@MyHtml.RedSpan()
+			選單連結
+		</label>
+		<div>
+			@Html.EditorValidationFor(model => model.CONTENT8)
+		</div>
+	</div>
+	@if (Model.PARENT_ID.Equals("BUDGET_ITEM"))
+	{
+		<div>
+			<label>
+				@MyHtml.RedSpan()主視覺圖片
+			</label>
+			<div>
+				<input type="file" name="pic1" />
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()首頁圖片
+			</label>
+			<div>
+				<input type="file" name="pic2" />
+			</div>
+		</div>
+	}
+	@if (TreeLevel < 2)
+	{
+		<div>
+			<label>
+				下層選單
+			</label>
+			<div>
+				@if (ViewBag.hasSub)
+				{
+					@MyHtml.RedP("下層已有資料，不可修改")
+					@Html.HiddenFor(m => m.URL)
+				}
+				else
+				{
+					<label for="URL_1">
+						<input type="radio" id="URL_1" name="URL" value="1" @(Model.URL.Equals("1") ? "checked" : "") /> 有
+					</label>
+					<label for="URL_0">
+						<input type="radio" id="URL_0" name="URL" value="0" @(Model.URL.Equals("0") ? "checked" : "") /> 無
+					</label>
+				}
+			</div>
+		</div>
+	}
+
+	<div>
+		@Html.ValidationSummary(true)
+	</div>
+</div>
+<div class="In_btn_box">
+	@MyHtml.EditButton(ViewBag.IsEdit, Url.MyAction("CategoryIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { y = ViewBag.y, pre = ViewBag.pre, cur = ViewBag.cur }))
+</div>
+@section scripts{
+
+}

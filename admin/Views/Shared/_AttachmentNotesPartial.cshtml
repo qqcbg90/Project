@@ -1,0 +1,44 @@
+﻿@model AttaNotesModel
+@{
+	AttaNotesModel m = new AttaNotesModel();
+	m.bMultiple = Model.bMultiple;
+	m.iDescType = Model.iDescType ?? 1;
+	m.iPicSizeLimit = Model.iPicSizeLimit ?? 2;
+	m.iFileSizeLimit = Model.iFileSizeLimit ?? 15;
+	m.sPicWH = Model.sPicWH;
+}
+<div class="file_notic">
+	@if (m.bMultiple)
+	{
+		@:※ 多檔上傳：按住 Ctrl 或 Shift +所要上傳的照片。
+	}
+	@if (!m.sPicWH.IsNullOrEmpty())
+	{
+		if (m.bMultiple)
+		{
+			@:圖片建議尺寸：@m.sPicWH
+		}
+		else
+		{
+			<p>※ 圖片建議尺寸：@m.sPicWH</p>
+		}
+	}
+	@switch (m.iDescType)
+	{
+		case 1: /*圖片*/
+			<p>
+				※ 檔案格式僅支援圖片檔(JPG, PNG, GIF等)，檔案大小請小於 @m.iPicSizeLimit MB。
+			</p>
+			break;
+		case 2: /*檔案*/
+			<p>
+				※ 檔案格式僅支援上傳 ODF(含ODT, ODS, ODP等)、PDF、DOCX、XLSX、PPTX，檔案大小請小於 @m.iFileSizeLimit MB。
+			</p>
+			break;
+		case 3: /*圖片和檔案*/
+			<p>
+				※ 檔案格式僅支援上傳 ODF(含ODT, ODS, ODP等)、PDF、DOCX、XLSX、PPTX、圖片檔(JPG, PNG, GIF等)，檔案大小請小於 @m.iFileSizeLimit MB，圖片大小請小於 @m.iPicSizeLimit MB。
+			</p>
+			break;
+	}
+</div>

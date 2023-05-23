@@ -1,0 +1,7 @@
+﻿@{
+    ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+    string _class = ViewData["class"] != null ? ViewData["class"].ToMyString() : "w200";
+    string _placeholder = ViewData["placeholder"] != null ? ViewData["placeholder"].ToMyString() : "";
+    string _maxlength = ViewData["maxlength"] != null ? ViewData["maxlength"].ToMyString() : "500";
+    }
+@Html.TextBox(string.Empty, null, new { @class = _class, placeholder = _placeholder, maxlength = _maxlength })

@@ -1,0 +1,144 @@
+﻿@model IPagedList<ARTICLE>
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon">
+	<title>@((string)ViewBag.ContentTitle2)</title>
+</head>
+<body>
+	<div class="noPrint" id="noArea" style="text-align: right;">
+		<a href="javascript:printPage();" rel="external nofollow" target="_self" class="btn">列印</a>
+		<a href="javascript:void(0)" onclick="javascript:parent.jQuery.fancybox.close();" class="btn">關閉</a>
+	</div>
+	<div class="Print" id="printArea">
+		<style type="text/css">
+			body {
+				font-family: 新細明體;
+			}
+
+			h1 {
+				font-size: 28px;
+				color: #000;
+				font-weight: bold;
+				height: 20px;
+				text-align: center;
+			}
+
+			table {
+				width: 100%;
+			}
+
+				table th, table td {
+					padding: 8px;
+				}
+
+				table th {
+					text-align: center;
+					width: 12.5%;
+				}
+
+			.tbBorder {
+				border-collapse: collapse;
+			}
+
+				.tbBorder tr {
+					border-collapse: collapse;
+					border: 1px solid #000;
+				}
+
+			.noPrint {
+				text-align: right;
+				background: #F1ECE6;
+				color: #FFF;
+				border-radius: 3px;
+				padding: 20px 10px;
+			}
+
+				.noPrint .btn {
+					padding: 10px;
+					margin-left: 5px;
+					text-decoration: none;
+					border-radius: 3px;
+					background: #6c4c3a;
+					border: none;
+					cursor: pointer;
+					color: #FFF;
+					font-weight: 500;
+					font-size: 0.9375rem;
+					transition: background 0.15s ease-out;
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					appearance: none;
+				}
+		</style>
+		<style media="print" type="text/css">
+			.noPrint {
+				display: none;
+			}
+		</style>
+	</div>
+
+	<h1>@((string)ViewBag.ContentTitle2)</h1>
+
+	<table border="1" class="tbBorder">
+		<tr>
+			<th>保修日期</th>
+			<th>里程</th>
+			<th>保修項目</th>
+			<th>單位</th>
+			<th>數量</th>
+			<th>金額</th>
+			<th>累積</th>
+			<th>承修廠商</th>
+		</tr>
+		@foreach (var m in Model)
+		{
+			<tr>
+				<td>@m.DATETIME1.Value.ToString("yyyy/MM/dd")</td>
+				<td>@m.DECIMAL1.ToInt()</td>
+				<td>@m.CONTENT1</td>
+				<td>@m.CONTENT2</td>
+				<td>@m.DECIMAL2.ToInt()</td>
+				<td>@m.DECIMAL3.ToInt()</td>
+				<td>@((m.DECIMAL2 * m.DECIMAL3).ToInt())</td>
+				<td>@m.CONTENT3</td>
+			</tr>
+		}
+	</table>
+	<script>
+		var getExplorer = (function () {
+			var explorer = window.navigator.userAgent,
+			compare = function (s) { return (explorer.indexOf(s) >= 0); },
+			ie11 = (function () { return ("ActiveXObject" in window) })();
+			if (compare("MSIE") || ie11) { return 'IE'; }
+			else if (compare("Firefox") && !ie11) { return 'Firefox'; }
+			else if (compare("Chrome") && !ie11) { return 'Chrome'; }
+			else if (compare("Opera") && !ie11) { return 'Opera'; }
+			else if (compare("Safari") && !ie11) { return 'Safari'; }
+		})();
+
+		function printPage() {
+			if (getExplorer == "IE") {
+				var divToPrint = document.getElementById("printArea");
+				var newWin = window.open();
+				var content = "<html>" +
+					"<head><title>@((string)ViewBag.ContentTitle2)</title></head>" +
+					"<body><style type='text/css'>.noPrint { display: none; }</style>" + document.body.innerHTML + "</body>" +
+					"</html>";
+				newWin.document.write(content);
+				newWin.document.close();
+				newWin.print();
+				newWin.close();
+			} else {
+				window.print();
+			}
+			parent.jQuery.fancybox.close();
+		}
+	</script>
+</body>
+</html>

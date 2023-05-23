@@ -1,0 +1,9 @@
+﻿@model  ActivitiesPlusModel
+<p id="@(Model.PLUS_ID)">
+	@Html.HiddenFor(m => m.PLUS_ID)
+	@Html.HiddenFor(m=>m.ORDER)
+	第@(Model.ORDER)梯次 @Html.EditorValidationFor(m => m.DATETIME1)-@Html.EditorValidationFor(m => m.DATETIME2) 
+	人數限制 @Html.EditorValidationFor(m => m.DECIMAL1, new { @class = "w100" })
+	是否供餐 @Html.EditorValidationFor(m=>m.CONTENT2)
+	<a href="javascript:RemoveSpan('@(Model.PLUS_ID)')" onclick="return confirm('再一次確認，您要刪除這筆資料？')"><span class="btn Pink">刪除</span></a>
+</p>

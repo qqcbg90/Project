@@ -1,0 +1,174 @@
+﻿@model List<ReportModel>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&start=' + $("#start").val() + '&end=' + $("#end").val();
+			GoUrl(url);
+		}
+	</script>
+	<style type="text/css">
+		#tbBudget {
+			width: 100%;
+		}
+
+			#tbBudget td, th {
+				border: 1px solid #666;
+				padding: 3px 2px;
+				font-size: 13px;
+			}
+
+		.center {
+			text-align: center;
+		}
+
+		.right {
+			text-align: right;
+		}
+	</style>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box" style="display:block">
+		<label class="key">
+			<span class="select">@Html.DropDownList("k1", ViewBag.BudgetItemSelect as SelectList)</span>
+			<span class="select"><select id="k2" name="k2"><option value="">類別</option></select></span>
+			<span class="select"><select id="k3" name="k3"><option value="">細目</option></select></span>
+		</label>
+		<br />
+		@Html.Partial("Input/_DateStartToEndPartial", new string[] { "start", "end", (string)ViewBag.start, (string)ViewBag.end, "1" })
+		<label class="btn_box go">
+			<input type="submit" id="save" name="save" value="查詢" class="btn" />
+			<input type="button" id="export1" name="export1" value="匯出 EXCEL" class="btn" />
+		</label>
+	</p>
+}
+@if (Model != null && Model.Count > 0)
+{
+	<table id="tbBudget" class="tb_list">
+		@foreach (var m in Model)
+		{
+			if (m.CONTENT2.CheckStringValue("G"))
+			{
+				<tr style="background: #C1FFC1;">
+					<td colspan="5">@m.CONTENT3</td>
+					<td class="right">@((m.DECIMAL1 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL2 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL3 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL4 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL5 ?? 0).ToString("#,0.##"))%</td>
+					<td>@m.CONTENT8</td>
+					<td>@m.CONTENT9</td>
+					<td>@m.CONTENT10</td>
+				</tr>
+				<tr style="background: #BFBFBF;">
+					<th>項目</th>
+					<th>類別</th>
+					<th>細目</th>
+					<th>說明</th>
+					<th>執行細目</th>
+					<th>預算數</th>
+					<th>簽會數</th>
+					<th>執行數</th>
+					<th>剩餘數</th>
+					<th>執行率</th>
+					<th>承辦人</th>
+					<th>廠商</th>
+					<th>動支字號</th>
+				</tr>
+			}
+			else if (m.CONTENT2.CheckStringValue("C"))
+			{
+				<tr style="background: #FFF68F;">
+					<td align="center">@m.CONTENT3</td>
+					<td colspan="4">@m.CONTENT4</td>
+					<td class="right">@((m.DECIMAL1 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL2 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL3 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL4 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL5 ?? 0).ToString("#,0.##"))%</td>
+					<td>@m.CONTENT8</td>
+					<td>@m.CONTENT9</td>
+					<td>@m.CONTENT10</td>
+				</tr>
+			}
+			else
+			{
+				<tr style="background: @(m.CONTENT2.Equals("I") ? "#EED8AE" : (m.CONTENT2.Equals("E") ? "#BBFFFF" : "#FFFFF"));">
+					<td style="background: #FFFFFF;">@m.CONTENT3</td>
+					<td style="background: #FFFFFF;">@m.CONTENT4</td>
+					<td style="background: @(m.CONTENT2.Equals("I") ? "#EED8AE" : "#FFFFFF")">@m.CONTENT5</td>
+					<td>@m.CONTENT6</td>
+					<td>@m.CONTENT7</td>
+					<td class="right">@((m.DECIMAL1 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL2 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL3 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL4 ?? 0).ToString("#,0"))</td>
+					<td class="right">@((m.DECIMAL5 ?? 0).ToString("#,0.##"))%</td>
+					<td>@m.CONTENT8</td>
+					<td>@m.CONTENT9</td>
+					<td>@m.CONTENT10</td>
+				</tr>
+			}
+		}
+	</table>
+}
+@section scripts{
+	<script>
+		$(function () {
+			$("#export1").click(function () {
+				var url = '@Url.Action("ReportIndex", new { nid = ViewBag.NodeID })&all=1&export=1' + 
+				'&k1=' + $("[name=k1]").val() + '&k2=' + $("[name=k2]").val() + '&k3=' + $("[name=k3]").val() +
+				'&start=' + $("[name=start]").val() + '&end=' + $("[name=end]").val();
+				window.open(url);
+			});
+			getChild("@ViewBag.k1", "@ViewBag.k2", '類別', 2);
+			getChild("@ViewBag.k2", "@ViewBag.k3", '細目', 3);
+			$('[name=k1]').change(function () {
+				var k1 = $(this).val();
+				var k2 = $("#k2").val();
+				var k3 = $("#k3").val();
+				if (k1 == "") k1 = -1;
+				k2 = k3 = -1;
+				getChild(k1, '', '類別', 2);
+				getChild(k2, '', '細目', 3);
+			});
+			$('[name=k2]').change(function () {
+				var k2 = $(this).val();
+				var k3 = $("#k3").val();
+				if (k2 == "") k2 = -1;
+				k3 = -1;
+				getChild(k2, '', '細目', 3);
+			});
+		});
+		function getChild(arg1, arg2, firstTextVal, idx) {
+			$.post("@Url.Action("GetChild", "Json")", { id: arg1, v: arg2, first: firstTextVal }, function (data) {
+				$("#k" + idx).html(data);
+			});
+		}
+	</script>
+}

@@ -1,0 +1,120 @@
+﻿@model PagedList<SYSUSER>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "Edit";
+	string _delete = "Delete";
+
+	string c1 = (string)ViewBag.c1;
+	string c2 = (string)ViewBag.c2;
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null
+	   , new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, c1 = ViewBag.c1, c2 = ViewBag.c2 })
+	</div>
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&c1=' + $("[name=c1]").val()
+				+ '&c2=' + $("[name=c2]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val());
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box">
+		@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Search))
+        {
+            <span class="select">@Html.DropDownList("c1", ViewBag.IdentityTypeSelect as SelectList, "身分別", new { title = "身分別" })</span>
+			<span class="select">@Html.DropDownList("c2", ViewBag.H as SelectList, "區域", new { title = "區域" })</span>
+			<label class="key">@MyList.KeywordInput(ViewBag.Keyword, "關鍵字(帳號、姓名)")</label>
+			<label class="btn_box go">@MyList.Submit()</label>
+		}
+	</p>
+	<p class="top_bar">
+		<label class="btn_box">
+			@MyHtml.Button(Resource.Add, Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { c2 = ViewBag.c2 }), "org")
+		</label>
+	</p>
+	if (MyList.IsTwoPagers())
+	{
+		@Pager()
+	}
+	<div class="tb_list_box">
+		<table>
+			<tr class="thead">
+				<th>@Resource.Account</th>
+                <th>身分別</th>
+				<th>區域</th>
+				<th>@Resource.Name</th>
+				<th>@Resource.LastLoginTime</th>
+				<th>@Resource.Features</th>
+			</tr>
+			@foreach (var user in Model)
+			{
+				<tr>
+					<td data-th="@Resource.Account">@user.USER_ID</td>
+                    <td data-th="身分別">@(((IdentityType)user.CONTENT1.ToInt()).GetDescription())</td>
+					<td data-th="區域">@(user.CONTENT2.IsNullOrEmpty() ? "無" : Function.GetNodeTitle(user.CONTENT2))</td>
+					<td data-th="@Resource.Name">@user.NAME</td>
+					<td data-th="@Resource.LastLoginTime">@user.DATETIME1.ToDefaultStringWithTime()</td>
+					<td data-th="@Resource.Features">
+						<div class="btn_box">
+							<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = user.USER_ID, c1 = ViewBag.c1, c2 = ViewBag.c2 })" title="@Resource.Edit">
+								<span class="btn"><i class="far fa-edit"></i></span>
+							</a>
+							@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+							{
+								<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = user.USER_ID, c1 = ViewBag.c1, c2 = ViewBag.c2 })" onclick="return confirm('@(user.ENABLE.IsEnable() ? Resource.msg_17 : Resource.msg_18)')">
+									@MyList.EditImage(user.ENABLE.IsEnable() ? Resource.close : Resource.open, user.ENABLE.IsEnable() ? "gray" : "red")
+								</a>
+							}
+						</div>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+	@Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("#c1").change(function () {
+				//getHallUnit($(this).val(), "", "單位");
+			});
+			@*@Html.Raw((!c1.IsNullOrEmpty() && !c2.IsNullOrEmpty() ? "getHallUnit('" + c1 + "', '" + c2 + "','單位');" : ""))*@
+		});
+
+		function getHallUnit(hallVal, unitVal, firstTextVal) {
+			$.post("@Url.Action("GetHallUnit", "Json")", { hall: hallVal, unit: unitVal, firstText: firstTextVal }, function (data) {
+				$("#c2").html(data);
+			});
+		}
+	</script>
+}

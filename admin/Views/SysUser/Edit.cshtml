@@ -1,0 +1,144 @@
+﻿@model SysUserModel
+@{
+	bool IsAdd = (bool)ViewBag.IsAdd;
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>@MyHtml.RedSpan()帳號</label>
+			<div>
+				@if (IsAdd)
+				{
+					@Html.EditorValidationFor(model => model.USER_ID)
+					<p class="colortxt_red" style="width: 100%;">帳號格式：首字英文字母</p>
+				}
+				else
+				{
+					@Html.DisplayFor(model => model.USER_ID)
+					@Html.HiddenFor(model => model.USER_ID)
+				}
+			</div>
+		</div>
+		<div>
+			<label>@Html.Raw(IsAdd ? MyHtml.RedSpan() + "" : "重設")密碼</label>
+			<div>
+				@Html.EditorValidationFor(model => model.PASSWORD)<br />
+				<p class="colortxt_red" style="width: 100%;">密碼格式：首字英文字母+英數混合 8-20 字元</p>
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Resource.Name
+			</label>
+			<div>@Html.EditorValidationFor(model => model.NAME)</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(model => model.EMAIL)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.EMAIL)
+			</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()身分別</label>
+			<div>
+                <span class="select">
+                    @Html.DropDownListFor(model => model.CONTENT1, ViewBag.IdentityTypeSelect as SelectList, new { @class = "" })
+                </span>
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()區域
+			</label>
+			<div>
+				<span class="select">
+					@Html.DropDownListFor(model => model.CONTENT2, ViewBag.H as SelectList, new { @class = "" })
+				</span>
+				@Html.ValidationMessageFor(m => m.CONTENT2)
+			</div>
+		</div>
+        <div class="c1_1">
+            <label>遊程商品代碼<br />(逗號分隔)</label>
+            <div>@Html.EditorValidationFor(model => model.CONTENT10)</div>
+        </div>
+        <div class="c1_1">
+            <label>英文名稱</label>
+            <div>@Html.EditorValidationFor(model => model.CONTENT6)</div>
+        </div>
+        <div class="c1_1">
+            <label>地址</label>
+            <div>@Html.EditorValidationFor(model => model.CONTENT3)</div>
+        </div>
+        <div class="c1_1">
+            <label>英文地址</label>
+            <div>@Html.EditorValidationFor(model => model.CONTENT7)</div>
+        </div>
+        <div class="c1_1">
+            <label>聯絡人</label>
+            <div>@Html.EditorValidationFor(model => model.CONTENT4)</div>
+        </div>
+        <div class="c1_1">
+            <label>電話</label>
+            <div>@Html.EditorValidationFor(model => model.CONTENT5)</div>
+        </div>
+        <div class="c1_1">
+            <label>經度</label>
+            <div>@Html.EditorValidationFor(model => model.CONTENT8)</div>
+        </div>
+        <div class="c1_1">
+            <label>緯度</label>
+            <div>@Html.EditorValidationFor(model => model.CONTENT9)</div>
+        </div>
+		<div>
+			<label>@Resource.Remarks</label>
+			<div>@Html.EditorValidationFor(model => model.MEMO)</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+        $(function () {
+            setDivC1_1();
+			//setRequired(true, 'CONTENT2');
+			@Html.Raw((!IsAdd ? "setRequired(false, 'PASSWORD');" :""))
+		    $("#CONTENT1").change(function () {
+		        setDivC1_1();
+			});
+		});
+        function setDivC1_1()
+        {
+            if ($("#CONTENT1").val() == "0")
+            {
+                $("div.c1_1").hide();
+            }
+            else
+            {
+                $("div.c1_1").show();
+            }
+        }
+	</script>
+}
+

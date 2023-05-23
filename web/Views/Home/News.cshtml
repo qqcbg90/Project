@@ -1,0 +1,54 @@
+﻿@model IPagedList<ARTICLE>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+}
+@helper Pager()
+{
+    <div class="tab_control">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 1, null, new { o = ViewBag.o, start = ViewBag.start, end = ViewBag.end })
+    </div>
+}
+
+<div class="page_main" style="background-image: url(@Url.Content("~/images/pagebg_05.jpg")">
+    <div class="wrap" style="display: contents;">
+        <!--標題-->
+        <div class="main_title">
+            <h1 class="page_title">@ViewBag.b1</h1>
+        </div>
+    </div>
+</div>
+<div class="wrap page1_sec1">
+    <h2>@Resource.index01</h2><h2 style="color: #44957F;">@Resource.view01</h2>
+    <!--活動列表-->
+    <div class="page1_sec1_gallery">
+        @foreach (var item in Model)
+        {
+            <div class="page1_sec1_item" onclick="javascript:GoUrl('@Url.Action("News_detail", new { id = item.ID, o = ViewBag.o, start = ViewBag.start, end = ViewBag.end, page = ViewBag.page })')">
+                <img src="@item.GetFirstAttachment().GetPic(PictureType.Medium)" style="width: 40%; object-fit: cover;">
+                <div class="page1_sec1_des">
+                    <div>
+                        <h6 style="color: #545454;">@item.GetDateRange()</h6>
+                        <h3 style="color: #44957F;line-height: 1.5;">@item.GetValueOnLang()</h3>
+                        <p>@item.GetValueOnLang(4).RegexHtmlTag()</p>
+                    </div>
+                    @*<div style="display: flex; align-items: center;">
+                        <img height="12" src="image/icon/icon_location_grey.png" style="padding-right: 4px;">
+                        <h6 style="color: #A2A2A2; font-family: 'Noto Sans CJK TC';">桃園市</h6>
+                    </div>*@
+                </div>
+            </div>
+        }
+    </div>
+    <!--頁面控制鈕-->
+    @Pager()
+    @*<div class="tab_control">
+        <span id="btn_prev"></span>
+        <span class="current"><p>1</p></span>
+        <!-- <span><p>2</p></span> -->
+        <!-- <span><p>3</p></span> -->
+        <span id="btn_next"></span>
+    </div>*@
+</div>
+@section scripts{
+    
+}

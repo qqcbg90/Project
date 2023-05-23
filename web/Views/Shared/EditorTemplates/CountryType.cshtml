@@ -1,0 +1,10 @@
+﻿@{
+    string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    string tmpValue = ViewData.TemplateInfo.FormattedModelValue.ToString();
+}
+@foreach (SysUserCustom2Type manager in Enum.GetValues(typeof(SysUserCustom2Type)))
+{
+    @Html.RadioButton(string.Empty, manager.ToIntValue(), manager.ToIntValue().Equals(tmpValue))
+    @manager.GetDescription()
+    @:&nbsp;
+}

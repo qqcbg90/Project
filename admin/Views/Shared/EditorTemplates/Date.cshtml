@@ -1,0 +1,31 @@
+﻿@model DateTime?
+@{
+	ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+}
+@Html.TextBox(string.Empty, Model.HasValue ? Model.Value.ToDefaultString() : string.Empty
+	, new { Style = ViewData["width"] != null ? ViewData["width"] : "", @class = "datepicker input", placeholder = "YYYY/MM/DD", maxlength = 10 })
+<script type="text/javascript">
+	$(".datepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'yy/mm/dd',
+		showAnim: 'drop',
+		//minDate: new Date(),
+		buttonImage: '@Url.Content("~/images/calendar.gif")',
+		//showOn: 'both',
+		buttonImageOnly: true,
+		yearRange: "1911:+3"
+	});
+	@*$(function () {
+        $(".datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy/mm/dd',
+            showAnim: 'drop',
+            //minDate: new Date()
+            buttonImage: '@Url.Content("~/images/calendar.gif")',
+            showOn: 'both', buttonImageOnly: true,
+            yearRange: "1911:+3"
+        });
+    });*@
+</script>

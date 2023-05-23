@@ -1,0 +1,246 @@
+﻿@model PagedList<PLUS>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string _sendtest = "SendNotice";
+    var List = Model.Where(p => p.CONTENT20 == "1").OrderBy(p => p.ORDER);
+    var decimal1 = ViewBag.decimal1;
+    string _att1 = ViewBag.att1;
+    string _att2 = ViewBag.att2;
+    string _att3 = ViewBag.att3;
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            InputGo("@ViewBag.DefaultPage");
+        })
+        //select by dropdownlist
+        function SelectGo(page) {
+            $('div .pager').find('select').each(function () {
+                $(this).val(page);
+            });
+            var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=@(ViewBag.k)'
+				+ '&k1=' + $("[name=k1]").val()
+                + '&k2=' + $("[name=k2]").val()
+                + '&k3=' + $("[name=k3]").val()
+                + '&k4=' + $("[name=k4]").val()
+				+ '&start=' + $("#start").val()
+				+ '&end=' + $("#end").val();
+            GoUrl(url);
+        }
+    </script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+    <div class="pager">
+        <div class="pager">
+            @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null,
+                              new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.k, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end })
+        </div>
+    </div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <p class="search_box" style="display:block;width: 100%;">
+        <span> 活動標題：</span>
+        @MyList.KeywordInput(ViewBag.Keyword, "關鍵字(Email/姓名)")
+        <span class="select" id="selectk2" ee="@ViewBag.k2">
+            <select id="k2" name="k2">
+                <option value="">全部</option>
+                <option value="1">已回覆</option>
+                <option value="0">未回覆</option>
+            </select>
+        </span>
+        @*<span> 回覆日期查詢：</span>
+            @Html.Partial("Input/_DateStartToEndPartial", new string[] { "start", "end", (string)ViewBag.start, (string)ViewBag.end, "2" })*@
+        <label class="btn_box go">
+            @MyList.Submit()
+        </label>
+        <span class="return"><a href="~/Data1?nid=Activities">回活動列表</a></span>
+    </p>
+
+    <span class="custom-file-upload">
+        <a style="text-decoration: none;color:white;" href="@Url.MyAction("Export",(Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = ViewBag.d1})">匯出中獎者名單</a>
+    </span>
+
+
+    if (MyList.IsTwoPagers())
+    {
+        @Pager()
+    }
+    <div class="tb_list_box">
+        <table class="tb_list">
+            <tr class="thead">
+                <th width="10%">
+                    獎項
+                </th>
+                <th width="10%">
+                    Email/連絡電話
+                </th>
+                <th width="10%">
+                    得獎者
+                </th>
+                @if (ViewBag.k2 != "0")
+                {
+                    if (decimal1 == 1)
+                    {
+                        <th width="10%">
+                            身分證(正)
+                        </th>
+                        <th width="10%">
+                            身分證(反)
+                        </th>
+                    }
+                    if (_att1 != "")
+                    {
+                        <th>
+                            @(_att1)
+                        </th>
+                    }
+                    if (_att2 != "")
+                    {
+                        <th>
+                            @(_att2)
+                        </th>
+                    }
+                    if (_att3 != "")
+                    {
+                        <th>
+                            @(_att3)
+                        </th>
+                    }
+                }
+                <th>發送日期</th>
+                <th width="10%">寄信</th>
+            </tr>
+            @foreach (var item in Model.OrderBy(p => p.CONTENT2).ThenBy(p => p.ORDER))
+            {
+                List<ATTACHMENT> atts = item.ATTACHMENT.Where(p => p.ORDER <= 5).ToList();
+                ATTACHMENT att1 = null, att2 = null, att3 = null, att4 = null, att5 = null;
+                if (atts != null && atts.Count > 0)
+                {
+                    att1 = atts.FirstOrDefault(p => p.ORDER == 1);
+                    att2 = atts.FirstOrDefault(p => p.ORDER == 2);
+                    att3 = atts.FirstOrDefault(p => p.ORDER == 3);
+                    att4 = atts.FirstOrDefault(p => p.ORDER == 4);
+                    att5 = atts.FirstOrDefault(p => p.ORDER == 5);
+                }
+                <tr>
+                    <td>@item.CONTENT1</td>
+                    <td>@item.CONTENT3<br />@item.CONTENT9</td>
+                    <td>@item.CONTENT4</td>
+                    @if (ViewBag.k2 != "0")
+                    {
+                        if (decimal1 == 1)
+                        {
+                            <td>
+                                @if (att1 != null)
+                                {
+                                    <a href="@att1.GetFile()" target="_blank" title="@att1.ORIGINAL_FILE_NAME">
+                                        <img class="lazy" src="@att1.GetFile()" style="max-width:300px;" />
+                                    </a>
+                                }
+                            </td>
+                            <td>
+                                @if (att2 != null)
+                                {
+                                    <a href="@att2.GetFile()" target="_blank" title="@att2.ORIGINAL_FILE_NAME">
+                                        <img class="lazy" src="@att2.GetFile()" style="max-width:300px;" />
+                                    </a>
+                                }
+                            </td>
+
+                        }
+                        if (_att1 != "")
+                        {
+                            <td>
+                                @if (att3 != null)
+                                {
+                                    <a href="@att3.GetFile()" target="_blank" title="@att3.ORIGINAL_FILE_NAME">
+                                        <img class="lazy" src="@att3.GetFile()" style="max-width:300px;" />
+                                    </a>
+                                }
+                            </td>
+                        }
+                        if (_att2 != "")
+                        {
+
+                            <td>
+                                @if (att4 != null)
+                                {
+                                    <a href="@att4.GetFile()" target="_blank" title="@att4.ORIGINAL_FILE_NAME">
+                                        <img class="lazy" src="@att4.GetFile()" style="max-width:300px;" />
+                                    </a>
+                                }
+                            </td>
+                        }
+                        if (_att3 != "")
+                        {
+
+                            <td>
+                                @if (att5 != null)
+                                {
+                                    <a href="@att5.GetFile()" target="_blank" title="@att5.ORIGINAL_FILE_NAME">
+                                        <img class="lazy" src="@att5.GetFile()" style="max-width:300px;" />
+                                    </a>
+                                }
+                            </td>
+
+                        }
+                    }
+
+                    <td>@item.DATETIME4</td>
+                    <td class="txtcenter">
+                        <a href="@Url.MyAction( _sendtest, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {id = ViewBag.d1, mid = item.ID, defaultPage = ViewBag.DefaultPage, page = ViewBag.page, k = ViewBag.k, k2 = ViewBag.k2,k3 = "personal", start = ViewBag.start, end = ViewBag.end })">
+                            <span class="btn emailall" title="寄信">
+                                <i class="fas fa-paper-plane"></i>
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    @Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            var selectedValue = $("#selectk2").attr('ee');
+            $('#k2').val(selectedValue);
+            $('#k2 option:selected').attr('selected', 'selected');
+            $("#dt").css("width", "200px");
+            $("#start").css("width", "200px");
+            $("#end").css("width", "200px");
+        })
+
+        function getStatusChecked() {
+            return $('._chk:checkbox').map(function () {
+                if ($(this).is(':checked'))
+                    return $(this).attr("vv");
+            }).get().join(',');
+        }
+        function GetStatusValue() {
+            $("#chkstatus_value").val(getStatusChecked());
+            $("[name=chkStatus]").attr("disabled", $("#chkstatus_value").val() == '');
+        }
+    </script>
+}

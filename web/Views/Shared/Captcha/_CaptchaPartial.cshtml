@@ -1,0 +1,29 @@
+﻿@{
+    string captcha = "captcha";
+    string captchaimg = "captchaimg";
+    }
+<div id="imageDiv" style="width:200px;display:inline-block">
+<img id="@captchaimg" style="vertical-align: bottom" src="@Url.Action("GetCaptchaImage", "Captcha")" />
+    </div>
+
+<a href="javascript:Refresh();" title="@Resource.login_msg9"><img src="~/images/re.png" class="re" /></a> 
+@Html.TextBox(captcha, null, new Dictionary<string, object>
+                                                  {
+                                                      {"data-val", "true"},
+                                                      //{"data-val-required", "*"},
+                                                      {"placeholder",Resource.login_msg8 },
+    {"class","w100" },
+    { "style","vertical-align: text-bottom"}
+})
+<br />
+@Html.ValidationMessage(captcha, new { @class = "validation-error", @style = "color:red;" })
+    <script type="text/javascript">
+        function Refresh() {
+            $("#imageDiv").html("<img src='@Url.Content("~/images/loader.gif")' />");
+            setTimeout(function () {
+                var i = new Image();
+                i.src = '@Url.Action("GetCaptchaImage", "Captcha")';
+                $("#imageDiv").html(i)
+            }, 500);
+        }
+    </script>

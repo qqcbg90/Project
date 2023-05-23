@@ -1,0 +1,181 @@
+﻿@model IPagedList<ReportModel>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	bool fun11_04 = ((string)ViewBag.NodeID).CheckStringValue("fun11_04");
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&k1=' + $("[name=k1]").val()
+				+ '&k2=' + $("[name=k2]").val()
+				+ '&start=' + $("#start").val() + '&end=' + $("#end").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null,
+	   new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end })
+	</div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box" style="display:block">
+		<label class="key">
+			<span class="select">@Html.DropDownList("k", ViewBag.INVENTORY_ITEM as SelectList, "類別")</span>
+			@if (fun11_04)
+			{
+				<span class="select"><select id="k1" name="k1"><option value="">物品</option></select></span>
+			}
+		</label>
+		@if (fun11_04)
+		{
+			<label class="key"><span class="select">@Html.DropDownList("k2", ViewBag.DeptSelect as SelectList, "申請單位")</span></label>
+			<br />
+			@Html.Partial("Input/_DateStartToEndPartial", new string[] { "start", "end", (string)ViewBag.start, (string)ViewBag.end, "1" })
+		}
+		else
+		{
+			<br />
+			<span class="select">
+				@Html.DropDownList("k1", ViewBag.YearSelect as SelectList)
+			</span>
+			<span class="select">
+				@Html.DropDownList("k2", ViewBag.MonthSelect as SelectList)
+			</span>
+		}
+		<br />
+		<label class="btn_box go">
+			<input type="submit" id="save" name="save" value="查詢" class="btn" />
+			@if (!fun11_04)
+			{
+				<input type="button" id="print" name="print" value="列印" class="btn" />
+				<input type="button" id="export1" name="export1" value="匯出 EXCEL" class="btn" />
+				<input type="button" id="export2" name="export2" value="匯出月報表 EXCEL" class="btn" />
+			}
+			else
+			{
+				<input type="button" id="export3" name="export1" value="匯出 EXCEL" class="btn" />
+			}
+		</label>
+	</p>
+}
+@if (Model != null && Model.Count > 0)
+{
+	if (fun11_04)
+	{
+		<div class="tb_list_box">
+			<table class="tb_list">
+				<tr class="thead"><th>類別 > 物品</th><th>申請單位</th><th>總申請量</th></tr>
+				@foreach (ReportModel m in Model)
+				{
+					<tr>
+						<td data-th="類別 > 物品">@m.CONTENT1 > @m.CONTENT2</td>
+						<td data-th="申請單位">@m.CONTENT3</td>
+						<td data-th="總申請量">@m.DECIMAL1.Value.ToString("#,0")</td>
+					</tr>
+				}
+			</table>
+		</div>
+	}
+	else
+	{
+		int iIndex = 1;
+		<div class="tb_list_box">
+			<table class="tb_list">
+				<tr class="thead">
+					<th>編號</th>
+					<th>類別 > 物品</th>
+					<th>單位</th>
+					<th>上月盤存</th>
+					<th>本月購進</th>
+					<th>本月領用</th>
+					<th>本月盤存</th>
+				</tr>
+				@foreach (ReportModel m in Model)
+				{
+					<tr>
+						<td data-th="編號">@iIndex</td>
+						<td data-th="類別 > 物品">@m.CONTENT1 > @m.CONTENT2</td>
+						<td data-th="單位">@m.CONTENT3</td>
+						<td data-th="上月盤存">@m.DECIMAL1.Value.ToString("#,0")</td>
+						<td data-th="本月購進">@m.DECIMAL2.Value.ToString("#,0")</td>
+						<td data-th="本月領用">@m.DECIMAL3.Value.ToString("#,0")</td>
+						<td data-th="本月盤存">@m.DECIMAL4.Value.ToString("#,0")</td>
+					</tr>
+					iIndex++;
+				}
+			</table>
+		</div>
+	}
+}
+@if (ViewBag.all == 0)
+{
+	@Pager()
+}
+	@*網頁內容end*@
+
+	@section scripts{
+		<script>
+			$(function () {
+				@Html.Raw(fun11_04 ? "getChild('" +((string)ViewBag.Keyword) + "', '" + ((string)ViewBag.k1) + "', '物品', 1);" : "")
+				@Html.Raw(fun11_04 ? "$('[name=k]').click(function () { getChild($(this).val(), '', '物品', 1); });" : "")
+
+				$("#print").click(function () {
+					$.fancybox.open({
+						type: 'iframe',
+						modal: true,
+						toolbar: false,
+						src: '@Url.Action("ReportIndex", new { nid = ViewBag.NodeID })&all=1&export=1&k=' + $("[name=k]").val() + '&k1=' + $("[name=k1]").val() + '&k2=' + $("[name=k2]").val()
+					});
+				});
+
+				$("#export1").click(function () {
+					var url = '@Url.Action("ReportIndex", new { nid = ViewBag.NodeID })&all=1&export=2&k=' + $("[name=k]").val() + '&k1=' + $("[name=k1]").val() + '&k2=' + $("[name=k2]").val();
+					window.open(url);
+				});
+
+				$("#export2").click(function () {
+					var url = '@Url.Action("ReportIndex", new { nid = ViewBag.NodeID })&all=1&export=3&k=' + $("[name=k]").val() + '&k1=' + $("[name=k1]").val() + '&k2=' + $("[name=k2]").val();
+					window.open(url);
+				});
+				$("#export3").click(function () {
+					var url = '@Url.Action("ReportIndex", new { nid = ViewBag.NodeID })&all=1&export=4&k=' + $("[name=k]").val() + '&k1=' + $("[name=k1]").val() + '&k2=' + $("[name=k2]").val()
+					+ '&start=' + $("#start").val() + '&end=' + $("#end").val();
+					window.open(url);
+				});
+			});
+
+			function getChild(arg1, arg2, firstTextVal, idx) {
+				$.post("@Url.Action("GetChild", "Json")", { id: arg1, v: arg2, first: firstTextVal }, function (data) {
+					$("#k" + idx).html(data);
+				});
+			}
+		</script>
+	}

@@ -1,0 +1,5 @@
+﻿@foreach (Switch sw in Enum.GetValues(typeof(Switch)))
+{
+    @(sw.ToIntValue() == Switch.ON.ToIntValue() ? " " : "")
+    @Html.RadioButton(string.Empty, sw.ToIntValue(), sw.ToIntValue() == ViewData.TemplateInfo.FormattedModelValue.ToString())@sw.GetDescription()
+}

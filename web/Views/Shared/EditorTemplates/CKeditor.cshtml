@@ -1,0 +1,24 @@
+﻿@{
+    ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+}
+@*@Scripts.Render("~/ckeditor/js")*@
+@Html.TextArea(string.Empty, null, new { cols = ViewData["cols"] != null ? ViewData["cols"] : 45, rows = ViewData["rows"] != null ? ViewData["rows"] : 10, @class = "editors" })
+<script type="text/javascript">
+    CKEDITOR.replace('@ViewData.TemplateInfo.HtmlFieldPrefix', {
+        toolbar: 'MyBar',
+        width: '100%',
+        height: '350px'
+    });
+    @*  window.onload = function () {
+
+    };*@
+    @* 如果同一畫面有複數的CKeditor 要在該編輯頁放下列指令
+    $(function () {
+        $("#save").click(function () {
+            $('.editors').each(function () {
+                CKEDITOR.instances[$(this).attr('name')].updateElement();
+            });
+        });
+    });
+        *@
+</script>

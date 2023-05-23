@@ -1,0 +1,6 @@
+﻿@{
+    string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    string tmpLength = ViewData["length"] != null ? ViewData["length"].ToString() : "500";
+    //ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+    }
+<textarea name="@tmpName" id="@tmpName" cols="@(ViewData["cols"] != null ? ViewData["cols"] : 45)" rows="@(ViewData["rows"] != null ? ViewData["rows"] : 10)" class="big_txtarea" data-val="true" data-val-length-max="@tmpLength" data-val-length="請勿超過 @tmpLength 個字">@ViewData.TemplateInfo.FormattedModelValue</textarea>

@@ -1,0 +1,38 @@
+﻿@{
+    string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+}
+@foreach (ThemeParkIconTypeC icon in Enum.GetValues(typeof(ThemeParkIconTypeC)))
+{
+    <label>
+        <input type="checkbox" class="choosed" value="@icon.ToIntValue()" onclick="GetIconValueC()" />
+        @icon.GetDescription()
+        <img src="~/images/icon/@(icon.ToIntValue().PadLeft(2,'0')).jpg" style="width:100px" />
+    </label>
+}
+@Html.Hidden(string.Empty)
+<script type="text/javascript">
+    var _iconNameC = '@tmpName';
+    SetIconValueC();
+    function getIconCheckedC() {
+        return $('#iconListC :checkbox').map(function () {
+            if ($(this).is(':checked'))
+                return $(this).val();
+        }).get().join(',');
+    }
+    function GetIconValueC() {
+        $("#" + _iconNameC).val(getIconCheckedC());
+    }
+    function SetIconValueC() {
+        var tmp = $("#" + _iconNameC).val();
+        if (tmp != "") {
+            $.map(tmp.split(','), function (str) {
+                $('#iconListC :checkbox').map(function () {
+                    if (str == $(this).val()) {
+                        $(this).prop("checked", true);
+                    }
+                });
+            });
+        }
+    }
+</script>

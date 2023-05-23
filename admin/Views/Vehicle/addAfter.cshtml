@@ -1,0 +1,192 @@
+﻿@model AfterDrivingModel
+@{
+	bool IsAdd = (bool)ViewBag.IsAdd;
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		@if (!IsAdd)
+		{
+			<div>
+				<label>
+					@Html.LabelFor(m => m.CREATE_DATE)
+				</label>
+				<div>
+					@Html.DisplayFor(m => m.CREATE_DATE)
+				</div>
+			</div>
+		}
+		<div>
+			<label>
+				@Html.LabelFor(m => m.ARTICLE_ID)
+			</label>
+			<div>
+				@Html.DisplayFor(m => m.ARTICLE_ID) - @Html.DisplayFor(m => m.CONTENT1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DATETIME1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DATETIME1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DATETIME2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DATETIME2)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				起迄地點
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT2, new { htmlAttr = new { placeholder = "出發地", title = "出發地" } })
+				@Html.EditorValidationFor(m => m.CONTENT3, new { htmlAttr = new { placeholder = "目的地", title = "目的地" } })
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				里程表
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DECIMAL1, new { htmlAttr = new { placeholder = "出發里程數(單位:KM)", title = "出發里程數(單位:KM)" } })
+				@Html.EditorValidationFor(m => m.DECIMAL2, new { htmlAttr = new { placeholder = "返回里程數(單位:KM)", title = "返回里程數(單位:KM)" } })
+			</div>
+		</div>
+		<div>
+			<label>行駛里程數</label>
+			<div><span id="DiffKM">0</span> 公里</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				是否加油
+			</label>
+			<div>
+				<label for="CONTENT4_N">
+					<input type="radio" id="CONTENT4_N" name="CONTENT4" value="0" checked /> 否
+				</label>
+				<label for="CONTENT4_Y">
+					<input type="radio" id="CONTENT4_Y" name="CONTENT4" value="1" @(Model.CONTENT4.CheckStringValue("1") ? "checked" : "") /> 是
+				</label>
+				@if (Model.CONTENT4.CheckStringValue("1"))
+				{
+					@Html.EditorValidationFor(m => m.DECIMAL3, new { htmlAttr = new { placeholder = "公升數", title = "公升數" } })
+					@Html.EditorValidationFor(m => m.DECIMAL4, new { htmlAttr = new { placeholder = "總金額(元)", title = "總金額(元)" } })
+					@Html.EditorValidationFor(m => m.DECIMAL5, new { htmlAttr = new { placeholder = "加油時里程數(公里)", title = "加油時里程數(公里)" } })
+				}
+				else
+				{
+					@Html.EditorValidationFor(m => m.DECIMAL3, new { htmlAttr = new { placeholder = "公升數", title = "公升數", @disabled = "disabled" } })
+					@Html.EditorValidationFor(m => m.DECIMAL4, new { htmlAttr = new { placeholder = "總金額(元)", title = "總金額(元)", @disabled = "disabled" } })
+					@Html.EditorValidationFor(m => m.DECIMAL5, new { htmlAttr = new { placeholder = "加油時里程數(公里)", title = "加油時里程數(公里)", @disabled = "disabled" } })
+				}
+			</div>
+		</div>
+		<div>
+			<label>本次是否須檢修</label>
+			<div>
+				<label for="CONTENT5_N">
+					<input type="radio" id="CONTENT5_N" name="CONTENT5_1" value="0" checked /> 否
+				</label>
+				<label for="CONTENT5_Y">
+					<input type="radio" id="CONTENT5_Y" name="CONTENT5_1" value="1" @(Model.CONTENT5_1.CheckStringValue("1") ? "checked" : "") /> 是
+				</label>
+				@if (Model.CONTENT5_1.CheckStringValue("1"))
+				{
+					@Html.EditorValidationFor(m => m.CONTENT5_2, new { htmlAttr = new { placeholder = "維修項目" } })
+				}
+				else
+				{
+					@Html.EditorValidationFor(m => m.CONTENT5_2, new { htmlAttr = new { placeholder = "維修項目", @disabled = "disabled" } })
+				}
+			</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT6)</label>
+			<div>@Html.EditorValidationFor(m => m.CONTENT6)</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			calcDiffKM();
+			$("#DECIMAL1,#DECIMAL2").blur(function () {
+				calcDiffKM();
+			});
+
+			$("input[name='CONTENT4']").click(function () {
+				var _val = $(this).val();
+				if (_val == "0") {
+					$("#DECIMAL3").val("");
+					$("#DECIMAL4").val("");
+					$("#DECIMAL5").val("");
+				}
+				$("#DECIMAL3").prop("disabled", _val == "0");
+				$("#DECIMAL4").prop("disabled", _val == "0");
+				$("#DECIMAL5").prop("disabled", _val == "0");
+
+				setRequired(_val == "1", "DECIMAL3");
+				setRequired(_val == "1", "DECIMAL4");
+				setRequired(_val == "1", "DECIMAL5");
+			});
+
+			$("input[name='CONTENT5_1']").click(function () {
+				var _val = $(this).val();
+				if (_val == "0") {
+					$("#CONTENT5_2").val("");
+				}
+				$("#CONTENT5_2").prop("disabled", _val == "0");
+
+				setRequired(_val == "1", "CONTENT5_2");
+			});
+
+			$("#save").click(function () {
+				var D1 = $("#DECIMAL1").val().trim();
+				var D2 = $("#DECIMAL2").val().trim();
+				D1 = D1 == "" ? 0 : (isNaN(D1) ? 0 : parseInt(D1, 0));
+				D2 = D2 == "" ? 0 : (isNaN(D2) ? 0 : parseInt(D2, 0));
+				if (D1 > D2) {
+					showMsg("返回里程數不得小於出發里程數", 4);
+					return false;
+				}
+			});
+		});
+		function calcDiffKM() {
+			var D1 = $("#DECIMAL1").val().trim();
+			var D2 = $("#DECIMAL2").val().trim();
+			D1 = D1 == "" ? 0 : (isNaN(D1) ? 0 : parseInt(D1, 0));
+			D2 = D2 == "" ? 0 : (isNaN(D2) ? 0 : parseInt(D2, 0));
+			$("#DiffKM").html(D2 - D1);
+		}
+	</script>
+}
+

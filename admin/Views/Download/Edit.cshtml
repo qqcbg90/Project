@@ -1,0 +1,94 @@
+﻿@model DownloadModel
+@{
+	List<SelectListItem> downloadtype = (ViewBag.downloadtype as SelectList).ToList<SelectListItem>();
+	downloadtype.Add(new SelectListItem() { Value = "add", Text = "-- 新增 --" });
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k = ViewBag.Keyword, k1 = ViewBag.k1 }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>@MyHtml.RedSpan()類別</label>
+			<div>
+				<span class="select">@Html.DropDownListFor(m => m.PARENT_ID, new SelectList(downloadtype, "Value", "Text"), "請選擇")</span>
+				@Html.ValidationMessageFor(m => m.PARENT_ID)
+				@Html.EditorValidationFor(model => model.PARENT_ID_OTHER, new { htmlAttr = new { style = "display: none;", placeholder = "類別名稱", maxlength = 20 } })
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.TITLE)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.TITLE)
+			</div>
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = true, iDescType = 2, iFileSizeLimit = 10 })
+		<div class="file_notic" style="color: red;">
+			※ 相同檔案，檔案類型不同，檔名請填寫相同。
+		</div>
+		<div>
+			<label>附件上傳</label>
+			<div class="up_img">
+				<input type="file" name="HPFs" multiple accept="@Function.DEFAULT_FILEUPLOAD_EXT" />
+				<div class="show_img">
+					<ul style="width: 100%">
+						@if (Model.ATTAs != null && Model.ATTAs.Count > 0)
+						{
+							foreach (ATTACHMENT atta in Model.ATTAs)
+							{
+								<li style="margin: 10px 0;">
+									@Html.Hidden("ATTAs.index", atta.ID)
+									@Html.Hidden("ATTAs[" + atta.ID + "].ID", atta.ID)
+									<span style="color: orangered; margin-right: 10px;">@atta.CREATE_DATE.ToDateString()</span>
+									@Html.TextBox("ATTAs[" + atta.ID + "].DESCRIPTION", atta.DESCRIPTION, new { maxlength = 50, style = "width: 80%", title = atta.DESCRIPTION })
+									<span style="color: blue;margin-right: 10px;">@atta.EXTENSION</span>
+									<a href="@Url.Content(atta.GetFile())" target="_blank" title="下載 (開新視窗)"><i class="fa fa-download" style="font-size: x-large;color:#1c70c5;text-shadow: 2px 2px 2px #CCC; margin: 0 10px;"></i></a>
+									<a href="@Url.MyAction("DeleteAttachment", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = atta.MAIN_ID, attid = atta.ID, k1 = ViewBag.k1 })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')">
+										<i class="fa fa-times" style="font-size: x-large;color: #dd4b39;text-shadow: 2px 2px 2px #CCC;"></i>
+									</a>
+								</li>
+							}
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+		<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit, Url.MyAction("Index", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { k1 = ViewBag.k1 }))</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("#PARENT_ID").change(function () {
+				var val = $(this).val();
+				if (val == "add") {
+					$("#PARENT_ID_OTHER").show();
+					setRequired(true, 'PARENT_ID_OTHER');
+				} else {
+					$("#PARENT_ID_OTHER").val();
+					$("#PARENT_ID_OTHER").hide();
+					setRequired(false, 'PARENT_ID_OTHER');
+				}
+			});
+		});
+	</script>
+}
+

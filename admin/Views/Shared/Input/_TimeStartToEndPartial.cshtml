@@ -1,0 +1,177 @@
+﻿@*
+    日期範圍 partial
+    model[0]：日期起控制項name 傳入
+    model[1]：日期迄控制項name 傳入
+    model[2]：日期起值 傳入
+    model[3]：日期迄值 傳入
+    model[4]：是否必填(1:是，0:否)
+*@
+@model string[]
+@{
+    string start = Model[0];
+    string end = Model[1];
+    string startValue = Model[2];
+    string endValue = Model[3];
+
+    string isRequired = Model[4].IsNullOrEmpty() ? "1" : Model[4];
+    var htmlAttr = new { @class = "datepicker input", placeholder = "YYYY/MM/DD" };
+    var htmlAttrRequired = new { @class = "datepicker input", placeholder = "YYYY/MM/DD", data_val = "true", data_val_required = "*" };
+
+    int startHour = 0;
+    int startMinute = 0;
+    int startSecond = 0;
+    if (!startValue.IsNullOrEmpty())
+    {
+        DateTime startDate = startValue.ToDateTime();
+        startValue = startDate.ToDefaultString();
+        startHour = startDate.Hour;
+        startMinute = startDate.Minute;
+        startSecond = startDate.Second;
+    }
+    int endHour = 0;
+    int endMinute = 0;
+    int endSecond = 0;
+    if (!endValue.IsNullOrEmpty())
+    {
+        DateTime endDate = endValue.ToDateTime();
+        endValue = endDate.ToDefaultString();
+        endHour = endDate.Hour;
+        endMinute = endDate.Minute;
+        endSecond = endDate.Second;
+    }
+    int hourMin = ViewData["hourMin"] != null ? ((string)ViewData["hourMin"]).ToInt() : 0;
+    int hourMax = ViewData["hourMax"] != null ? ((string)ViewData["hourMax"]).ToInt() : 23;
+    int minuteMin = ViewData["minuteMin"] != null ? ((string)ViewData["minuteMin"]).ToInt() : 0;
+    int minuteMax = ViewData["minuteMax"] != null ? ((string)ViewData["minuteMax"]).ToInt() : 59;
+    int secondMin = ViewData["secondMin"] != null ? ((string)ViewData["secondMin"]).ToInt() : 0;
+    int secondMax = ViewData["secondMax"] != null ? ((string)ViewData["secondMax"]).ToInt() : 59;
+    int minuteStep = ViewData["minuteStep"] != null ? ((string)ViewData["minuteStep"]).ToInt() : 1;
+}
+<span>
+    起
+    @if (isRequired.CheckStringValue("1"))
+    {
+        @Html.TextBox(start + "date", startValue, htmlAttrRequired)
+    }
+    else
+    {
+        @Html.TextBox(start + "date", startValue, htmlAttr)
+    }
+    <span class="select time">
+        <select id="@(start)hour" name="@(start)hour">
+            @for (int i = hourMin; i <= hourMax; i++)
+            {
+                <option value="@i.ToString("00")" @(startHour == i ? "selected" : "")>@i.IntToStringAddZero(2)</option>
+            }
+        </select>
+    </span>
+    :&nbsp;&nbsp;
+    <span class="select time">
+        <select id="@(start)minute" name="@(start)minute">
+            @for (int i = minuteMin; i <= minuteMax; i += minuteStep)
+            {
+                <option value="@i.ToString("00")" @(startMinute == i ? "selected" : "")>@i.IntToStringAddZero(2)</option>
+            }
+        </select>
+    </span>
+    :&nbsp;&nbsp;
+    <span class="select time">
+        <select id="@(start)second" name="@(start)second">
+            @for (int i = secondMin; i <= secondMax; i += minuteStep)
+            {
+                <option value="@i.ToString("00")" @(startSecond == i ? "selected" : "")>@i.IntToStringAddZero(2)</option>
+            }
+        </select>
+    </span>
+    <div>
+        @*&nbsp;&nbsp;至&nbsp;&nbsp;*@
+        迄
+        @if (isRequired.CheckStringValue("1"))
+        {
+            @Html.TextBox(end + "date", endValue, htmlAttrRequired)
+        }
+        else
+        {
+            @Html.TextBox(end + "date", endValue, htmlAttr)
+        }
+        <span class="select time">
+            <select id="@(end)hour" name="@(end)hour">
+                @for (int i = hourMin; i <= hourMax; i++)
+                {
+                    <option value="@i.ToString("00")" @(endHour == i ? "selected" : "")>@i.IntToStringAddZero(2)</option>
+                }
+            </select>
+        </span>
+        :&nbsp;&nbsp;
+        <span class="select time">
+            <select id="@(end)minute" name="@(end)minute">
+                @for (int i = minuteMin; i <= minuteMax; i += minuteStep)
+                {
+                    <option value="@i.ToString("00")" @(endMinute == i ? "selected" : "")>@i.IntToStringAddZero(2)</option>
+                }
+            </select>
+        </span>
+        :&nbsp;&nbsp;
+        <span class="select time">
+            <select id="@(end)second" name="@(end)second">
+                @for (int i = secondMin; i <= secondMax; i += minuteStep)
+                {
+                    <option value="@i.ToString("00")" @(endSecond == i ? "selected" : "")>@i.IntToStringAddZero(2)</option>
+                }
+            </select>
+        </span>
+    </div>
+</span>
+@Html.Hidden(start, Model[2])
+@Html.Hidden(end, Model[3])
+<style type="text/css">
+    .datepicker {
+        max-width: 110px;
+        margin-right: 5px !important;
+    }
+
+    .time {
+        max-width: 90px;
+    }
+</style>
+<script type="text/javascript">
+	$(function () {
+		$("input[name='@(start)date']").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'yy/mm/dd',
+			showAnim: 'drop',
+			buttonImage: '@Url.Content("~/images/calendar.gif")',
+			//showOn: 'both',
+			buttonImageOnly: true,
+			yearRange: "1911:+3",
+			buttonText: '開始日期',
+			onSelect: function (selectedDate) {
+				$("input[name='@(end)date']").datepicker("option", "minDate", selectedDate);
+			}
+		});
+		$("input[name='@(end)date']").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'yy/mm/dd',
+			showAnim: 'drop',
+			buttonImage: '@Url.Content("~/images/calendar.gif")',
+			//showOn: 'both',
+			buttonImageOnly: true,
+			yearRange: "1911:+3",
+			buttonText: '結束日期',
+			onSelect: function (selectedDate) {
+				$("input[name='@(start).date']").datepicker("option", "maxDate", selectedDate);
+			}
+		});
+		$("input[name='@(start)date'],select[name='@(start)hour'],select[name='@(start)minute'],select[name='@(end)second']").on('change', SetStart);
+		$("input[name='@(end)date'],select[name='@(end)hour'],select[name='@(end)minute'],select[name='@(end)second']").on('change', SetEnd);
+
+	});
+	function SetStart() {
+		$("#@(start)").val($("input[name='@(start)date']").val() + " " + $("select[name='@(start)hour']").val() + ":" + $("select[name='@(start)minute']").val() + ":" + $("select[name='@(start)second']").val());
+	}
+	function SetEnd() {
+		$("#@(end)").val($("input[name='@(end)date']").val() + " " + $("select[name='@(end)hour']").val() + ":" + $("select[name='@(end)minute']").val()+ ":" + $("select[name='@(start)second']").val());
+	}
+</script>

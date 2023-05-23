@@ -1,0 +1,19 @@
+﻿@*
+    A+Image 通用Partial
+*@
+@model ATTACHMENT
+@{ 
+    string _url = Model.GetValueOnLang(1);
+}
+@if (_url.IsNullOrEmpty())
+{
+    <a href="javascript:;" title="@Model.GetValueOnLang()">
+        <img src="@Model.GetPic(PictureType.Medium)">
+    </a>
+}
+else
+{
+    <a href="@_url" title="@Model.GetValueOnLang()" target="_blank">
+        <img src="@Model.GetPic(PictureType.Medium)">
+    </a>
+}

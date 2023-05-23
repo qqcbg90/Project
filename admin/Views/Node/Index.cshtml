@@ -1,0 +1,105 @@
+﻿@model PagedList<NODE>
+
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "Edit";
+	string _delete = "Delete";
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null, new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, pid = ViewBag.pid })
+	</div>
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&pid=' + $("#pid").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<div class="search_box">
+		<label class="key">@MyList.KeywordInput(ViewBag.Keyword, "ID, TITLE, PARENT_ID")</label>
+		<label class="btn_box go">@MyList.Submit()</label>
+	</div>
+	<div class="top_bar">
+		<label class="btn_box">
+			@MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues))
+		</label>
+	</div>
+	if (MyList.IsTwoPagers())
+	{
+		@Pager()
+	}
+	<div class="tb_list_box">
+		<table>
+			<tr class="thead">
+				<th>PARENT_ID</th>
+				<th>ID</th>
+				<th>TITLE</th>
+				<th>ENABLE</th>
+				<th>ORDER</th>
+				<th>功能</th>
+			</tr>
+			@foreach (var data in Model)
+			{
+				string PARENT_TITLE = Function.GetNodeTitle(data.PARENT_ID);
+				<tr>
+					<td data-th="PARENT_ID" style="text-align: left">
+						<span style="font-size:smaller">@data.PARENT_ID</span> @Html.Raw(PARENT_TITLE.IsNullOrEmpty() ? "" : "<br /><span style=\"color:green\">" + PARENT_TITLE + "</span>")
+					</td>
+					<td data-th="ID" style="text-align: left">
+						<span style="font-size:smaller">@data.ID</span>
+					</td>
+					<td data-th="TITLE" style="text-align: left">
+						<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = data.ID, pid = ViewBag.pid })" title="@data.TITLE">
+							@data.TITLE
+						</a>
+					</td>
+					<td data-th="ENABLE">
+						@(data.ENABLE.IsEnable() ? "V" : "")
+					</td>
+					<td data-th="ORDER">
+						@data.ORDER
+					</td>
+					<td data-th="功能">
+						<div class="btn_box">
+							<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = data.ID, pid = ViewBag.pid })" title="@Resource.Edit"><span class="btn"><i class="far fa-edit"></i></span></a>
+							<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = data.ID, pid = ViewBag.pid })" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')">@MyList.DeleteImage()</a>
+						</div>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+	@Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

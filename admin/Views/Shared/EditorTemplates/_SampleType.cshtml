@@ -1,0 +1,43 @@
+﻿@{
+    string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+}
+
+@Html.DropDownList(string.Empty, new SelectList(Enum.GetValues(typeof(SampleType)).Cast<SampleType>()
+            .Select(p => new SelectListItem { Value = p.ToIntValue(), Text = p.GetDescription() }), "Value", "Text", ViewData.TemplateInfo.FormattedModelValue), "請選擇")
+
+<span id="iconListA">
+@foreach (SampleType icon in Enum.GetValues(typeof(SampleType)))
+{
+    <input type="checkbox" class="choosed" value="@icon.ToIntValue()" onclick="GetIconValueA()" />
+    @icon.GetDescription()
+    <!--如果有圖示的話 -->
+    <img src="~/images/icon/@(icon.ToIntValue()).png" />
+}
+</span>
+@Html.Hidden(string.Empty)
+<script type="text/javascript">
+    var _iconNameA = '@tmpName';
+    SetIconValueA();
+    function getIconCheckedA() {
+        return $('#iconListA :checkbox').map(function () {
+            if ($(this).is(':checked'))
+                return $(this).val();
+        }).get().join(',');
+    }
+    function GetIconValueA() {
+        $("#" + _iconNameA).val(getIconCheckedA());
+    }
+    function SetIconValueA() {
+        var tmp = $("#" + _iconNameA).val();
+        if (tmp != "") {
+            $.map(tmp.split(','), function (str) {
+                $('#iconListA :checkbox').map(function () {
+                    if (str == $(this).val()) {
+                        $(this).prop("checked", true);    
+                    }
+                });
+            });
+        }
+    }
+</script>

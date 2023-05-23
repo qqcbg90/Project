@@ -1,0 +1,978 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="ALL" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>回上頁</value>
+  </data>
+  <data name="City1" xml:space="preserve">
+    <value>臺北市</value>
+  </data>
+  <data name="City10" xml:space="preserve">
+    <value>南投縣</value>
+  </data>
+  <data name="City11" xml:space="preserve">
+    <value>雲林縣</value>
+  </data>
+  <data name="City12" xml:space="preserve">
+    <value>花蓮縣</value>
+  </data>
+  <data name="City13" xml:space="preserve">
+    <value>嘉義市</value>
+  </data>
+  <data name="City14" xml:space="preserve">
+    <value>嘉義縣</value>
+  </data>
+  <data name="City15" xml:space="preserve">
+    <value>臺南市</value>
+  </data>
+  <data name="City16" xml:space="preserve">
+    <value>高雄市</value>
+  </data>
+  <data name="City17" xml:space="preserve">
+    <value>臺東縣</value>
+  </data>
+  <data name="City18" xml:space="preserve">
+    <value>屏東縣</value>
+  </data>
+  <data name="City2" xml:space="preserve">
+    <value>基隆市</value>
+  </data>
+  <data name="City3" xml:space="preserve">
+    <value>新北市</value>
+  </data>
+  <data name="City4" xml:space="preserve">
+    <value>桃園市</value>
+  </data>
+  <data name="City5" xml:space="preserve">
+    <value>宜蘭縣</value>
+  </data>
+  <data name="City6" xml:space="preserve">
+    <value>新竹縣</value>
+  </data>
+  <data name="City7" xml:space="preserve">
+    <value>苗栗縣</value>
+  </data>
+  <data name="City8" xml:space="preserve">
+    <value>臺中市</value>
+  </data>
+  <data name="City9" xml:space="preserve">
+    <value>彰化縣</value>
+  </data>
+  <data name="Company_CONTENT1" xml:space="preserve">
+    <value>公司名稱</value>
+  </data>
+  <data name="Company_CONTENT10" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="Company_CONTENT11" xml:space="preserve">
+    <value>網站</value>
+  </data>
+  <data name="Company_CONTENT12" xml:space="preserve">
+    <value>FB</value>
+  </data>
+  <data name="Company_CONTENT13" xml:space="preserve">
+    <value>IG</value>
+  </data>
+  <data name="Company_CONTENT2" xml:space="preserve">
+    <value>協會成員</value>
+  </data>
+  <data name="Company_CONTENT3" xml:space="preserve">
+    <value>公司簡介</value>
+  </data>
+  <data name="Company_CONTENT4" xml:space="preserve">
+    <value>地接旅行社</value>
+  </data>
+  <data name="Company_CONTENT5" xml:space="preserve">
+    <value>聯絡人</value>
+  </data>
+  <data name="Company_CONTENT6" xml:space="preserve">
+    <value>職稱</value>
+  </data>
+  <data name="Company_CONTENT8" xml:space="preserve">
+    <value>公司地址</value>
+  </data>
+  <data name="Company_CONTENT9" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Company_DATA_TYPE" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Company_STATUS" xml:space="preserve">
+    <value>公司別</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>首頁</value>
+  </data>
+  <data name="ListPage" xml:space="preserve">
+    <value>&lt;li class="all"&gt;{0} 筆資料 / 每頁顯示 {1} 筆&lt;/li&gt;</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>下一頁</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>頁</value>
+  </data>
+  <data name="PrevPage" xml:space="preserve">
+    <value>上一頁</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>*為必填欄位</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>重新輸入</value>
+  </data>
+  <data name="ResetPassword" xml:space="preserve">
+    <value>重設密碼</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>存檔</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜尋</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>請選擇</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>顯示</value>
+  </data>
+  <data name="SysManager" xml:space="preserve">
+    <value>系統管理者</value>
+  </data>
+  <data name="WebsiteTitle" xml:space="preserve">
+    <value>菲律賓後台系統</value>
+  </data>
+  <data name="TotalPage" xml:space="preserve">
+    <value>&lt;li class="go"&gt;前往 {0} 頁 / 總共 {1} 頁&lt;/li&gt;</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Hi,</value>
+  </data>
+  <data name="Home_Welcome" xml:space="preserve">
+    <value>歡迎使用</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>帳號</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>瀏覽</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>功能</value>
+  </data>
+  <data name="Keyword_SYSUSER" xml:space="preserve">
+    <value>帳號、姓名、E-mail、公司名稱</value>
+  </data>
+  <data name="LastLoginTime" xml:space="preserve">
+    <value>最後登入時間</value>
+  </data>
+  <data name="msg_01" xml:space="preserve">
+    <value>再一次確認，您要刪除這筆資料？</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>姓名</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>登 入</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>登 出</value>
+  </data>
+  <data name="AddUser" xml:space="preserve">
+    <value>新增使用者</value>
+  </data>
+  <data name="AdminListPage" xml:space="preserve">
+    <value>每頁顯示&lt;input type='text' name='defaultPage' value='' size='2' onchange='InputGo($(this).val())' /&gt;筆&lt;/span&gt;&lt;input type='button' class='btn' value='顯示' title='顯示' onclick='ChangeDefaultPage()'/&gt;</value>
+  </data>
+  <data name="AdminTotalPage" xml:space="preserve">
+    <value>&lt;span style=\"line-height:30px\"&gt;總共 {0} 頁 / {1} 筆資料&lt;/span&gt;</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>公司</value>
+  </data>
+  <data name="define" xml:space="preserve">
+    <value>確定</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>編輯使用者</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>結束日</value>
+  </data>
+  <data name="EnTitle" xml:space="preserve">
+    <value>英文名稱</value>
+  </data>
+  <data name="Footer_01" xml:space="preserve">
+    <value>版權所有 © 2021 All Rights Reserved.</value>
+  </data>
+  <data name="Footer_02" xml:space="preserve">
+    <value>建議使用瀏覽器IE11.0以上版本；最佳螢幕解析度：1024x768 以上</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>群組名稱</value>
+  </data>
+  <data name="GroupPermissions" xml:space="preserve">
+    <value>群組權限</value>
+  </data>
+  <data name="Identity" xml:space="preserve">
+    <value>身份</value>
+  </data>
+  <data name="msg_02" xml:space="preserve">
+    <value>帳號或密碼錯誤!! 請確認帳號和密碼的大小寫是否一致!! </value>
+  </data>
+  <data name="phone" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="PickCompany" xml:space="preserve">
+    <value>任職公司</value>
+  </data>
+  <data name="PickThisStore" xml:space="preserve">
+    <value>總公司</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>處理中</value>
+  </data>
+  <data name="Remarks" xml:space="preserve">
+    <value>備註</value>
+  </data>
+  <data name="SearchResults" xml:space="preserve">
+    <value>搜尋結果</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>挑選使用者</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>起始日</value>
+  </data>
+  <data name="UserSearch" xml:space="preserve">
+    <value>使用者搜尋</value>
+  </data>
+  <data name="DateRange" xml:space="preserve">
+    <value>日期範圍</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>標題</value>
+  </data>
+  <data name="fill" xml:space="preserve">
+    <value>我要填寫</value>
+  </data>
+  <data name="msg_03" xml:space="preserve">
+    <value>問卷已被使用，無法刪除。</value>
+  </data>
+  <data name="msg_04" xml:space="preserve">
+    <value>已刪除</value>
+  </data>
+  <data name="msg_05" xml:space="preserve">
+    <value>刪除失敗</value>
+  </data>
+  <data name="Questionnaire" xml:space="preserve">
+    <value>問卷統計</value>
+  </data>
+  <data name="QuestionnaireTitle" xml:space="preserve">
+    <value>問卷標題</value>
+  </data>
+  <data name="SelectQuestionnaire" xml:space="preserve">
+    <value>選擇問卷</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一題</value>
+  </data>
+  <data name="ApprovalStatus" xml:space="preserve">
+    <value>審核狀態</value>
+  </data>
+  <data name="BackToHomepage" xml:space="preserve">
+    <value>回主頁</value>
+  </data>
+  <data name="ApprovalStatus_DidNotPass" xml:space="preserve">
+    <value>未通過</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>附件</value>
+  </data>
+  <data name="InformationDrop" xml:space="preserve">
+    <value>送客資料</value>
+  </data>
+  <data name="msg_06" xml:space="preserve">
+    <value>您答錯了喔!!</value>
+  </data>
+  <data name="NumberOfData" xml:space="preserve">
+    <value>資料筆數</value>
+  </data>
+  <data name="ApprovalStatus_Pass" xml:space="preserve">
+    <value>通過</value>
+  </data>
+  <data name="SendGuestNumberList" xml:space="preserve">
+    <value>送客人數排名表</value>
+  </data>
+  <data name="SendingGuestStatistics" xml:space="preserve">
+    <value>送客人數統計表</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>使用者名稱</value>
+  </data>
+  <data name="close" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="msg_07" xml:space="preserve">
+    <value>註冊成功，請至您註冊時填寫的電子信箱收信，並點擊信件中的超連結來啟用帳號。</value>
+  </data>
+  <data name="msg_08" xml:space="preserve">
+    <value>帳號已開通</value>
+  </data>
+  <data name="msg_09" xml:space="preserve">
+    <value>開通失敗，請連絡管理員。</value>
+  </data>
+  <data name="msg_10" xml:space="preserve">
+    <value>已啟用</value>
+  </data>
+  <data name="msg_11" xml:space="preserve">
+    <value>已停用</value>
+  </data>
+  <data name="open" xml:space="preserve">
+    <value>啟用</value>
+  </data>
+  <data name="CannotBeEmpty" xml:space="preserve">
+    <value>不能為空</value>
+  </data>
+  <data name="msg_12" xml:space="preserve">
+    <value>※ 如果清單中找不到您的公司，請自行輸入。</value>
+  </data>
+  <data name="msg_14" xml:space="preserve">
+    <value>建立您的帳戶</value>
+  </data>
+  <data name="registered" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="msg_15" xml:space="preserve">
+    <value>活動時間內註冊自動報名</value>
+  </data>
+  <data name="registration_activity" xml:space="preserve">
+    <value>活動報名</value>
+  </data>
+  <data name="msg_16" xml:space="preserve">
+    <value>帳號已開通，請自行前往登入頁。</value>
+  </data>
+  <data name="registered_date" xml:space="preserve">
+    <value>註冊日期</value>
+  </data>
+  <data name="msg_17" xml:space="preserve">
+    <value>確定要停用此帳號?</value>
+  </data>
+  <data name="msg_18" xml:space="preserve">
+    <value>確定要啟用此帳號?</value>
+  </data>
+  <data name="msg_19" xml:space="preserve">
+    <value>檔案類型錯誤，可接受的副檔名有：</value>
+  </data>
+  <data name="msg_20" xml:space="preserve">
+    <value>上傳的檔案大小限制要低於 5MB</value>
+  </data>
+  <data name="msg_21" xml:space="preserve">
+    <value>上傳的檔案只接受 pdf 和 word</value>
+  </data>
+  <data name="msg_22" xml:space="preserve">
+    <value>您的帳號尚未啟用，請至您註冊時填寫的電子信箱收取確認信</value>
+  </data>
+  <data name="Rst_Body" xml:space="preserve">
+    <value>&lt;p&gt;您好 {0}，您的帳號為：{1}&lt;/p&gt;&lt;p&gt;請點擊連結進行帳戶開通：&lt;a href="{2}" target="_blank"&gt;點我開通&lt;/a&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="Rst_Subject" xml:space="preserve">
+    <value>菲律賓後台系統註冊確認信</value>
+  </data>
+  <data name="WebsiteTitle_Web" xml:space="preserve">
+    <value>Taiwan Expert Rewards</value>
+  </data>
+  <data name="DeleteCompanyUser" xml:space="preserve">
+    <value>請刪除公司下的使用者!!</value>
+  </data>
+  <data name="Menu1" xml:space="preserve">
+    <value>PROGRAM RULES</value>
+  </data>
+  <data name="Menu2" xml:space="preserve">
+    <value>ITINERARIES</value>
+  </data>
+  <data name="Menu3" xml:space="preserve">
+    <value>RESOURCES</value>
+  </data>
+  <data name="Menu4" xml:space="preserve">
+    <value>REGISTER BOOKINGS</value>
+  </data>
+  <data name="Menu5" xml:space="preserve">
+    <value>WINNERS</value>
+  </data>
+  <data name="Menu6" xml:space="preserve">
+    <value />
+  </data>
+  <data name="RegisterBookings_ORDER" xml:space="preserve">
+    <value>送客筆數</value>
+  </data>
+  <data name="RegisterBookings_ORDER_Hint" xml:space="preserve">
+    <value>(不包含領隊)</value>
+  </data>
+  <data name="RegisterBookings_CONTENT3" xml:space="preserve">
+    <value>出發航空</value>
+  </data>
+  <data name="RegisterBookings_CONTENT4" xml:space="preserve">
+    <value>出發航班</value>
+  </data>
+  <data name="RegisterBookings_CONTENT5" xml:space="preserve">
+    <value>出發日期</value>
+  </data>
+  <data name="RegisterBookings_CONTENT6" xml:space="preserve">
+    <value>回程航空</value>
+  </data>
+  <data name="RegisterBookings_CONTENT7" xml:space="preserve">
+    <value>回程航班</value>
+  </data>
+  <data name="RegisterBookings_CONTENT8" xml:space="preserve">
+    <value>回程日期</value>
+  </data>
+  <data name="RegisterBookings_DESCRIPTION" xml:space="preserve">
+    <value>行程景點</value>
+  </data>
+  <data name="RegisterBookings_DESCRIPTION_Hint" xml:space="preserve">
+    <value>※ 您的送客行程需至少包含一個新的景點。</value>
+  </data>
+  <data name="RegisterBookings_HPF" xml:space="preserve">
+    <value>行程和送客名單</value>
+  </data>
+  <data name="RegisterBookings_HPF_Hint" xml:space="preserve">
+    <value>※ 上傳的資料需包含航班訂購憑證或是機票憑證。</value>
+  </data>
+  <data name="RegisterBookings_Batch" xml:space="preserve">
+    <value>梯次</value>
+  </data>
+  <data name="RegisterBookings_CheckSelect" xml:space="preserve">
+    <value>行程景點:至少選擇1個!!</value>
+  </data>
+  <data name="RegisterBookings_UploadLimit" xml:space="preserve">
+    <value>※ 檔案格式僅支援 PDF 和 WORD 檔，大小要小於 5MB。</value>
+  </data>
+  <data name="RegisterBookings_Departing" xml:space="preserve">
+    <value>出發航班資訊</value>
+  </data>
+  <data name="RegisterBookings_Returning" xml:space="preserve">
+    <value>回程航班資訊</value>
+  </data>
+  <data name="ApprovalStatus_PendingReview" xml:space="preserve">
+    <value>待審核</value>
+  </data>
+  <data name="FillDate" xml:space="preserve">
+    <value>填寫日期</value>
+  </data>
+  <data name="QUIZ_MSG1" xml:space="preserve">
+    <value>現在開始完成幾個簡單的基本測驗，就可以成為認證專家哦~</value>
+  </data>
+  <data name="QUIZ_MSG2" xml:space="preserve">
+    <value>開始測驗</value>
+  </data>
+  <data name="QUIZ_MSG3" xml:space="preserve">
+    <value>恭喜你已經是臺灣旅遊專家了，現在就開始上傳您的送客資料，成為金牌專家吧!!</value>
+  </data>
+  <data name="QUIZ_MSG4" xml:space="preserve">
+    <value>上傳資料</value>
+  </data>
+  <data name="QUIZ_MSG5" xml:space="preserve">
+    <value>成為臺灣旅遊專家</value>
+  </data>
+  <data name="QUIZ_MSG6" xml:space="preserve">
+    <value>上傳送客競賽資料</value>
+  </data>
+  <data name="QUIZ_MSG0" xml:space="preserve">
+    <value>歡迎參加臺灣旅遊專家培訓計畫</value>
+  </data>
+  <data name="ResetPassword_NewPassword" xml:space="preserve">
+    <value>新密碼</value>
+  </data>
+  <data name="ResetPassword_ConfirmNewPassword" xml:space="preserve">
+    <value>確認新密碼</value>
+  </data>
+  <data name="ResetPassword_NotMatch" xml:space="preserve">
+    <value>密碼不符</value>
+  </data>
+  <data name="Required2" xml:space="preserve">
+    <value>必填</value>
+  </data>
+  <data name="Company_CONTENT7" xml:space="preserve">
+    <value>公司所在地</value>
+  </data>
+  <data name="Alternative" xml:space="preserve">
+    <value>擇一填寫</value>
+  </data>
+  <data name="Repeated" xml:space="preserve">
+    <value>已重覆</value>
+  </data>
+  <data name="DownloadCertificate" xml:space="preserve">
+    <value>證書下載</value>
+  </data>
+  <data name="AccountLimit" xml:space="preserve">
+    <value>※ 可使用英文(a-z)、數字(0-9)和底線(_)。</value>
+  </data>
+  <data name="RegisterBookings_msg" xml:space="preserve">
+    <value>※ You will be able to register bookings once your participation of rewards program is confirmed by the organizer.</value>
+  </data>
+  <data name="address" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="all1" xml:space="preserve">
+    <value>查看全部</value>
+  </data>
+  <data name="back1" xml:space="preserve">
+    <value>返回上一頁</value>
+  </data>
+  <data name="code01" xml:space="preserve">
+    <value>會員帳號</value>
+  </data>
+  <data name="code02" xml:space="preserve">
+    <value>紅利點數</value>
+  </data>
+  <data name="code03" xml:space="preserve">
+    <value>訂單管理</value>
+  </data>
+  <data name="code04" xml:space="preserve">
+    <value>使用條款</value>
+  </data>
+  <data name="code05" xml:space="preserve">
+    <value>客服相關</value>
+  </data>
+  <data name="code06" xml:space="preserve">
+    <value>水資源</value>
+  </data>
+  <data name="code07" xml:space="preserve">
+    <value>自然生態</value>
+  </data>
+  <data name="code08" xml:space="preserve">
+    <value>食農教育</value>
+  </data>
+  <data name="code09" xml:space="preserve">
+    <value>人文歷史</value>
+  </data>
+  <data name="code10" xml:space="preserve">
+    <value>環保再生</value>
+  </data>
+  <data name="code11" xml:space="preserve">
+    <value>綠色節能</value>
+  </data>
+  <data name="code12" xml:space="preserve">
+    <value>環境污染</value>
+  </data>
+  <data name="code13" xml:space="preserve">
+    <value>防救災害</value>
+  </data>
+  <data name="code14" xml:space="preserve">
+    <value>海洋</value>
+  </data>
+  <data name="code15" xml:space="preserve">
+    <value>森林</value>
+  </data>
+  <data name="code16" xml:space="preserve">
+    <value>農業</value>
+  </data>
+  <data name="code17" xml:space="preserve">
+    <value>歷史人文</value>
+  </data>
+  <data name="code18" xml:space="preserve">
+    <value>生態守護王</value>
+  </data>
+  <data name="code19" xml:space="preserve">
+    <value>已取消</value>
+  </data>
+  <data name="code20" xml:space="preserve">
+    <value>待使用</value>
+  </data>
+  <data name="code21" xml:space="preserve">
+    <value>已使用</value>
+  </data>
+  <data name="footer01" xml:space="preserve">
+    <value>桃園市政府環境保護局</value>
+  </data>
+  <data name="footer02" xml:space="preserve">
+    <value>33001桃園市桃園區縣府路1號11F</value>
+  </data>
+  <data name="footer03" xml:space="preserve">
+    <value>桃園市政府海岸管理工程處</value>
+  </data>
+  <data name="footer04" xml:space="preserve">
+    <value>337017桃園市大園區中華路298號</value>
+  </data>
+  <data name="footer05" xml:space="preserve">
+    <value>最佳瀏覽環境1280x800視窗模式以上，IE11以上版本瀏覽器</value>
+  </data>
+  <data name="footer06" xml:space="preserve">
+    <value>關於海岸管理工程處</value>
+  </data>
+  <data name="footer07" xml:space="preserve">
+    <value>常見問題</value>
+  </data>
+  <data name="footer08" xml:space="preserve">
+    <value>聯絡我們</value>
+  </data>
+  <data name="footer09" xml:space="preserve">
+    <value>友站連結</value>
+  </data>
+  <data name="footer10" xml:space="preserve">
+    <value>網站安全政策</value>
+  </data>
+  <data name="index" xml:space="preserve">
+    <value>首頁</value>
+  </data>
+  <data name="index01" xml:space="preserve">
+    <value>熱門</value>
+  </data>
+  <data name="index02" xml:space="preserve">
+    <value>生態體驗</value>
+  </data>
+  <data name="index03" xml:space="preserve">
+    <value>最新</value>
+  </data>
+  <data name="index04" xml:space="preserve">
+    <value>優惠</value>
+  </data>
+  <data name="index05" xml:space="preserve">
+    <value>精選</value>
+  </data>
+  <data name="index06" xml:space="preserve">
+    <value>遊程</value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>登入</value>
+  </data>
+  <data name="login_msg" xml:space="preserve">
+    <value>使用社交平臺快速登入</value>
+  </data>
+  <data name="login_msg1" xml:space="preserve">
+    <value>會員帳號登入</value>
+  </data>
+  <data name="login_msg2" xml:space="preserve">
+    <value>免費註冊</value>
+  </data>
+  <data name="login_msg3" xml:space="preserve">
+    <value>會員登入</value>
+  </data>
+  <data name="login_msg4" xml:space="preserve">
+    <value>E-mail(帳號)</value>
+  </data>
+  <data name="login_msg5" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="login_msg6" xml:space="preserve">
+    <value>忘記密碼</value>
+  </data>
+  <data name="login_msg7" xml:space="preserve">
+    <value>我已詳閱並同意</value>
+  </data>
+  <data name="login_msg8" xml:space="preserve">
+    <value>驗證碼</value>
+  </data>
+  <data name="login_msg9" xml:space="preserve">
+    <value>重新產生</value>
+  </data>
+  <data name="logout" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="member01" xml:space="preserve">
+    <value>帳號設定</value>
+  </data>
+  <data name="member02" xml:space="preserve">
+    <value>名</value>
+  </data>
+  <data name="member03" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="member04" xml:space="preserve">
+    <value>性別</value>
+  </data>
+  <data name="member05" xml:space="preserve">
+    <value>出生日期</value>
+  </data>
+  <data name="member06" xml:space="preserve">
+    <value>密碼設定</value>
+  </data>
+  <data name="member07" xml:space="preserve">
+    <value>帳號 E-mail(不可修改)</value>
+  </data>
+  <data name="member08" xml:space="preserve">
+    <value>我的點數</value>
+  </data>
+  <data name="member09" xml:space="preserve">
+    <value>訂單查詢</value>
+  </data>
+  <data name="member10" xml:space="preserve">
+    <value>兌換紀錄查詢</value>
+  </data>
+  <data name="member11" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="member12" xml:space="preserve">
+    <value>目前點數</value>
+  </data>
+  <data name="member13" xml:space="preserve">
+    <value>兌換好禮</value>
+  </data>
+  <data name="member14" xml:space="preserve">
+    <value>守護者經驗</value>
+  </data>
+  <data name="member15" xml:space="preserve">
+    <value>見習守護者</value>
+  </data>
+  <data name="member16" xml:space="preserve">
+    <value>進階守護者</value>
+  </data>
+  <data name="member17" xml:space="preserve">
+    <value>資深守護者</value>
+  </data>
+  <data name="member18" xml:space="preserve">
+    <value>菁英守護者</value>
+  </data>
+  <data name="member19" xml:space="preserve">
+    <value>傳奇守護者</value>
+  </data>
+  <data name="member20" xml:space="preserve">
+    <value>目前累積經驗值</value>
+  </data>
+  <data name="member21" xml:space="preserve">
+    <value>訂單編號</value>
+  </data>
+  <data name="member22" xml:space="preserve">
+    <value>購買日期</value>
+  </data>
+  <data name="member23" xml:space="preserve">
+    <value>至Kkday查詢詳細內容</value>
+  </data>
+  <data name="member24" xml:space="preserve">
+    <value>兌換紀錄</value>
+  </data>
+  <data name="member25" xml:space="preserve">
+    <value>點數紀錄</value>
+  </data>
+  <data name="member26" xml:space="preserve">
+    <value>到期</value>
+  </data>
+  <data name="menu01" xml:space="preserve">
+    <value>活動訊息</value>
+  </data>
+  <data name="menu02" xml:space="preserve">
+    <value>環境教育場域</value>
+  </data>
+  <data name="menu03" xml:space="preserve">
+    <value>熱門景點</value>
+  </data>
+  <data name="menu04" xml:space="preserve">
+    <value>生態遊程</value>
+  </data>
+  <data name="menu05" xml:space="preserve">
+    <value>人氣商家</value>
+  </data>
+  <data name="menu06" xml:space="preserve">
+    <value>好禮兌換</value>
+  </data>
+  <data name="menu07" xml:space="preserve">
+    <value>會員專區</value>
+  </data>
+  <data name="menu08" xml:space="preserve">
+    <value>關於本站</value>
+  </data>
+  <data name="menu09" xml:space="preserve">
+    <value>服務條款</value>
+  </data>
+  <data name="more" xml:space="preserve">
+    <value>更多</value>
+  </data>
+  <data name="or" xml:space="preserve">
+    <value>或</value>
+  </data>
+  <data name="point" xml:space="preserve">
+    <value>點</value>
+  </data>
+  <data name="privacypolicy" xml:space="preserve">
+    <value>隱私權保護政策</value>
+  </data>
+  <data name="recommend" xml:space="preserve">
+    <value>推薦</value>
+  </data>
+  <data name="register" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="search1" xml:space="preserve">
+    <value>搜尋</value>
+  </data>
+  <data name="servicepolicy" xml:space="preserve">
+    <value>使用者條款</value>
+  </data>
+  <data name="tel" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="view01" xml:space="preserve">
+    <value>好康活動</value>
+  </data>
+  <data name="view02" xml:space="preserve">
+    <value>活動日期</value>
+  </data>
+  <data name="view03" xml:space="preserve">
+    <value>鄰近</value>
+  </data>
+  <data name="view04" xml:space="preserve">
+    <value>店家</value>
+  </data>
+  <data name="view05" xml:space="preserve">
+    <value>推薦行程</value>
+  </data>
+  <data name="view06" xml:space="preserve">
+    <value>周邊</value>
+  </data>
+  <data name="view07" xml:space="preserve">
+    <value>景點</value>
+  </data>
+  <data name="view08" xml:space="preserve">
+    <value>可累積</value>
+  </data>
+  <data name="view09" xml:space="preserve">
+    <value>立即訂購</value>
+  </data>
+  <data name="view10" xml:space="preserve">
+    <value>金額以付款頁面為準</value>
+  </data>
+  <data name="view11" xml:space="preserve">
+    <value>集點獨享優惠</value>
+  </data>
+  <data name="login_msg10" xml:space="preserve">
+    <value>加入會員，隨時收到獨家優惠</value>
+  </data>
+  <data name="footer_app" xml:space="preserve">
+    <value>新屋濱海植物園APP下載</value>
+  </data>
+</root>

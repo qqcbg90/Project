@@ -1,0 +1,350 @@
+﻿@model FilmModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@helper TimeAdd(string _ID = "", string _SHOW_TEXT = "", string _START_TIME = "", bool IsAdd = true)
+{
+string sID = "${ID}";
+string sSHOW_TEXT = "${showText}";
+string sSTART_TIME = "${startTime}";
+if (!IsAdd)
+{
+	sID = _ID.IsNullOrEmpty() ? sID : _ID;
+	sSHOW_TEXT = _SHOW_TEXT.IsNullOrEmpty() ? sSHOW_TEXT : _SHOW_TEXT;
+	sSTART_TIME = _START_TIME.IsNullOrEmpty() ? sSTART_TIME : _START_TIME;
+}
+	<li id="@sID" title="@sSHOW_TEXT">
+		<span>@sSHOW_TEXT</span>
+		<a href="javascript:delTime('@sID')" title="刪除" class="close_bt"><i class="far fa-times-circle"></i></a>
+		<input type="hidden" id="TIMEs.index" name="TIMEs.index" value="@sID" />
+		<input type="hidden" id="TIMEs[@sID].ID" name="TIMEs[@sID].ID" value="@sID" />
+		<input type="hidden" id="TIMEs[@sID].DATETIME1" name="TIMEs[@sID].DATETIME1" value="@sSTART_TIME" />
+	</li>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT14)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT14)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT21)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT21)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT11)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT11)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT13)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT13)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.ORDER)
+			</label>
+			<div>
+				<input type="checkbox" value="0" id="ORDER" name="ORDER" @(Model.ORDER == 0 ? "checked" : "") />
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.DECIMAL3)
+			</label>
+			<div>
+				<input type="checkbox" value="0" id="DECIMAL3" name="DECIMAL3" @(Model.DECIMAL3 == 0 ? "checked" : "") />
+			</div>
+		</div>
+		<div class="file_notic">
+			時間新增說明
+			<br />
+			1. 「開始日期」和「開始時間」為必填，時間不可為 00:00。
+			<br />
+			2. 設定完成，請按「新增」；新增／刪除時間後，請按「存檔」。
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.TIME)
+			</label>
+			<div class="al_it_c">
+				@Html.EditorValidationFor(m => m.TIME)
+				@MyHtml.ClickButton("btnAdd", "新增")
+			</div>
+		</div>
+		<div>
+			<label></label>
+			<div class="new_time">
+				<p>已新增時間</p>
+				<ul id="lsTime">
+					@if (Model.TIMEs != null)
+					{
+						foreach (TimeModel time in Model.TIMEs)
+						{
+							string showText = time.DATETIME1.ToDateTimeString(week: true);
+							@TimeAdd(time.ID, showText, time.DATETIME1.ToDateTimeString(), false)
+						}
+					}
+				</ul>
+				@Html.ValidationMessageFor(m => m.TIMEs)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT4)
+			</label>
+			<div>
+				<span class="select">@Html.DropDownListFor(m => m.CONTENT4, ViewBag.FilmFormat as SelectList, "請選擇")</span>
+				@Html.ValidationMessageFor(m => m.CONTENT4)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT5)
+			</label>
+			<div>
+				<span class="select">@Html.DropDownListFor(m => m.CONTENT5, ViewBag.FilmGenre as SelectList, "請選擇")</span>
+				@Html.ValidationMessageFor(m => m.CONTENT5)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT6)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT6)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DECIMAL1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DECIMAL1, new { htmlAttr = new { placeholder = "西元年(格式：YYYY)" } })
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT7)
+			</label>
+			<div>
+				<span class="select">
+					@Html.DropDownListFor(m => m.CONTENT7, ViewBag.FilmCountrySelect as SelectList, "請選擇", new { @class = "hasOther07" })
+				</span>
+				@Html.ValidationMessageFor(m => m.CONTENT7)
+				@{string c7 = Model.CONTENT7.ToMyString();
+					string c7Style = "display: none;";
+					if (!c7.IsNullOrEmpty() && c7.Equals("其他"))
+					{
+						c7Style = string.Empty;
+					}
+				}
+				@Html.EditorValidationFor(model => model.CONTENT7_OTHER, new { htmlAttr = new { style = c7Style, placeholder = "自行新增" } })
+				@MyHtml.RedP("選其他，可自行新增或編寫多種國家，例如「法國、德國」", "newLine")
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT8)
+			</label>
+			<div>
+				<span class="select">
+					@Html.DropDownListFor(m => m.CONTENT8, ViewBag.FilmScreeningSpecificationsSelect as SelectList, "請選擇", new { @class = "hasOther08" })
+				</span>
+				@Html.ValidationMessageFor(m => m.CONTENT8)
+				@{string c8 = Model.CONTENT8.ToMyString();
+					string c8Style = "display: none;";
+					if (!c8.IsNullOrEmpty() && c8.Equals("其他"))
+					{
+						c8Style = string.Empty;
+					}
+				}
+				@Html.EditorValidationFor(model => model.CONTENT8_OTHER, new { htmlAttr = new { style = c8Style, placeholder = "自行新增" } })
+				@MyHtml.RedP("選其他，可自行新增", "newLine")
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DECIMAL2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DECIMAL2)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT9)
+			</label>
+			<div>
+				<span class="select">
+					@Html.DropDownListFor(m => m.CONTENT9, ViewBag.FilmPronunciationSelect as SelectList, "請選擇", new { @class = "hasOther09" })
+				</span>
+				@Html.ValidationMessageFor(m => m.CONTENT9)
+				@{string c9 = Model.CONTENT9.ToMyString();
+					string c9Style = "display: none;";
+					if (!c9.IsNullOrEmpty() && c9.Equals("其他"))
+					{
+						c9Style = string.Empty;
+					}
+				}
+				@Html.EditorValidationFor(model => model.CONTENT9_OTHER, new { htmlAttr = new { style = c9Style, placeholder = "自行新增" } })
+				@MyHtml.RedP("選其他，可自行新增或編寫多種語言，例如「英語、法語發音」", "newLine")
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT10)
+			</label>
+			<div>
+				<span class="select">
+					@Html.DropDownListFor(m => m.CONTENT10, ViewBag.FilmSubtitleSelect as SelectList, "請選擇", new { @class = "hasOther10" })
+				</span>
+				@Html.ValidationMessageFor(m => m.CONTENT10)
+				@{string c10 = Model.CONTENT10.ToMyString();
+					string c10Style = "display: none;";
+					if (!c10.IsNullOrEmpty() && c10.Equals("其他"))
+					{
+						c10Style = string.Empty;
+					}
+				}
+				@Html.EditorValidationFor(model => model.CONTENT10_OTHER, new { htmlAttr = new { style = c10Style, placeholder = "自行新增" } })
+				@MyHtml.RedP("選其他，可自行新增", "newLine")
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT12)
+			</label>
+			<div>
+				<span class="select">@Html.DropDownListFor(m => m.CONTENT12, ViewBag.FilmColorSelect as SelectList)</span>
+				@Html.ValidationMessageFor(m => m.CONTENT12)
+			</div>
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = true, iDescType = 1, sPicWH = "700 x 400" })
+		<div>
+			<label>圖片上傳</label>
+			<div class="up_img">
+				<input type="file" name="HPFs" multiple accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" /><br />
+				@Html.Partial("_AttachmentPartial", Model.PICs)
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+	@Html.Hidden("lsDel")
+					}
+@*網頁內容end*@
+
+@section scripts{
+	<script type="text/x-jquery-tmpl" id="tmplTime">
+		@TimeAdd()
+	</script>
+	<script>
+		$(function () {
+			$("#save").click(function () {
+				if ($("#lsTime li").length == 0) {
+					showMsg("放映時間：至少 1 個！", 3);
+					return false;
+				}
+			});
+
+			$("#btnAdd").click(function () {
+				var weekText = ['日', '一', '二', '三', '四', '五', '六'];
+				var start = $("#TIME_date").val();
+				var starthour = $("#TIMEhour").val();
+				var startminute = $("#TIMEminute").val();
+				var startTime = starthour + ":" + startminute;
+				if (start == "") {
+					showMsg("時間：必填！", 3);
+				} else {
+					var showText = start + " (" + weekText[(new Date(start).getDay())] + ") " + startTime;
+					if ($("#lsTime li[title='" + showText + "']").length == 0) {
+						$("#tmplTime").tmpl({
+							ID: (new Date().getTime()) + "" + ($("#lsTime li").length + 1),
+							startTime: start + " " + startTime,
+							showText: showText
+						}).appendTo("#lsTime");
+					} else {
+						showMsg("此時間已存在！", 3);
+					}
+				}
+			});
+
+			$("[class^=hasOther]").change(function () {
+				var val = $(this).val();
+				var idx = parseInt($(this).prop("class").substr(8, 2));
+				if (val == "其他") {
+					$("#CONTENT" + idx + "_OTHER").show();
+				}
+				else {
+					$("#CONTENT" + idx + "_OTHER").hide();
+				}
+			});
+		});
+
+		function delTime(vID) {
+			if ($("#lsTime li").length > 1) {
+				var lsDel = $("#lsDel").val();
+				$("#lsDel").val(vID + ";" + lsDel);
+
+				$("#" + vID).remove();
+			} else {
+				showMsg("放映時間：至少 1 個（請先新增 1 個，再進行刪除）！", 3);
+			}
+		}
+	</script>
+}
+

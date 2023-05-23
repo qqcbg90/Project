@@ -1,0 +1,83 @@
+﻿@model IPagedList<DATA2>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string k1 = (string)ViewBag.k1;
+	string k2 = (string)ViewBag.k2;
+	string k3 = (string)ViewBag.k3;
+	string k4 = (string)ViewBag.k4;
+	bool fun13_05_03 = ((string)ViewBag.NodeID).CheckStringValue("fun13_05_03");
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&k1=' + $("[name=k1]").val()
+				+ '&k2=' + $("[name=k2]").val()
+				+ '&k3=' + $("[name=k3]").val()
+				+ '&k4=' + $("[name=k4]").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box" style="display:block">
+		@*<label class="key"><span class="select">@Html.DropDownList("k1", ViewBag.hallType as SelectList, "演出館別")</span></label><br />*@
+		<label class="key">
+			演出館別：
+			@foreach (SelectListItem sli in (ViewBag.hallType as SelectList))
+			{
+				<label for="k1_@sli.Value">
+					<input type="radio" value="@sli.Value" id="k1_@sli.Value" name="k1" @(k1.CheckStringValue(sli.Value) ? "checked" : "") />@sli.Text
+				</label>
+			}
+		</label><br />
+		<label class="key">演出場地：<span class="select">@Html.DropDownList("k2", ViewBag.hall1 as SelectList)</span></label><br />
+		<label class="key">展演類型：<span class="select">@Html.DropDownList("k3", ViewBag.performanceType as SelectList)</span></label><br />
+		<label class="key">活動類型：<span class="select">@Html.DropDownList("k4", ViewBag.performance1 as SelectList)</span></label><br />
+		@Html.Partial("Input/_DateStartToEndPartial", new string[] { "start", "end", (string)ViewBag.start, (string)ViewBag.end, "1" })
+		<br />
+		<label class="btn_box go"><input type="submit" id="save" name="save" value="匯出 Excel" class="btn" /></label>
+	</p>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("[name=k1]").click(function () {
+				getChild($(this).val(), "", "全部", 2);
+			});
+			$("[name=k3]").change(function () {
+				getChild($(this).val(), "", "全部", 4);
+			});
+		});
+
+		function getChild(arg1, arg2, firstTextVal, idx) {
+			$.post("@Url.Action("GetChild", "Json")", { id: arg1, v: arg2, first: firstTextVal }, function (data) {
+				$("#k" + idx).html(data);
+			});
+		}
+	</script>
+}

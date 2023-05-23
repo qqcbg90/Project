@@ -1,0 +1,19 @@
+﻿@model NewsModel
+<div>
+    <label>
+        @MyHtml.RedSpan()
+        名稱
+    </label>
+    <div>
+        @Html.EditorValidationFor(m => m.CONTENT1)
+    </div>
+</div>
+<div>
+    <label>
+        @MyHtml.RedSpan()
+        網址
+    </label>
+    <div>
+        @Html.EditorValidationFor(m => m.CONTENT11)
+    </div>
+</div>

@@ -1,0 +1,408 @@
+﻿@model UserModel
+@{
+    List<NODE> expList = Function.NodeList.Where(p => "MemberLevel".Equals(p.PARENT_ID) && p.ORDER < 10).OrderBy(p => p.ORDER).ToList();
+    KingspModel.Interface.IDB iDB = new KingspModel.Repository.DBRepository();
+    int _prev = 0;
+}
+<div class="heightBox"></div>
+<div style="background-color: #F5F5F5; width: 100%;padding: 80px 0px 48px;">
+    <div class="wrap pageA">
+        <!--用戶操作選單-->
+        <div class="pageA_sec1">
+            <div class="pageA_sec1_user">
+                <div style="display: flex;flex-direction: column;align-items: center;margin: 16px auto 40px;">
+                    <div style="position: relative;margin-bottom: 12px;">
+                        @if (!Model.AttPic.CREATER.IsNullOrEmpty())
+                        {
+                            <img src="@Model.AttPic.GetPic(PictureType.Medium)" style="max-height:136px">
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/member.png")" height="136">
+                        }
+                        @*<img class="edit" src="@Url.Content("~/images/icon/icon_edit.svg")" height="26">*@
+                    </div>
+                    <h5 id="username" style="color: #545454;font-weight: bold;cursor: pointer;">@($"{Model.CONTENT2}{Model.CONTENT3}")</h5>
+                    <div id="lv1" style="margin-top: 6px;">
+                        <img src="@Url.Content($"~/images/icon/icon_{Model.CONTENT6}.png")" height="24">
+                        <b>@Function.GetNodeValueByLang(Model.CONTENT6)</b>
+                    </div>
+                </div>
+                @*<div style="border-top: 1px solid #D8D8D8;padding-top: 24px;display: flex;justify-content: space-between;">
+                        <div style="display: flex;align-items: center;">
+                            <img src="@Url.Content("~/images/icon/fb.png")" height="26" style="margin-right: 12px;">
+                            <h5 style="color: #545454;">Facebook</h5>
+                        </div>
+                        @if (!Model.CONTENT11.IsNullOrEmpty())
+                        {
+                            <img src="@Url.Content("~/images/icon/icon_checked.svg")" height="26" style="float: right;">
+                        }
+                    </div>*@
+            </div>
+            <!--菜單-->
+            <div class="pageA_sec1_menu">
+                <ul>
+                    <li>
+                        <a id="menu-1" class="current">
+                            <div class="menu-img">@Resource.member01</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="menu-2" style="display: flex; justify-content: space-between;">
+                            <div style="display: flex;align-items: center;">
+                                <div class="menu-img">@Resource.member08</div>
+                            </div>
+                            <span style="display: flex;align-items: baseline;">
+                                <h5 style="color: #B7940A;padding-right: 4px;">@Model.CONTENT14</h5>
+                                <h6 style="color: #B7940A;">點</h6>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="menu-3">
+                            <div class="menu-img">@Resource.member09</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="menu-4">
+                            <div class="menu-img">@Resource.member10</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="menu-5" href="@Url.Action("LogOff")">
+                            <div class="menu-img">@Resource.logout</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--選單內容-->
+        <div class="pageA_sec2">
+            <!--帳號設定-->
+            <div class="pageA_sec2_tab01">
+                @using (Html.BeginFileForm())
+                {
+                    <h3>@Resource.member01</h3>
+                    <div style="display: flex;align-items: flex-start">
+                        <div style="display: flex;flex-direction: column;margin-right: 4%;;width: 30%;">
+                            <label class="">@Resource.member02</label>
+                            <input type="text" id="CONTENT3" name="CONTENT3" placeholder="小明" value="@Model.CONTENT3">
+                        </div>
+                        <div style="display: flex;flex-direction: column;margin-right: 4%;;width: 30%;">
+                            <label class="">@Resource.member03</label>
+                            <input type="text" id="CONTENT2" name="CONTENT2" placeholder="王" value="@Model.CONTENT2">
+                        </div>
+                        <div style="display: flex;flex-direction: column;width: 28%;">
+                            <label>@Resource.member04</label>
+                            @Html.DropDownListFor(m => m.CONTENT4, SexType.Male.ToSelectList())
+                        </div>
+                    </div>
+                    <div style="display: flex;align-items: flex-start;">
+                        <div style="display: flex;flex-direction: column;margin-right: 4%;width: 30%;">
+                            <label>@Resource.member05</label>
+                            @Html.EditorValidationFor(m => m.DATETIME1)
+                            @*<input type="date" id="user_birth" name="user_birth">*@
+                        </div>
+                        <div style="display: flex;flex-direction: column;width: 62%;">
+                            <label class="">@Resource.tel</label>
+                            <input type="tel" id="CONTENT5" name="CONTENT5" placeholder="02-12345678" value="@Model.CONTENT5">
+                        </div>
+                        @*<div style="display: flex;flex-direction: column;width: 30%;">
+                                <label>國家/地區</label>
+                                <input type="text" id="user_country" name="user_country" placeholder="台北市">
+                            </div>*@
+                    </div>
+                    <div style="display: flex;align-items: flex-start;">
+                        <div style="display: flex;flex-direction: column;margin-right: 4%;width: 30%;">
+                            <label>@Resource.member06</label>
+                            <input type="password" id="PASSWORD" name="PASSWORD" placeholder="密碼重設">
+                        </div>
+                        <div style="display: flex;flex-direction: column;width: 62%;">
+                            <label class="">@Resource.member07</label>
+                            <input type="text" id="CONTENT1" name="CONTENT1" placeholder="@Resource.member07" value="@Model.CONTENT1" readonly>
+                        </div>
+                    </div>
+                    <div style="display: flex;align-items: flex-start;">
+                        <div style="display: flex;flex-direction: column;margin-right: 4%;width: 80%;">
+                            <label>Photo</label>
+                            @if (!Model.AttPic.CREATER.IsNullOrEmpty())
+                            {
+                                <img src="@Model.AttPic.GetPic(PictureType.Medium)" style="max-width:120px"><br />
+                            }
+                            <input type="file" name="hpfPic" accept="image/*" />
+                        </div>
+                    </div>
+                    <div>
+                        <button id="btn_save" style="margin: 40px 0px 24px;">@Resource.member11</button>
+                    </div>
+                }
+            </div>
+            <!--我的點數-->
+            <div class="pageA_sec2_tab02-1 display0">
+                <h3>@Resource.member08</h3>
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; align-items: center;">
+                        <h5 style="margin-right: 12px;">@(Resource.member12)：</h5>
+                        <img src="@Url.Content("~/images/icon/icon_point.png")" height="20" style="margin-right: 4px;">
+                        <h4 style="color: #B7940A;">@Model.CONTENT14</h4>
+                    </div>
+                    <button id="btn_gotogift">@Resource.member13</button>
+                </div>
+            </div>
+            <div class="pageA_sec2_tab02-2 display0">
+                <h3 style="color: #414141;">@Resource.member14</h3>
+                <div id="lv">
+                    @if ("level99".Equals(Model.CONTENT6))
+                    {
+                        <div id="lv99">
+                            <img src="@Url.Content($"~/images/icon/icon_level99.png")" height="80">
+                            <b>@Function.GetNodeValueByLang("level99")</b>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var item in expList)
+                        {
+                            string _style = item.ID.Equals(Model.CONTENT6) ? "" : "opacity: 0.3;";
+                            string _point = $"{_prev}~{item.CONTENT1.ToInt()}點";
+                            if (item == expList.LastOrDefault())
+                            {
+                                _point = $"{_prev}點以上";
+                            }
+                            <div id="lv@(item.ORDER)" style="@(_style)">
+                                <img src="@Url.Content($"~/images/icon/icon_{item.ID}.png")" height="80">
+                                <b>@item.GetValueOnLang(2)</b>
+                                <p>@_point</p>
+                            </div>
+                            _prev = item.CONTENT1.ToInt() + 1;
+                        }
+                    }
+                </div>
+                <div class="pageA_sec2_exp" style="margin-bottom: 4px;">
+                    <div class="pageA_sec2_level">
+                        @*@foreach (var item in expList.Take(4))
+                            {
+                                <label>@(item.CONTENT1.ToInt() + 1)</label>
+                            }*@
+                    </div>
+                    @*<div style="width: 100%; background-color: #D8D8D8;">
+                            <div class="levelbar" style="width:@(Model.CONTENT17)%"></div>
+                            <div class="levelbar" style="width:0%"></div>
+                        </div>*@
+                    <span>
+                        <h5 style="color: #545454;">@(Resource.member20)：</h5>
+                        <h5 id="exp">@Model.CONTENT15</h5>
+                        @*<h5 style="color: #A2A2A2;">/ @(Model.CONTENT16)</h5>*@
+                    </span>
+                </div>
+            </div>
+            <!--訂單查詢-->
+            <div class="pageA_sec2_tab03 display0" id="orderList">
+                <h3 style="color: #414141;">@Resource.member09</h3>
+                <div style="display: flex; flex-direction: column;">
+                    @if (Model.PlusFun4000 != null && Model.PlusFun4000.Count > 0)
+                    {
+                        foreach (var item in Model.PlusFun4000)
+                        {
+                            DATA1 data1 = iDB.GetByIDAsNoTracking<DATA1>(item.MAIN_ID);
+                            if (data1 == null)
+                            {
+                                continue;
+                            }
+                            string bgc = "#44957F;";
+                            if (item.STATUS.ToInt() == OrderStatus.Type99.ToInt())
+                            {
+                                bgc = "#FF3131;";
+                            }
+                            else if (item.STATUS.ToInt() == OrderStatus.Type0.ToInt())
+                            {
+                                bgc = "#548CAA;";
+                            }
+                            <div class="item">
+                                <div style="width: 30%; overflow: hidden;">
+                                    <img src="@data1.GetFirstAttachment().GetPic(PictureType.Medium)" style="object-fit: cover;object-position: center;width: 100%;height: 100%;">
+                                </div>
+                                <div style="width: 70%;position: relative;">
+                                    <div class="order_text">
+                                        <div class="state" style="background-color: @(bgc)">@item.GetFun4000_STATUS()</div>
+                                        <h4 style="color: #545454;">@data1.GetValueOnLang()</h4>
+                                        <h5>@(Resource.member21): @item.CONTENT1</h5>
+                                        <h5>@(Resource.member22): @item.DATETIME1.ToDefaultString()</h5>
+                                    </div>
+                                    <div class="item_price">
+                                        <div style="display: flex; align-items: baseline;">
+                                            @if (item.DECIMAL5 > 0)
+                                            {
+                                                <img class="icon2" src="@Url.Content("~/images/icon/icon_point.png")" style="margin-right: 4px;">
+                                                <h4 style="color: #B7940A;">@item.DECIMAL5.ToInt()</h4>
+                                            }
+                                            <h6 style="color: #A2A2A2;">NT$</h6>
+                                            <h4 style="color: #44957F;">@item.DECIMAL3.ToInt()</h4>
+                                        </div>
+                                        <button id="btn_kkday" onclick="javascript:GoUrlOpen('@data1.GetValueOnLang(3)')">@Resource.member23</button>
+                                        @*<button id="btn_kkday2">KKday查詢</button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="item">
+                            目前尚無訂單資訊
+                        </div>
+                    }
+                </div>
+            </div>
+            <!--兌換紀錄-->
+            <div class="pageA_sec2_tab04 display0">
+                <h3 style="color: #414141;">@Resource.member10</h3>
+                <div class="record_wra">
+                    <div id="record_tab1" class="record_current">@Resource.member24</div>
+                    <div id="record_tab2">@Resource.member25</div>
+                </div>
+                <div>
+                    <table id="tab1" style="width: 100%;">
+                        <tr>
+                            <td class="col1">兌換日期</td>
+                            <td class="col2">品項名稱</td>
+                            <td class="col3">兌換代碼</td>
+                            <td class="col4">兌換點數</td>
+                        </tr>
+                        @foreach (var item in Model.PlusFun5003.Where(p => AuditStatus.Type1.ToIntValue().Equals(p.STATUS)).OrderByDescending(p => p.DATETIME1))
+                        {
+                            DATA3 data3 = iDB.GetByIDAsNoTracking<DATA3>(item.MAIN_ID);
+                            if (data3 == null)
+                            {
+                                continue;
+                            }
+                            <tr>
+                                <td class="col1">@item.DATETIME1.ToDefaultString()</td>
+                                <td class="col2">@data3.GetValueOnLang()</td>
+                                <td class="col3">@item.CONTENT1</td>
+                                <td class="col4"><img class="icon2" src="@Url.Content("~/images/icon/icon_point.png")"><h4>@item.DECIMAL5.ToInt()</h4></td>
+                            </tr>
+                        }
+                        @*<tr>
+                                <td class="col1">2021/10/01</td>
+                                <td class="col2">石滬故事館- 紀念筆(這是範例)</td>
+                                <td class="col3">兌換代碼</td>
+                                <td class="col4"><img class="icon2" src="@Url.Content("~/images/icon/icon_point.png")"><h4>5</h4></td>
+                            </tr>*@
+                    </table>
+                </div>
+                <div>
+                    <table id="tab2" style="width: 100%;">
+                        @foreach (var item in Model.PlusList.Where(p => ("fun4000".Equals(p.PLUS_TYPE) || "fun5002".Equals(p.PLUS_TYPE))).OrderByDescending(p => p.DATETIME1))
+                        {
+                            if ("0".Equals(item.PLUS_TYPE) || "99".Equals(item.PLUS_TYPE))
+                            {
+                                continue;
+                            }
+                            string _v1 = string.Empty;
+                            string _v2 = string.Empty;
+                            if ("fun4000".Equals(item.PLUS_TYPE))
+                            {
+                                DATA1 data1 = iDB.GetByIDAsNoTracking<DATA1>(item.MAIN_ID);
+                                if (data1 == null)
+                                {
+                                    continue;
+                                }
+                                _v1 = $"購買遊程-{data1.GetValueOnLang()}";
+                                _v2 = "";
+                            }
+                            else//fun5002
+                            {
+                                _v1 = item.CONTENT5;
+                                _v2 = $"{item.DATETIME2.ToDefaultString()}{Resource.member26}";
+                            }
+                            <tr>
+                                <td class="col1">@item.DATETIME1.ToDefaultString()</td>
+                                <td class="col2">@_v1</td>
+                                <td class="col3"><p>@_v2</p>@*<div class="dot"></div>*@</td>
+                                <td class="col4"><img class="icon2" src="@Url.Content("~/images/icon/icon_point.png")"><h4>@item.DECIMAL5.ToInt()</h4></td>
+                            </tr>
+                        }
+                        @*<tr>
+                                <td class="col1">2021/10/01</td>
+                                <td class="col2">加入會員(這是範例)</td>
+                                <td class="col3"><p>2022/05/30到期</p><div class="dot"></div></td>
+                                <td class="col4"><img class="icon2" src="@Url.Content("~/images/icon/icon_point.png")"><h4>5</h4></td>
+                            </tr>*@
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            // 此Page內程式碼 //
+            // 用戶頁面選單切換 //
+            // tab-1 //
+            $(".pageA_sec1_menu a#menu-1").click(function () {
+                $(".pageA_sec1_menu a#menu-1 img").attr("src", "image/icon/icon_green_setting.svg");
+                $(".pageA_sec1_menu a").removeClass("current");
+                $(".pageA_sec1_menu a#menu-1").addClass("current");
+                $(".pageA_sec2_tab01").animate({ opacity: '1' }, "fast", function () { $(this).show().removeClass("display0"); });
+                $(".pageA_sec2_tab02-1").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab02-2").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab03").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab04").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+            });
+            // tab-2 //
+            $(".pageA_sec1_menu a#menu-2").click(function () {
+                $(".pageA_sec1_menu a#menu-2 img").attr("src", "image/icon/icon_green_money.svg");
+                $(".pageA_sec1_menu a").removeClass("current");
+                $(".pageA_sec1_menu a#menu-2").addClass("current");
+                $(".pageA_sec2_tab01").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab02-1").animate({ opacity: '1' }, "fast", function () { $(this).show().removeClass("display0"); });
+                $(".pageA_sec2_tab02-2").animate({ opacity: '1' }, "fast", function () { $(this).show().removeClass("display0"); });
+                $(".pageA_sec2_tab03").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab04").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+            });
+            // tab-3 //
+            $(".pageA_sec1_menu a#menu-3").click(function () {
+                $(".pageA_sec1_menu a#menu-3 img").attr("src", "image/icon/icon_green_order.svg");
+                $(".pageA_sec1_menu a").removeClass("current");
+                $(".pageA_sec1_menu a#menu-3").addClass("current");
+                $(".pageA_sec2_tab03").animate({ opacity: '1' }, "fast", function () { $(this).show().removeClass("display0"); });
+                $(".pageA_sec2_tab02-1").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab02-2").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab01").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab04").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+            });
+            // tab-4 //
+            $(".pageA_sec1_menu a#menu-4").click(function () {
+                $(".pageA_sec1_menu a#menu-4 img").attr("src", "image/icon/icon_green_record.svg");
+                $(".pageA_sec1_menu a").removeClass("current");
+                $(".pageA_sec1_menu a#menu-4").addClass("current");
+                $(".pageA_sec2_tab04").animate({ opacity: '1' }, "fast", function () { $(this).show().removeClass("display0"); });
+                $(".pageA_sec2_tab02-1").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab02-2").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab03").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+                $(".pageA_sec2_tab01").animate({ opacity: '0' }, "fast", function () { $(this).hide(); });
+            });
+            // 訂單紀錄選單切換 //
+            // tab-1 //
+            $(".pageA_sec2_tab04 #record_tab1").click(function () {
+                $(".pageA_sec2_tab04 #tab1").delay(200).fadeIn("fast");
+                $(".pageA_sec2_tab04 #tab2").fadeOut("fast");
+            })
+            $(".pageA_sec2_tab04 #record_tab2").click(function () {
+                $(".pageA_sec2_tab04 #tab2").delay(200).fadeIn("fast");
+                $(".pageA_sec2_tab04 #tab1").fadeOut("fast");
+
+            })
+            $("#btn_save").click(function () {
+                SendSubmit();
+            });
+            $("#btn_gotogift").click(function () {
+                GoUrl('@(Url.Action("ExchangeList"))');
+            });
+
+        });
+
+    </script>
+}

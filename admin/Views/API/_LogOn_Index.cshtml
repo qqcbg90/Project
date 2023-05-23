@@ -1,0 +1,147 @@
+﻿@*
+    LogOn Partial
+*@
+@{
+
+}
+@Html.Partial("_FBPartial")
+<span id="FB_STATUS_1"></span>
+<div class="login">
+    <!--標題-->
+    <div style="display: flex; flex-direction: column; align-items: center;padding: 8px;">
+        <h4 style="color: #44957F; letter-spacing: 1.5px;">@Resource.login_msg</h4>
+        @*<h6 style="color: #A2A2A2;">@Resource.login_msg10</h6>*@
+    </div>
+    <div style="width: 100%;padding-bottom: 16px; border-bottom: 1px solid #D8D8D8;">
+        <div class="media">
+            <a href="javascript:fb();"><img src="@Url.Content("~/Images/icon/icon_fb_bule.png")"></a>
+            <a href="@Url.Action("GoogleLoginDirect","API",new { openExternalBrowser = "1" })"><img src="@Url.Content("~/Images/icon/icon_gmail.png")"></a>
+            @*<a href="javascript:goGoogle();"><img src="@Url.Content("~/images/icon/icon_gmail.png")"></a>*@
+        </div>
+    </div>
+    <!--或-->
+    <div style="background-color: #FFF; position: absolute; transform: translate(-50%, -50%); left: 50%;padding: 8px;">
+        <h6 style="color: #A2A2A2;">@Resource.or</h6>
+    </div>
+
+    <!--帳號登入/免費註冊-->
+    <div style="display: flex;margin: 24px 0 16px;flex-direction: column;">
+        @using (Ajax.BeginForm("Register", "Home", new AjaxOptions()
+        {
+            HttpMethod = "Post",
+            UpdateTargetId = "",
+            InsertionMode = InsertionMode.Replace,
+            OnBegin = "verify",
+            OnComplete = "",
+            OnSuccess = "onSuccess(data, status, xhr)"
+            // OnFailure = "onFailure(xhr, status, error)"
+
+        }, new { @id = "inputForm" }))
+        {
+            @* your html in form *@
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <h5 id="title" style="font-weight: bold;margin-bottom: 8px;">@Resource.login_msg1</h5>
+                <h5 id="switch" style="font: normal 0.875em 'Noto Sans CJK TC';color: #D8D8D8; cursor: pointer;"><a>@Resource.login_msg2</a></h5>
+            </div>
+            <!--輸入框-->
+            @Html.Hidden("USER_ID", Function.GetGuid())
+            @Html.Hidden("CONTENT9")
+            <input type="email" id="mail" name="CONTENT1" placeholder="@Resource.login_msg4" autocomplete="off">
+            <input type="password" id="password" name="PASSWORD" placeholder="@Resource.login_msg5" autocomplete="off">
+            <div class="terms display0">
+                <input type="checkbox" id="terms" name="terms">
+                <label class="essential" for="terms"><p>@Resource.login_msg7</p><a href="@Url.Action("ServicePolicy")" target="_blank">@Resource.servicepolicy</a><p>&</p><br /><a href="@Url.Action("PrivacyPolicy")" target="_blank">@Resource.privacypolicy</a></label>
+            </div>
+            <div class="verify display0">
+                @Html.Partial("Captcha/_CaptchaPartial")
+                @*<input type="text" id="verify" name="verify" placeholder="請輸入驗證碼">
+                    <div style="border: 1px dashed #545454; background-color: #A2A2A2;color: #FFF; padding: 6px;height: fit-content;margin: auto 8px;"><o>9035</o></div>
+                    <p style="color: #545454;font-size: 0.875em;">換一張?</p>*@
+            </div>
+        }
+    </div>
+    <!--忘記密碼/登入-->
+    <div style="display: flex; align-items: flex-end;flex-direction: column;">
+        <h6 style="font: normal 0.875em 'Noto Sans CJK TC';color: #D8D8D8; cursor: pointer;"><a href="@Url.Action("Forget")">@(Resource.login_msg6)?</a></h6>
+        <input type="button" id="btn_login" name="btn_login" value="@Resource.login">
+    </div>
+
+    <!--關閉-->
+    <img id="close" src="@Url.Content("~/Images/icon/icon_close.png")" height="23">
+</div>
+<script>
+    // 跳出登入 //
+    var login = function () {
+        $("div.login").addClass("focus");
+        $("div.burger").animate({ right: '-281px' }, "fast", function () { $(this).hide(); });
+        $("div.black_bg2").fadeIn("fast");
+        $(".terms, .verify").addClass("display0");
+        $("h5#title").text("@Html.Raw(Resource.login_msg1)");
+        $("h5#switch").text("@Html.Raw(Resource.login_msg2)");
+        $("input#btn_login").val("@Html.Raw(Resource.login)");
+        $("#CONTENT9").val("");
+    };
+    $("#login, .burger #login").click(login);
+    // 跳出註冊 //
+    var signup = function () {
+        $("div.login").addClass("focus");
+        $("div.burger").animate({ right: '-281px' }, "fast", function () { $(this).hide(); });
+        $("div.black_bg2").fadeIn("fast");
+        $(".terms, .verify").removeClass("display0");
+        $("h5#title").text("@Html.Raw(Resource.login_msg2)");
+        $("h5#switch").text("@Html.Raw(Resource.login_msg3)");
+        $("input#btn_login").val("@Html.Raw(Resource.register)");
+        $("#CONTENT9").val("1");
+    }
+    var logoff = function () {
+        var _logoff = '@Url.Action("LogOff")';
+        GoUrl(_logoff);
+    }
+    $("#signup, .burger #signup").click(signup);
+    $("#logoff, .burger #logoff").click(logoff);
+    // 切換註冊/登入 //
+    $("h5#switch").click(function () {
+        if ($("h5#switch").text() === ("@Html.Raw(Resource.login_msg3)")) {
+            login();
+        } else {
+            signup();
+        }
+    });
+    // 關閉登入 //
+    $("img#close").click(function () {
+        $("div.black_bg2").fadeOut("fast");
+        $("div.login").removeClass("focus");
+    });
+
+    $("div.black_bg2").click(function () {
+        $("div.login").removeClass("focus");
+        $("div.black_bg2").fadeOut("fast");
+   });
+    $("#btn_login").click(function () {
+        $('#inputForm').submit();
+    });
+    function verify() {
+        if ("1" == $("#CONTENT9").val()) {
+            if (!$("#terms").is(":checked")) {
+                showMsg("請點選" + "@Html.Raw(Resource.login_msg7)", 2);
+            }
+            return $("#terms").is(":checked");
+        }
+        else {
+            return true;
+        }
+    }
+    function onSuccess(data, status, xhr) {
+        if ("1" == data) {
+            GoUrl('/');
+        }
+        else {
+            showMsg(data, 2);
+        }
+        Refresh();
+    }
+    @*function goGoogle() {
+        var _url = "@Url.Action("ExternalLogin")";
+        $.post(_url);
+    }*@
+</script>

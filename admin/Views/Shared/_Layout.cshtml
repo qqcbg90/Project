@@ -1,0 +1,152 @@
+﻿@{ 
+	string sDEPT = Convert.ToString(Session[Function.SESSION_GROUP]);
+	sDEPT = sDEPT.IsNullOrEmpty() ? "" : sDEPT;
+	string sNAME = Convert.ToString(Session[Function.SESSION_NAME]);
+	sNAME = sNAME.IsNullOrEmpty() ? "無名稱" : sNAME;
+}
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon">
+	<title>@Function.PAGE_TITLE</title>
+	@Styles.Render("~/BaseCss/css", "~/OtherCss/css")
+	@Scripts.Render("~/bundles/basejquery", "~/bundles/customjquery")
+	@RenderSection("head", required: false)
+	@*<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default,Array.prototype.includes,Array.prototype.find"></script>*@
+	<style type="text/css">
+		.fancybox-slide--iframe .fancybox-content, .fancybox-slide--map .fancybox-content, .fancybox-slide--pdf .fancybox-content, .fancybox-slide--video .fancybox-content {
+			min-width: 300px !important;
+			max-width: 1080px !important;
+		}
+
+		.datepicker {
+			max-width: 200px !important;
+		}
+	</style>
+</head>
+<body>
+	@{Html.RenderPartial("Template");}
+	<div class="mobile_remind" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">請旋轉您的螢幕</h4>
+			</div>
+			<div class="modal-body">
+				為確保功能正常，且讓您有最好的使用體驗，請將您的螢幕旋轉為直向，謝謝！
+			</div>
+		</div>
+	</div>
+	<div class="black_bg"></div>
+	<div id="menuBtn" class="menu-btn">
+		<span class="line-1"></span>
+		<span class="line-2"></span>
+		<span class="line-3"></span>
+	</div>
+	@RenderSection("featured_top", required: false)
+	<div class="In_bg"></div>
+	<div id="wrapper">
+		<div id="header">
+			<div class="logo">
+                <a href="@Url.Action("Index")">
+                    
+                    @*<img src="~/images/Logo01.png" alt="@Function.PAGE_TITLE" title="回首頁" />*@
+                    @*<p style="text-align: center; margin-bottom: 10px;"><img src="https://notion-emojis.s3-us-west-2.amazonaws.com/prod/svg-twitter/1f469-1f3fb-200d-1f4bb.svg" alt="@Function.PAGE_TITLE" title="回首頁" /></p>*@
+                    @*<img src="~/images/brand_logo.png" alt="@Function.PAGE_TITLE" title="回首頁" />*@
+                </a>
+			</div>
+			<div class="sm">
+				<p class="welc">@Resource.Welcome.ToString() @sNAME</p>
+				<p class="node">
+					@if ("kingsp".Equals(User.Identity.Name))
+					{
+						<a href="@Url.Action("Index", "Node")"><i class="fas fa-cat"></i></a>
+					}
+				</p>
+				<p class="out"><a href="@Url.Action("LogOff","SysUser")" title="@Resource.SignOut"><i class="fas fa-sign-out-alt"></i></a></p>
+				<p class="re"><a href="@Url.Action("ResetPassword", "Json")" title="@Resource.ResetPassword"></a></p>
+			</div>
+		</div>
+		<div class="content">
+			<div class="left_box">
+				@Html.Partial("Menu/_LeftMenuPartial")
+				<div class="mobile_box">
+					<p class="welc">@Resource.Welcome @sDEPT @sNAME</p>
+					<a href="@Url.Action("LogOff","SysUser")" title="@Resource.SignOut"><i class="fas fa-sign-out-alt"></i> @Resource.SignOut</a>
+					<a href="@Url.Action("ResetPassword", "Json")" title="@Resource.ResetPassword"><i class="fas fa-key"></i> @Resource.ResetPassword</a>
+				</div>
+			</div>
+			<div class="right_box">
+				<div class="con_r">
+					@RenderSection("featured", required: false)
+					<div class="con_r_main">
+						<h1>@ViewBag.ContentTitle@(ViewBag.ContentTitle2)</h1>
+						@RenderBody()
+					</div>
+				</div>
+				<div class="footer">
+					@Html.Partial("Menu/_FooterRightPartial")
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(function () {
+			var wh = $(window).height();
+			var hh = $("#header").height();
+			var fh = $("#footer").height() + 20;
+			$(".right_box").css("min-height", wh - hh - fh);
+			$(".left_box").css("min-height", wh - hh - fh);
+			var rh = $(".right_box").height();
+			$(".left_box").height(rh - fh);
+
+			$(".menu-btn").click(function () {
+				$(".black_bg").fadeToggle();
+				$(".left_box").toggleClass("active");
+				$(this).toggleClass("active");
+			});
+
+			$(".black_bg").click(function () {
+				$(".menu-btn").click();
+			});
+
+			$("[data-fancybox=images]").fancybox({
+				toolbar: false,
+				smallBtn: false,
+				modal: false
+			});
+			$("[data-fancybox=print]").fancybox({
+				modal: true,
+				toolbar: false,
+				iframe: {
+					preload: false
+				}
+			});
+			for (var i = 1; i <= 3; i++) {
+				$("[data-fancybox=print" + i + "]").fancybox({
+					modal: true,
+					toolbar: false,
+					iframe: {
+						preload: false
+					}
+				});
+			}
+		});
+		//判斷手機方向：
+		window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
+			if (window.orientation === 180 || window.orientation === 0) {
+				$('.mobile_remind').removeClass('active');
+				$('#wrapper').removeClass('active');
+			}
+			if (window.orientation === 90 || window.orientation === -90) {
+				$('.mobile_remind').addClass('active');
+				$('#wrapper').addClass('active');
+			}
+		}, false);
+	</script>
+	@RenderSection("scripts", required: false)
+	@*@StackExchange.Profiling.MiniProfiler.RenderIncludes(StackExchange.Profiling.RenderPosition.BottomRight)*@
+	@Html.Raw(TempData[Function.TEMPDATA_MESSAGE_KEY])
+</body>
+</html>

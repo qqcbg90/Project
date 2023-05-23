@@ -1,0 +1,118 @@
+﻿@model DemoModel
+@{
+
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+
+        });
+    </script>
+
+}
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+
+
+    @MyHtml.RedP()
+    <table class="tb_con">
+        <tr>
+            <th width="8.3%">
+                @MyHtml.RedSpan()
+                @Html.LabelFor(model => model.CONTENT)
+            </th>
+            <td colspan="11">
+                @Html.EditorValidationFor(model => model.CONTENT)
+            </td>
+        </tr>
+        <tr>
+            <th width="8.3%">
+                @Html.LabelFor(model => model.DATE)
+            </th>
+            <td colspan="11">
+                @Html.EditorValidationFor(model => model.DATE)
+            </td>
+        </tr>
+        <tr>
+            <th width="8.3%">
+                @Html.LabelFor(model => model.DATETIME)
+            </th>
+            <td colspan="11">
+                @Html.EditorValidationFor(model => model.DATETIME, new { hourMin = "8", hourMax = "22", minuteMin = "0", minuteMax = "59",minuteStep="10" })
+            </td>
+        </tr>
+        <tr>
+            <th width="8.3%">
+                @Html.LabelFor(model => model.DECIMAL)
+            </th>
+            <td colspan="11">
+                @Html.EditorValidationFor(model => model.DECIMAL)
+            </td>
+        </tr>
+        <tr>
+            <th width="8.3%">
+                @Html.LabelFor(model => model.INT)
+            </th>
+            <td colspan="11">
+                @Html.EditorValidationFor(model => model.INT)
+            </td>
+        </tr>
+        <tr>
+            <th width="8.3%">
+                @Html.LabelFor(model => model.CONTENT_MAX)
+            </th>
+            <td colspan="11">
+                @Html.EditorValidationFor(model => model.CONTENT_MAX)
+            </td>
+        </tr>
+        <tr>
+            <th width="8.3%">
+                @Html.LabelFor(model => model.CKEDITOR)
+            </th>
+            <td colspan="11">
+                @Html.EditorValidationFor(model => model.CKEDITOR)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @MyHtml.RedSpan()
+                @Html.LabelFor(model => model.ATT)
+            </th>
+            <td colspan="11">
+                @if (Model.AttList != null && Model.AttList.Count > 0)
+                {
+                     <ul class="only_jpg">
+                         @foreach (var data in Model.AttList)
+                         { 
+                <li>
+                    <div>
+                        <a href="@Url.MyAction("DeleteAtt", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = data.ID, aid = data.MAIN_ID })" class="delete" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                             <img src="@data.GetPic()" />
+                    </div>
+                </li>
+                         }
+            </ul>
+                }
+                @Html.EditorValidationFor(model => model.ATT)
+            </td>
+        </tr>
+    </table>
+    <div>
+        @Html.ValidationSummary(true)
+    </div>
+    @MyHtml.EditButton(ViewBag.IsEdit)
+}
+@*網頁內容end*@
+@section scripts{
+
+}

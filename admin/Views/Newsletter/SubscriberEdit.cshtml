@@ -1,0 +1,57 @@
+﻿@model List<ROLE_USER_MAPPING>
+@{
+	Layout = "~/Views/Shared/_popupLayout.cshtml";
+	ViewBag.ContentTitle3 = "訂閱名單管理";
+}
+@section head{
+	<style type="text/css">
+		.EMAILs {
+			margin-top: 10px;
+			border-top: 1px dashed #CCC;
+		}
+
+			.EMAILs > li {
+				display: inline-block;
+				max-width: 300px;
+				width: 100%;
+				padding-right: 5px;
+				margin: 8px 0;
+			}
+	</style>
+}
+
+@section bottonList{
+	<input type="submit" id="save" name="save" class="btn" value="存檔" style="visibility:hidden" />
+}
+<p class="search_box" style="display:block; margin-top: 10px;">
+	@Html.Partial("Input/_DateStartToEndPartial", new string[] { "start", "end", (string)ViewBag.start, (string)ViewBag.end, "1" })
+	<label class="key">@MyList.CustomInput("k1", ViewBag.k1, "E-mail")</label>
+	<br />
+	<label class="btn_box go">
+		@MyList.Submit()
+		@MyHtml.Button("回群組", Url.MyAction("SubscriberIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { }), "gray")
+	</label>
+</p>
+<p class="top_bar">
+	<label class="btn_box">
+		@MyHtml.Button("新增訂閱", Url.MyAction("SubscriberAdd", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = ViewBag.ID, k1 = ViewBag.k1, start = ViewBag.start, end = ViewBag.end }), "org")		
+	</label>
+</p>
+<div class="tb_list_box">
+	目前共 @Model.Count() 筆資料
+	<ul class="EMAILs">
+		@foreach (ROLE_USER_MAPPING m in Model)
+		{
+			<li>
+				@m.USER_ID
+				@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+				{
+					<a href="@Url.MyAction("DeleteSubscriber", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ROLE_GROUP_ID, sid = m.ID, k1 = ViewBag.k1, start = ViewBag.start, end = ViewBag.end })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')" class="close_bt" style="color: #dd4b39"><i class="far fa-times-circle"></i></a>
+				}
+			</li>
+		}
+	</ul>
+</div>
+@section scripts{
+
+}

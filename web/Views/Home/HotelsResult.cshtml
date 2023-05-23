@@ -1,0 +1,83 @@
+﻿@model List<USER>
+@{
+
+}
+@section head{
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+}
+@section top{
+
+}
+<div class="Game-cover">
+    <div class="lightbox focus">
+        <div class="container">
+            <div class="row" id="loading" style="text-align:center;">
+                <div class="col-md-12">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    排名
+                                </th>
+                                <th>
+                                    分數
+                                </th>
+                                <th>
+                                    次數
+                                </th>
+                                @*<th>
+                                    建立日期
+                                </th>*@
+                                <th>
+                                    E-mail
+                                </th>
+                                @*<th>
+                                    C2
+                                </th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @(Model.IndexOf(item)+1)
+                                    </td>
+                                    <td>
+                                        @item.CONTENT5.ToDecimal()
+                                    </td>
+                                    <td>
+                                        @item.CONTENT6.ToInt()
+                                    </td>
+                                    @*<td>
+                                        @item.CREATE_DATE.ToDefaultStringWithTime()
+                                    </td>*@
+                                    <td>
+                                        <a href="@Url.Action("Partner",new { id = item.USER_ID })" target="_blank" title="看遊戲記錄">
+                                            @item.CONTENT1
+                                        </a>
+                                    </td>
+                                    @*<td>
+                                        @item.CONTENT2
+                                    </td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+
+        })
+    </script>
+}

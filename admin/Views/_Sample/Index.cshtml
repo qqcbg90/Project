@@ -1,0 +1,110 @@
+﻿@model PagedList<DATA1>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string _edit = "Edit";
+    string _delete = "Delete";
+}
+
+@*分頁*@
+@helper Pager()
+{
+    <div class="pager">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null,
+        new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword })
+    </div>
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            InputGo("@ViewBag.DefaultPage");
+        })
+        //select by dropdownlist
+        function SelectGo(page) {
+            $('div .pager').find('select').each(function () {
+                $(this).val(page);
+            });
+            var url = '@_action?page='
+                + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage='
+                + $("[name=defaultPage]").val()
+                + '&k='
+                + EncodeParameter($("[name=k]").val());
+            GoUrl(url);
+        }
+    </script>
+
+}
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+
+    <p class="s_list3">
+        @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Search, true))
+        {
+            @*<select class="sp">
+                    <option>單位 : 全部</option>
+                    <option>東北角暨宜蘭海岸國家風景區</option>
+                </select>*@
+            @MyList.KeywordInput(ViewBag.Keyword, "借問站名稱")
+            @MyList.Submit()
+            <input type="submit" value="匯出Excel" class="btn Ex">
+        }
+    </p>
+    <p class="s_list2">
+        @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add, true))
+        {
+            @MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues))
+        }
+    </p>
+    if (MyList.IsTwoPagers())
+    {
+        @Pager()
+    }
+    <table class="tb_list">
+        <tr>
+            <th width="7%">縣市</th>
+            <th width="6%">分區</th>
+            <th width="15%">名稱</th>
+            <th width="20%">地址</th>
+            <th width="10%">電話</th>
+            <th width="22%">E-mail</th>
+            <th width="5%">下載照片</th>
+            <th width="15%">功能</th>
+        </tr>
+        @foreach (var data in Model)
+        {
+            <tr>
+                <td class="txtcenter">@data.CONTENT1</td>
+                <td class="txtcenter"></td>
+                <td class="txtcenter"></td>
+                <td></td>
+                <td class="txtcenter"></td>
+                <td class="txtcenter"></td>
+                <td class="txtcenter"><a href="#"><i class="fa fa-download" aria-hidden="true"></i></a></td>
+                <td class="txtcenter">
+                    <a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = data.ID })" title="@data.CONTENT2">@MyList.EditImage()</a>
+                    @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+                    {
+                        <a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = data.ID })" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')">@MyList.DeleteImage()</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    @Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
