@@ -1,0 +1,127 @@
+﻿@*按鈕導向url*@
+@helper Button(string value, string url)
+{
+    <input type="button" value="@value" class="btn" onclick="location.href='@url    '" />
+}
+
+@*另開按鈕導向url*@
+@helper ButtonForWinOpen(string value, string url)
+{
+    <input type="button" value="@value" class="btn" onclick="window.open('@url    ')" />
+}
+
+@*另開按鈕導向url 有寬高*@
+@helper ButtonForWinOpen(string value, string url, int width, int height)
+{
+    <input type="button" value="@value" class="btn" onclick="window.open('@url    ','','scrollbars=yes,width=@width,height=@height    ')" />
+}
+
+@*關閉視窗按鈕*@
+@helper ButtonForWinClose(string value = "關閉視窗")
+{
+    <input type="button" value="@value" class="btn" onclick="window.close()" />
+}
+
+@*自訂click按鈕*@
+@helper ClickButton(string id, string value)
+{
+    <input type="button" value="@value" id="@id" class="btn" />
+}
+
+@*回上一頁*@
+@helper ButtonBack(bool isEdit = true)
+{
+    <div class="bottom_bar">
+        <input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+    </div>
+}
+
+@*編輯頁二個一組按鈕*@
+@helper EditButton(bool isEdit = true)
+{
+    <div class="two_bt_box bt_box">
+        <input type="reset" value="重新填寫" class="btn bgray" />
+        <input type="submit" value="立即送出" class="btn bggreen" id="save" />
+    </div>
+}
+
+@*編輯頁三個一組按鈕*@
+@helper EditButton2(bool isEdit = true)
+{
+    <div class="three_bt_box bt_box">
+        <input type="reset" value="重新填寫" class="btn bgray" />
+        <a href="#" class="btn bggreen2">列印</a>
+        <input type="submit" value="立即送出" class="btn bggreen" id="save" />
+    </div>
+}
+
+@*Send 寄信四個一組按鈕*@
+@helper SendButton(bool isEdit = true)
+{
+    <div class="bottom_bar">
+        @if (isEdit)
+        {
+            <input type="submit" value="寄信" class="btn" id="save" />
+            <input type="reset" value="重新輸入" class="btn Gray" />
+        }
+        <input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+    </div>
+}
+
+@*Reply 寄信四個一組按鈕*@
+@helper ReplyButton(bool isEdit = true)
+{
+    <div class="bottom_bar">
+        @if (isEdit)
+        {
+            <input type="submit" value="暫存" class="btn Green" id="save2" />
+            <input type="submit" value="寄信" class="btn" id="save" />
+            <input type="reset" value="重新輸入" class="btn Gray" />
+        }
+        <input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+    </div>
+}
+
+@*編輯頁頁頭紅字提示訊息*@
+@helper RedP(string msg = null)
+{
+    <p class="colortxt_red">
+        @if (string.IsNullOrEmpty(msg))
+        {
+            @:*為必填欄位
+        }
+        else
+        {
+            @msg
+        }
+    </p>
+}
+@*編輯頁欄位紅字提示訊息*@
+@helper RedSpan(string msg = null)
+{
+    <i class="fa fa-pencil colred" aria-hidden="true"></i>
+    <span class="colortxt_red">
+        @if (string.IsNullOrEmpty(msg))
+        {
+            @:*
+        }
+        else
+        {
+            @msg
+        }
+    </span>
+}
+
+@*必填提醒*@
+@helper RequiredMsg(string msg = null)
+{
+    <p class="text_r">
+        <i class="fa fa-pencil colred" aria-hidden="true"></i> @(string.IsNullOrEmpty(msg) ? "為必填" : msg)
+    </p>
+}
+
+@*編輯頁欄位紅字提示訊息*@
+@helper Redi(string msg = null)
+{
+    <i class="fa fa-pencil colred" aria-hidden="true"></i>@msg
+}

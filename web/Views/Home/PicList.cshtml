@@ -1,0 +1,85 @@
+﻿@model List<ATTACHMENT>
+@{
+    
+}
+
+<div class="header_content">
+    <img src="~/Images/logo.svg" />
+    <h2>住宿拍照上傳 @ViewBag.picTotal</h2>
+</div>
+@using (Html.BeginFileForm())
+{
+    <div class="w1400 flex-shrink-0">
+        <div class="box for-store my-5 px-5 pt-3 pb-4">
+            <div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+                ※ 請輸入欲查詢之會員email
+            </div>
+            <div>
+                <h1>會員email：</h1>
+                <div>
+                    <input class="form-control" data-val="true" data-val-required="*" id="kk" maxlength="500" name="kk" placeholder="請輸入email" type="text" value="@ViewBag.kk" />
+                    <span class="field-validation-valid" data-valmsg-for="kk" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+            <br />
+            <br />
+            @if (Model != null && Model.Count > 0)
+            {
+                <div>
+                    <h1> 已上傳資料： </h1>
+                    <table class="table gift-boxB">
+                        @foreach (var att in Model)
+                        {
+                            <tr>
+                                <th scope="col">
+                                    @att.CONTENT1
+                                <th scope="col">
+                                    @($"{att.CONTENT2} - {att.CONTENT3} - {att.CONTENT6}")
+                                </th>
+                                <th scope="col">
+                                    <a href="@att.GetPic()" target="_blank" title="@att.ORIGINAL_FILE_NAME">
+                                        <img src="@att.GetPic()" style="max-width:300px" alt="照片" />
+                                    </a>
+                                </th>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <h1> 尚未上傳資料 </h1>
+                </div>
+            }
+            <div>
+                <input type="submit" id="sendpic" value="查詢" class="btn btn-primary" style="width: 100%;padding: 10px;font-size: 1.25rem;" />
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+
+}
+
+
+
+@section scripts
+{
+    <script>
+        function getC1Name() {
+            var _c2 = $("#c2").val();
+			$.ajax({
+				url: "@Url.Action("GetC1Name", "Json")",
+				type: 'post',
+				dataType: 'html',
+				data: { id: _c2 },
+                complete: function (data) {
+                    $("#c2name").html(data.responseText);
+				}
+			});
+		}
+    </script>
+}

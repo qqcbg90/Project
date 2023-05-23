@@ -1,0 +1,75 @@
+﻿@model InventoryRequisitionDetailModel
+@{
+	Layout = "~/Views/Shared/_popupLayout.cshtml";
+}
+
+@section head{
+
+}
+
+@section bottonList{
+	<input type="submit" id="save" name="save" class="btn" value="存檔" style="visibility: hidden" />
+}
+
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k = ViewBag.k1 }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				物品
+			</label>
+			<div>
+				@Html.DisplayFor(m => m.PLUS_TYPE_TITLE)
+				@Html.HiddenFor(m => m.PLUS_TYPE)
+				@Html.ValidationMessageFor(m => m.PLUS_TYPE)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.ORDER)
+			</label>
+			<div>
+				<label for="ORDER_0">
+					@Html.RadioButtonFor(m => m.ORDER, "0", new { name = "ORDER" }) 入庫
+				</label>
+				<label for="ORDER_1">
+					@Html.RadioButtonFor(m => m.ORDER, "1", new { name = "ORDER" }) 出庫
+				</label>
+				@Html.ValidationMessageFor(model => model.ORDER)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DECIMAL1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.DECIMAL1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.CONTENT1)
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+
+@section scripts{
+	<script>
+		$(function () {
+
+		});
+	</script>
+}
+

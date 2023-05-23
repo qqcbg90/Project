@@ -1,0 +1,56 @@
+﻿@model List<ROLE_GROUP>
+@{
+	Layout = "~/Views/Shared/_popupLayout.cshtml";
+	ViewBag.ContentTitle2 = "群組管理";
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "SubscriberEdit";
+	string _editGroup = "SubscriberGroupEdit";
+	string _delete = "DeleteGroup";
+}
+@section head{
+
+}
+
+@section bottonList{
+	<input type="submit" id="save" name="save" class="btn" value="存檔" style="visibility: hidden" />
+}
+<p class="top_bar">
+	<label class="btn_box">
+		@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+		{
+			@MyHtml.Button("新增群組", Url.MyAction(_editGroup, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { }), "org")
+		}
+	</label>
+</p>
+<div class="tb_list_box">
+	<table class="tb_list">
+		<tr class="thead">
+			<th>群組名稱</th>
+			<th>訂閱名單管理</th>
+			<th>功能</th>
+		</tr>
+		@foreach (ROLE_GROUP m in Model)
+		{
+			<tr>
+				<td data-th="群組名稱">@m.TITLE @(m.CONTENT1.IsNullOrEmpty() ? "" : " (" + m.CONTENT1 + ")")</td>
+				<td data-th="訂閱名單管理">
+					<div class="btn_box">
+						<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID })" title="訂閱名單管理"><span class="btn org"><i class="fas fa-users"></i></span></a>
+					</div>
+				</td>
+				<td data-th="功能">
+					<div class="btn_box">
+						<a href="@Url.MyAction(_editGroup, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { gid = m.ID })" title="編輯"><span class="btn"><i class="far fa-edit"></i></span></a>
+						@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete) && !"SUBSCRIBER,AudienceGroup".Contains(m.ID))
+						{
+							<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { gid = m.ID })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+						}
+					</div>
+				</td>
+			</tr>
+		}
+	</table>
+</div>
+@section scripts{
+
+}

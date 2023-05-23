@@ -1,0 +1,159 @@
+﻿@model IPagedList<DATA4>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "Edit";
+	string _delete = "Delete";
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+				+ '&nid=@(ViewBag.NodeID)'
+				+ '&defaultPage=' + $("[name=defaultPage]").val()
+				+ '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&k1=' + $("[name=k1]").val() + '&k2=' + $("[name=k2]").val()
+				+ '&k3=' + $("[name=k3]").val() + '&k4=' + $("[name=k4]").val()
+				+ '&y=' + $("#y").val() + '&m1=' + $("#m1").val() + '&m2=' + $("#m2").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null
+	   , new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, k1 = ViewBag.k1, k2 = ViewBag.k2, k3 = ViewBag.k3, k4 = ViewBag.k4, y = ViewBag.y, m1 = ViewBag.m1, m2 = ViewBag.m2 })
+	</div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box" style="display:block">
+		<span class="select">
+			@Html.DropDownList("y", ViewBag.YearSelect as SelectList)
+		</span>
+		<span class="select">
+			@Html.DropDownList("m1", ViewBag.MonthSelect as SelectList)
+		</span>
+		至&nbsp;&nbsp;&nbsp;&nbsp;
+		<span class="select">
+			@Html.DropDownList("m2", ViewBag.MonthSelect as SelectList)
+		</span>
+		<br/>
+		<label class="key">
+			<span class="select">@Html.DropDownList("k1", ViewBag.BudgetItemSelect as SelectList, "組別")</span>
+			<span class="select"><select id="k2" name="k2"><option value="">類別</option></select></span>
+			<span class="select"><select id="k3" name="k3"><option value="">細目</option></select></span>
+			<span class="select"><select id="k4" name="k4"><option value="">說明</option></select></span>
+		</label>
+		<br />
+		<label class="key">@MyList.KeywordInput(ViewBag.Keyword, "執行細目")</label>
+		<br />
+		<label class="btn_box go">@MyList.Submit()</label>
+	</p>
+	<p class="top_bar">
+		<label class="btn_box">
+			@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+				{
+				@MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { k1 = ViewBag.k1, k2 = ViewBag.k2, k3 = ViewBag.k3, k4 = ViewBag.k4, y = ViewBag.y, m1 = ViewBag.m1, m2 = ViewBag.m2 }), "org")
+				}
+		</label>
+	</p>
+	if (MyList.IsTwoPagers())
+	{
+		@Pager()
+	}
+	<div class="tb_list_box">
+		<table class="tb_list">
+			<tr class="thead">
+				<th>編號</th>
+				<th>類別</th>
+				<th>執行細目</th>
+				<th>簽會數</th>
+				<th>執行數</th>
+				<th>動支預算字號</th>
+				<th>功能</th>
+			</tr>
+			@foreach (var m in Model)
+			{
+				<tr>
+					<td data-th="編號">@m.ID</td>
+					<td data-th="類別"><div style="text-align: left">@m.CONTENT1</div></td>
+					<td data-th="執行細目"><div style="text-align: left">@m.CONTENT2</div></td>
+					<td data-th="簽會數">@((m.DECIMAL1 ?? 0).ToString("#,0"))</td>
+					<td data-th="執行數">@(m.DECIMAL2.HasValue ? m.DECIMAL2.Value.ToString("#,0") : "-")</td>
+					<td data-th="動支預算字號">@(m.CONTENT3.IsNullOrEmpty() ? "尚未登錄" : m.CONTENT3)</td>
+					<td data-th="功能">
+						<div class="btn_box">
+							<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, k1 = ViewBag.k1, k2 = ViewBag.k2, k3 = ViewBag.k3, k4 = ViewBag.k4, y = ViewBag.y, m1 = ViewBag.m1, m2 = ViewBag.m2 })" title="編輯"><span class="btn"><i class="far fa-edit"></i></span></a>
+							<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {  id = m.ID, k1 = ViewBag.k1, k2 = ViewBag.k2, k3 = ViewBag.k3, k4 = ViewBag.k4, y = ViewBag.y, m1 = ViewBag.m1, m2 = ViewBag.m2 })" title="刪除"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+						</div>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+	@Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script type="text/javascript">
+		$(function () {
+			getChild("@ViewBag.k1", "@ViewBag.k2", '類別', 2);
+			getChild("@ViewBag.k2", "@ViewBag.k3", '細目', 3);
+			getChild("@ViewBag.k3", "@ViewBag.k4", '說明', 4);
+			$('[name=k1]').change(function () {
+				var k1 = $(this).val();
+				var k2 = $("#k2").val();
+				var k3 = $("#k3").val();
+				var k4 = $("#k4").val();
+				if (k1 == "") k1 = -1;
+				k2 = k3 = k4 = -1;
+				getChild(k1, '', '類別', 2);
+				getChild(k2, '', '細目', 3);
+				getChild(k3, '', '說明', 4);
+			});
+			$('[name=k2]').change(function () {
+				var k2 = $(this).val();
+				var k3 = $("#k3").val();
+				var k4 = $("#k4").val();
+				if (k2 == "") k2 = -1;
+				k3 = k4 = -1;
+				getChild(k2, '', '細目', 3);
+				getChild(k3, '', '說明', 4);
+			});
+			$('[name=k3]').change(function () {
+				var k3 = $(this).val();
+				var k4 = $("#k4").val();
+				if (k3 == "") k3 = -1;
+				k4 = -1;
+				getChild(k3, '', '說明', 4);
+			});
+		});
+		function getChild(arg1, arg2, firstTextVal, idx) {
+			$.post("@Url.Action("GetChild", "Json")", { id: arg1, v: arg2, first: firstTextVal }, function (data) {
+				$("#k" + idx).html(data);
+			});
+		}
+	</script>
+}

@@ -1,0 +1,95 @@
+﻿@model IQueryable<ATTACHMENT>
+@{
+    
+}
+
+<div class="header_content">
+    <img src="~/Images/logo.svg" />
+    <h2>住宿拍照上傳</h2>
+</div>
+@using (Html.BeginFileForm())
+{
+    <div class="w1400 flex-shrink-0">
+        <div class="box for-store my-5 px-5 pt-3 pb-4">
+            <div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+                ※ 未勾選的照片即不合格
+            </div>
+            <br />
+            <br />
+            @if (Model != null && Model.Count() > 0)
+            {
+                <div>
+                    <table class="table gift-boxB">
+                        @foreach (var att in Model.Take(10))
+                        {
+                            <tr>
+                                <th scope="col">
+                                    @*@Html.CheckBox("chk" + att.ID, att.CONTENT7.IsTrue())*@
+                                    <input type="checkbox" @(att.CONTENT7.IsTrue()?"checked":"") onclick="javascript:changeC7('@att.ID');" />
+                                </th>
+                                <th scope="col">
+                                    @att.CONTENT1
+                                </th>
+                                <th scope="col">
+                                    @($"{att.CONTENT2} - {att.CONTENT3} - {att.CONTENT6}")
+                                </th>
+                                <th scope="col">
+                                    <a href="@att.GetPic()" target="_blank" title="@att.ORIGINAL_FILE_NAME">
+                                        <img src="@att.GetPic()" style="max-width:300px" alt="照片" />
+                                    </a>
+                                </th>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <h1> 尚未上傳資料 </h1>
+                </div>
+            }
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+
+}
+
+
+
+@section scripts
+{
+    <script>
+        function getC1Name() {
+            var _c2 = $("#c2").val();
+			$.ajax({
+				url: "@Url.Action("GetC1Name", "Json")",
+				type: 'post',
+				dataType: 'html',
+				data: { id: _c2 },
+                complete: function (data) {
+                    $("#c2name").html(data.responseText);
+				}
+			});
+        }
+        function changeC7(attid) {
+			$.ajax({
+				url: "@Url.Action("PicList2", "Home")",
+				type: 'post',
+				dataType: 'html',
+                data: { id: attid },
+                complete: function (data) {
+                    if ("0" == data.responseText) {
+                        alert('發生錯誤!!');
+                    }
+                    else {
+
+                    }
+				}
+			});
+		}
+    </script>
+}

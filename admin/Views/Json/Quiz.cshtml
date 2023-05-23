@@ -1,0 +1,142 @@
+﻿@model QuizModel
+<div id="step1" class="step_sp">
+    <div>
+        <p>
+            @Html.Raw(Resource.QUIZ_MSG1)
+        </p>
+        <div class="flow">
+            <div><i class="fas fa-edit"></i><br />@Resource.QUIZ_MSG2</div>
+            <div class="arrow"><i class="fas fa-angle-double-right"></i></div>
+            <div><i class="fas fa-thumbs-up"></i><br />@Resource.QUIZ_MSG5</div>
+            <div class="arrow"><i class="fas fa-angle-double-right"></i></div>
+            <div><i class="fas fa-upload"></i><br />@Resource.QUIZ_MSG6</div>
+        </div>
+        <div class="In_btn_box">
+            <div class="btn_box">
+                <input type="button" id="btnStart" value="@Resource.QUIZ_MSG2" class="btn L" />
+            </div>
+        </div>
+    </div>
+</div>
+<div id="step2" style="display:none">
+    @using (Html.BeginForm())
+	{
+        @Html.HiddenFor(x => x.DATA3_ID)
+        @Html.HiddenFor(x => x.QUESTION_BANK)
+        <div class="edit_list" id="app1">
+            <div id="app1" class="answer_list">
+                <p>{{currentlyData.Order}}. {{currentlyData.Title}}</p>
+                <table>
+                    <tr>
+                        <td>
+                            <div v-if="currentlyData.Type == 'radio' || currentlyData.Type == 'checkbox'">
+                                <div v-for="choice in currentlyData.Choices" class="answer_a">
+                                    <p class="check_input">
+                                        <input v-bind:type="currentlyData.Type" v-model="currentlyData.AnsU" v-bind:value="choice.cID" />
+                                        <label v-bind:class="currentlyData.Type"></label>
+                                    </p>
+                                    <span>{{choice.cTitle}}</span>
+                                </div>
+                            </div>
+                            <div v-else-if="currentlyData.type ==  'select'">
+                                <span class="select">
+                                    <select v-model="currentlyData.AnsU">
+                                        <option value="">@Resource.Select</option>
+                                        <option v-for="choice in currentlyData.Choices" v-bind:value="choice.cID">{{choice.cTitle}}</option>
+                                    </select>
+                                </span>
+                            </div>
+                            <div v-else class="input_text">
+                                <input type="text" v-model="currentlyData.AnsU" class="w500" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="In_btn_box">
+                <div class="btn_box">
+                    <input type="button" v-bind:value="saveBtnTitle" class="btn" v-on:click="toNext" />
+                    @*<input type="button" value="@Resource.Back" class="btn gray" onclick="back();return false;" />*@
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section scripts{
+    <script>
+        $(function(){
+            $("#btnStart").click(function(){
+                $("#step1").hide();
+                $("#step2").show();
+            });
+
+            var app1 = new Vue({
+                el:'#app1',
+                data:{
+                    model:@Html.Raw(Model.QUESTION_BANK),
+                    currentlyData:null
+                },
+                created:function(){
+                    this.currentlyData = this.model.find(function(item){
+                        return (Array.isArray(item.AnsU) && item.AnsU.length == 0);
+                    });
+                },
+                methods:{
+                    getCurrentlyData:function(){
+                        var vm = this;
+                        var findData = vm.model.find(function(item){
+                            return (Array.isArray(item.AnsU) && item.AnsU.length == 0);
+                        });
+                        return findData;
+                    },
+                    toNext:function(){
+                        var vm = this;
+                        if (Array.isArray(vm.currentlyData.AnsU) && vm.currentlyData.AnsU.length < 1) {
+                            showMsg('Please select answer!!');
+                            return false;
+                        }
+                        if (vm.currentlyData.Type == "radio" || vm.currentlyData.Type == "select") {
+                            if (!vm.currentlyData.AnsU.includes(vm.currentlyData.Ans)) {
+                                showMsg('@Resource.msg_06');
+                                return false;
+                            }
+                        }
+                        else if (vm.currentlyData.Type == "checkbox") {
+                            var correctArr = vm.currentlyData.AnsM;
+                            var correctLen = correctArr.length;
+                            if(correctLen > 0){
+                                var userArr = vm.currentlyData.AnsU;
+                                var userLen = userArr.length;
+                                if (correctLen != userLen || $(correctArr).filter(userArr).toArray().length != correctLen) {
+                                    showMsg('@Resource.msg_06');
+                                    return false;
+                                }
+                            }
+                        }
+                        var nextData = vm.getCurrentlyData();
+                        if (nextData != null) {
+                            this.currentlyData = nextData;
+                        }
+                        else{
+                            //送出資料
+                            $("#QUESTION_BANK").val(JSON.stringify(vm.model));
+                            SendSubmit();
+                        }
+                    }
+                },
+                computed:{
+                    saveBtnTitle:function(){
+                        var vm = this;
+                        var propData = vm.model[vm.model.length-1];
+                        if (vm.currentlyData.ID == propData.ID) {
+                            return '@Html.Raw(Resource.Save)';
+                        }
+                        else{
+                            return '@Html.Raw(Resource.Next)';
+                        }
+                    }
+                }
+            })
+        })
+    </script>
+}

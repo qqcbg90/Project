@@ -1,0 +1,471 @@
+﻿@model TeamSurveyModel
+@{
+	List<string> OPTs = new List<string>();
+	int idx = 0;
+}
+
+@section head{
+	<style type="text/css">
+		.select_opt {
+			width: 100%;
+		}
+
+			.select_opt > li {
+				display: inline-block;
+				padding-right: 15px;
+			}
+	</style>
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div style="background-color: lightblue;">
+			※ 基本資料
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT2)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				演出期間
+			</label>
+			<div>
+				@Html.Partial("Input/_DateStartToEndPartial", new string[] { "DATETIME1", "DATETIME2", Model.DATETIME1.ToDateString(), Model.DATETIME2.ToDateString(), "0" })
+			</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT3)</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT3)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DATETIME3)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DATETIME3)
+			</div>
+		</div>
+		<div style="background-color: lightblue;">
+			※ 意見調查
+		</div>
+		<!--Q1 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			一、表演區空間哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "1.完善", "2.寬度", "3.深度", "4.高度", "5.與觀眾席距離", "6.其它或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT4_@idx">
+								<input type="checkbox" name="CONTENT4" value="@idx" @(Model.CONTENT4 != null && Model.CONTENT4.Contains(idx.ToString()) ? "checked" : "")> @OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT4_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q1 End-->
+		<!--Q2 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			二、左右區側台空間是否滿意？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "完善", "太大", "過小", "其他或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT5_@idx">
+								<input type="radio" name="CONTENT5" value="@idx" @(!Model.CONTENT5.IsNullOrEmpty() && Model.CONTENT5.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT5_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q2 End-->
+		<!--Q3 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			三、使用空桿時，哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "完善", "數量不足", "間距", "操作不便", "其他或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT6_@idx">
+								<input type="checkbox" name="CONTENT6" value="@idx" @(Model.CONTENT6 != null && Model.CONTENT6.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT6_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q3 End-->
+		<!--Q4 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			四、使用布幕時，哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "完善", "顏色", "數量不足", "操作不便", "距離不適", "其他或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT7_@idx">
+								<input type="checkbox" name="CONTENT7" value="@idx" @(Model.CONTENT7 != null && Model.CONTENT7.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT7_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q4 End-->
+		<!--Q5 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			五、使用化妝室、廁所時，哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "完善", "數量不足", "設備不齊", "環境清潔", "其他或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT8_@idx">
+								<input type="checkbox" name="CONTENT8" value="@idx" @(Model.CONTENT8 != null && Model.CONTENT8.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT8_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q5 End-->
+		<!--Q6 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			六、使用燈光時，哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "完善", "燈數不足", "種類不夠", "迴路不足", "燈桿不足", "控制台操作不易", "控制台位置不好", "其它或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT9_@idx">
+								<input type="checkbox" name="CONTENT9" value="@idx" @(Model.CONTENT9 != null && Model.CONTENT9.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT9_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q6 End-->
+		<!--Q7 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			七、使用音響時，哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "完善", "主喇叭", "監聽喇叭", "麥克風迴路", "各類型麥克風", "控制系統", "播放系統", "INTER COM", "其它或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT10_@idx">
+								<input type="checkbox" name="CONTENT10" value="@idx" @(Model.CONTENT10 != null && Model.CONTENT10.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT10_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q7 End-->
+		<!--Q8 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			八、使用前台空間時，哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "完善", "指標不明", "服務台空間", "整理清潔", "設備不齊", "洗手間", "其它或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT11_@idx">
+								<input type="checkbox" name="CONTENT11" value="@idx" @(Model.CONTENT11 != null && Model.CONTENT11.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT11_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q8 End-->
+		<!--Q9 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			九、對於觀眾席哪方面建議需要改善？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "完善", "座位", "動線", "音場表現", "視線", "空間大小", "其它或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT12_@idx">
+								<input type="checkbox" name="CONTENT12" value="@idx" @(Model.CONTENT12 != null && Model.CONTENT12.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT12_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q9 End-->
+		<!--Q10 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十、對於館方後台管理人員與您配合上需改進的地方？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "良好 ", "服務態度", "溝通配合", "行為舉止/服裝儀容", "視線", "其它或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT13_@idx">
+								<input type="checkbox" name="CONTENT13" value="@idx" @(Model.CONTENT13 != null && Model.CONTENT13.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT13_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q10 End-->
+		<!--Q11 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十一、對於館方前台服務人員與您配合上需改進的地方？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "良好 ", "服務態度", "溝通配合", "行為舉止/服裝儀容", "環境設施", "其它或說明" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT14_@idx">
+								<input type="checkbox" name="CONTENT14" value="@idx" @(Model.CONTENT14 != null && Model.CONTENT14.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT14_OTH, new { htmlAttr = new { placeholder = "其它或說明", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q11 End-->
+		<!--Q12 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十二、演出當中，您對於觀眾的回應與狀況？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常好 ", "良好", "尚可", "不好" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT15_@idx">
+								<input type="radio" name="CONTENT15" value="@idx" @(!Model.CONTENT15.IsNullOrEmpty() && Model.CONTENT15.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q12 End-->
+		<!--Q13 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十三、您對於展演中心整體服務當中哪方面需改進？(可複選)
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "良好 ", "接待服務", "劇場服務", "硬體設備", "中國書畫", "其它" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT16_@idx">
+								<input type="checkbox" name="CONTENT16" value="@idx" @(Model.CONTENT16 != null && Model.CONTENT16.Contains(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+				<br />
+				@Html.EditorValidationFor(m => m.CONTENT16_OTH, new { htmlAttr = new { placeholder = "其它", style = "margin-top: 5px" } })
+			</div>
+		</div>
+		<!--Q13 End-->
+		<!--Q14 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十四、此次蒞臨，對於展演廳整體印象如何？
+		</div>
+		<div>
+			<div>
+				@{
+					OPTs = new List<string>() { "非常好 ", "良好", "尚可", "不好" };
+				}
+				<ul class="select_opt">
+					@for (int i = 0; i < OPTs.Count; i++)
+					{
+						idx = i + 1;
+						<li>
+							<label for="CONTENT17_@idx">
+								<input type="radio" name="CONTENT17" value="@idx" @(!Model.CONTENT17.IsNullOrEmpty() && Model.CONTENT17.Equals(idx.ToString()) ? "checked" : "")> @idx.@OPTs[i]
+							</label>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<!--Q14 End-->
+		<!--Q15 Start-->
+		<div style="background-color: lightgoldenrodyellow;">
+			十五、意見與建議
+		</div>
+		<div>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT110)
+			</div>
+		</div>
+		<!--Q15 End-->
+		@Html.ValidationSummary(true)
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(true)</div>
+					}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("[name$=OTH]").blur(function () {
+				var vName = $(this).prop("name");
+				var vPerfix = vName.replace(/_OTH/g, '');
+				var vVal = $.trim($(this).val());
+				var vLen = $("[name=" + vPerfix + "]").length;
+				if (vVal != "") {
+					$("[name=" + vPerfix + "]:eq(" + (vLen - 1) + ")").prop("checked", true);
+				} else {
+					$("[name=" + vPerfix + "]:eq(" + (vLen - 1) + ")").prop("checked", false);
+				}
+			});
+
+			$("#save").click(function () {
+				var err = "";
+				$(".select_opt").each(function () {
+					var vLen = $(this).find("[name^=CONTENT]:checked").length;
+					if (vLen == 0) {
+						err += "- " + $(this).parent().parent().prev().text() + "<br />";
+					}
+				});
+				if (err != "") {
+					showMsg("以下問題尚未作答：<br/>" + err, 3);
+					return false;
+				}
+			});
+		});
+	</script>
+}
+

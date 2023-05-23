@@ -1,0 +1,2 @@
+﻿@Html.DropDownList(string.Empty, new SelectList(Function.NodeList.Where(p => Function.NODE_ID_CITYINFO.CheckStringValue(p.PARENT_ID)).OrderBy(p => p.ORDER)
+            .Select(p => new SelectListItem { Value = p.ID, Text = p.TITLE }), "Value", "Text", ViewData.TemplateInfo.FormattedModelValue), "請選擇")

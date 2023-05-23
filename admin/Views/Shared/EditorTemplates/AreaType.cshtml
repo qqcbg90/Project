@@ -1,0 +1,5 @@
+﻿@{
+    //string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+@Html.DropDownList(string.Empty, new SelectList(Enum.GetValues(typeof(AreaType)).Cast<AreaType>()
+            .Select(p => new SelectListItem { Value = p.ToIntValue(), Text = p.GetDescription() }), "Value", "Text", ViewData.TemplateInfo.FormattedModelValue), "請選擇")

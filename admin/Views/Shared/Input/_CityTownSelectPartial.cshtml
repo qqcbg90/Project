@@ -1,0 +1,37 @@
+﻿@*
+	縣市鄉鎮選擇器 partial
+	ViewBag.CitySelect
+	把 model[0] 當 縣市控制項name 傳入
+	把 model[1] 當 鄉鎮控制項name 傳入
+	把 model[2] 當 縣市值 傳入
+	把 model[3] 當 鄉鎮值 傳入
+*@
+@model string[]
+@{
+	string start = Model[0];
+	string end = Model[1];
+	string startValue = Model[2];
+	string endValue = Model[3];
+	SelectList citys = ViewBag.CitySelect as SelectList;
+}
+縣市
+@Html.DropDownList(start, citys, "請選擇")
+鄉鎮
+@Html.DropDownList(end, new SelectList("", ""))
+<script type="text/javascript">
+	function setCityTown@(start)() {
+		$("#@(start)").val('@startValue');
+		getTown@(start)('@start', '@end', '@endValue');
+	}
+	function getTown@(start)(pid, child, childValue) {
+		var selected = $("#" + pid + " option:selected");
+		$.post("@Url.Action("GetTown","Json")", { id: selected.val(), v: childValue }, function (res) {
+			$("#" + child).empty();
+			$("#" + child).append(res);
+		});
+	}
+	$(function () {
+		setCityTown@(start)();
+		$("#@start").change(function () { getTown@(start)('@(start)', '@(end)'); });
+	});
+</script>

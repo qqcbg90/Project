@@ -1,0 +1,211 @@
+.ajax-file-upload-statusbar {
+border: 1px solid #0ba1b5;
+width: 500px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+padding:10px;
+}
+.ajax-file-upload-statusbar img{
+    max-width:100px;
+}
+
+.ajax-file-upload-filename {
+/*width: 300px;*/
+height: auto;
+margin: 0 5px 5px 0;
+
+}
+
+.ajax-file-upload-filesize {
+width: 50px;
+height: auto;
+margin: 0 5px 5px 0px;
+display: inline-block;
+vertical-align:middle;
+}
+.ajax-file-upload-progress {
+margin: 5px 10px 5px 0px;
+position: relative;
+width: 250px;
+border: 1px solid #ddd;
+padding: 1px;
+border-radius: 3px;
+display: inline-block;
+color:#FFFFFF;
+
+}
+.ajax-file-upload-bar {
+background-color: #0ba1b5;
+width: 0;
+height: 20px;
+border-radius: 3px;
+color:#FFFFFF;
+
+}
+.ajax-file-upload-percent {
+position: absolute;
+display: inline-block;
+top: 3px;
+left: 48%
+}
+.ajax-file-upload-red {
+    font-weight: normal;
+    color: #fff;
+    background: #ff5f5f;
+    box-shadow: 1px 1px 3px 0 rgba(0,0,0,0.1);
+    line-height:30px;
+    height:30px;
+    padding:0 10px;
+    border-radius: 3px;
+    transition: all 0.15s ease-out;
+    display: inline-block;
+    border: none;
+    cursor:pointer;
+	font-size:13px;
+}
+.ajax-file-upload-red:hover{
+    opacity:0.8;
+}
+.ajax-file-upload-green {
+background-color: #77b55a;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+margin: 0;
+padding: 0;
+display: inline-block;
+color: #fff;
+font-family: arial;
+font-size: 13px;
+font-weight: normal;
+padding: 4px 15px;
+text-decoration: none;
+cursor: pointer;
+text-shadow: 0 1px 0 #5b8a3c;
+vertical-align: top;
+margin: 5px 10px 5px 0px;
+}
+.ajax-file-upload {
+    font-size:13px;
+    
+    color: #fff;
+    background: #8e9eae;    
+    padding: 0 10px;
+    border-radius: 3px;
+    transition: all 0.15s ease-out;
+    border: none;
+    cursor: pointer;    
+    background: #3396c9;
+    margin:0 5px 0 0;
+	height:30px;
+	line-height:30px;
+	cursor:pointer;
+	box-shadow:1px 1px 3px 0 rgba(0,0,0,0.1);
+	letter-spacing:1px;
+}
+.ajax-file-upload:hover {
+      opacity:0.8;
+}
+.ajax-file-upload input{
+    cursor:pointer;
+	-webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.ajax-upload-dragdrop
+{
+
+	border:2px dotted #A5A5C7;
+	width:420px;
+	color: #DADCE3;
+	text-align:left;
+	vertical-align:middle;
+	padding:10px 10px 0px 10px;
+}
+
+.state-hover
+{
+		border:2px solid #A5A5C7;
+}
+
+.ajax-file-upload form{
+	cursor:pointer;
+}
+
+.ajax-file-upload-container
+{
+	margin:20px 0px 20px 0px;
+}
+/**/
+#fileuploader{
+    float:left;	
+	cursor:pointer;
+}
+
+
+input#btnCancel{
+	height:30px;
+	line-height:30px;
+	cursor:pointer;
+	transition:all 0.15s ease-out;
+}
+
+input#btnCancel:hover{
+	background:#cdcdcd;
+}
+
+
+/* upload2 */
+#fileuploader2{
+    float:left;	
+	cursor:pointer;
+}
+
+
+input#btnCancel2{
+	height:30px;
+	line-height:30px;
+	cursor:pointer;
+	transition:all 0.15s ease-out;
+}
+
+input#btnCancel2:hover{
+	background:#cdcdcd;
+}
+
+/* upload3 */
+#fileuploader3{
+    float:left;	
+	cursor:pointer;
+}
+
+
+input#btnCancel3{
+	height:30px;
+	line-height:30px;
+	cursor:pointer;
+	transition:all 0.15s ease-out;
+}
+
+input#btnCancel3:hover{
+	background:#cdcdcd;
+}
+
+/* upload4 */
+#fileuploader4{
+    float:left;	
+	cursor:pointer;
+}
+
+
+input#btnCancel4{
+	height:30px;
+	line-height:30px;
+	cursor:pointer;
+	transition:all 0.15s ease-out;
+}
+
+input#btnCancel4:hover{
+	background:#cdcdcd;
+}

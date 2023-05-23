@@ -1,0 +1,164 @@
+﻿@model DataModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1, k2 = ViewBag.k2, k3 = ViewBag.k3, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        <div>
+            <label>
+                訂單狀態
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.STATUS, ViewBag.OrderStatusSelect as SelectList, new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                訂單日期
+            </label>
+            <div>
+                @Model.DATETIME1.ToDefaultStringWithTime()
+            </div>
+        </div>
+        <div>
+            <label>
+                訂單代碼
+            </label>
+            <div>
+                @Model.CONTENT1
+                @Html.Hidden("CONTENT1", "**")
+            </div>
+        </div>
+        <div>
+            <label>
+                會員資料
+            </label>
+            <div>
+                @Model.CONTENT2
+                <br />
+                @Model.CONTENT3
+            </div>
+        </div>
+        <div>
+            <label>
+                遊程名稱
+            </label>
+            <div>
+                @Model.Data1.CONTENT1
+            </div>
+        </div>
+        <div>
+            <label>
+                套餐名稱
+            </label>
+            <div>
+                @Model.CONTENT10
+            </div>
+        </div>
+        <div>
+            <label>
+                定價
+            </label>
+            <div>
+                @Model.DECIMAL3.ToInt().ReplaceNumToThousand()
+            </div>
+        </div>
+        <div>
+            <label>
+                實際銷售金額
+            </label>
+            <div>
+                @Model.DECIMAL4.ToInt().ReplaceNumToThousand()
+            </div>
+        </div>
+        <div>
+            <label>
+                點數
+            </label>
+            <div>
+                @Model.DECIMAL5.ToInt().ReplaceNumToThousand()
+            </div>
+        </div>
+        <div>
+            <label>
+                需解說
+            </label>
+            <div>
+                @if (Model.Bool_DECIMAL2)
+                {
+                    @:是
+                    <br /><a href="@Url.Action("Index4","Data2",new { nid = "fun9001" })" target="_blank">排班</a>
+                    <br />
+                    @Model.CONTENT4
+                              }
+                    else
+                    {
+                    @:否
+                }
+            </div>
+        </div>
+        <div>
+            <label>
+                兌換日期
+            </label>
+            <div>
+                @Model.DATETIME2.ToDefaultStringWithTime()
+            </div>
+        </div>
+        <div>
+            <label>
+                核銷日期
+            </label>
+            <div>
+                @Model.DATETIME4.ToDefaultStringWithTime()
+            </div>
+        </div>
+        <div>
+            <label>
+                請款日期
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DATETIME3)
+            </div>
+        </div>
+        <div>
+            <label>
+                備註
+            </label>
+            <div>
+                <textarea name="CONTENT5" id="CONTENT5" cols="45" rows="5" class="big_txtarea valid" data-val="true" data-val-length-max="500" data-val-length="請勿超過 500 個字" aria-describedby="CONTENT5-error" aria-invalid="false">@Model.CONTENT5</textarea>
+                <span class="field-validation-valid" data-valmsg-for="CONTENT5" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#save").click(function () {
+            });
+        });
+    </script>
+}
+

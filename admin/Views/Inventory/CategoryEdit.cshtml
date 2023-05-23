@@ -1,0 +1,29 @@
+﻿@model NODE
+@{
+	Layout = "~/Views/Shared/_popupLayout.cshtml";
+}
+@section head{
+
+}
+
+@section bottonList{
+	<input type="submit" class="btn" value="存檔" style="visibility: hidden;" />
+}
+<div class="edit_list" id="app1">
+	<div>
+		<label>
+			@MyHtml.RedSpan()
+			物品類別
+		</label>
+		<div>
+			@Html.EditorValidationFor(model => model.TITLE)
+		</div>
+	</div>
+	<div>
+		@Html.ValidationSummary(true)
+	</div>
+</div>
+<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+@section scripts{
+
+}

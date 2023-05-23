@@ -1,0 +1,40 @@
+﻿@model string[]
+@{
+    string _name = Model[0];
+    string _value = Model[1];
+}
+
+<span id="iconListA">
+@foreach (NODE icon in Function.NodeList.Where(p => p.ENABLE == 1 && "DATA2_fun9003_PT".Equals(p.PARENT_ID)).OrderBy(p => p.ORDER))
+{
+    <input type="checkbox" class="choosed" value="@icon.ID" onclick="GetIconValueA()" />
+    @icon.TITLE
+}
+</span>
+@Html.Hidden(_name, _value)
+<script type="text/javascript">
+    var _iconNameA = '@_name';
+    var _sp = '@Html.Raw(Function.DELIMITER)';
+    SetIconValueA();
+    function getIconCheckedA() {
+        return $('#iconListA :checkbox').map(function () {
+            if ($(this).is(':checked'))
+                return $(this).val();
+        }).get().join(_sp);
+    }
+    function GetIconValueA() {
+        $("#" + _iconNameA).val(getIconCheckedA());
+    }
+    function SetIconValueA() {
+        var tmp = $("#" + _iconNameA).val();
+        if (tmp != "") {
+            $.map(tmp.split(_sp), function (str) {
+                $('#iconListA :checkbox').map(function () {
+                    if (str == $(this).val()) {
+                        $(this).prop("checked", true);
+                    }
+                });
+            });
+        }
+    }
+</script>

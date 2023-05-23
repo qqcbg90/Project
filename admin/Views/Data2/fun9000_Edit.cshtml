@@ -1,0 +1,159 @@
+﻿@model DataModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                身份證字號
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT3)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                中文姓名
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT1)
+            </div>
+        </div>
+        <div>
+            <label>
+                英文姓名
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT4)
+            </div>
+        </div>
+        <div>
+            <label>
+                性別
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT5, SexType.Male.ToSelectList(), new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                語言別
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT6, LanguageType.English.ToSelectList(), "請選擇...", new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                生日
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DATETIME1)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                E-mail
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT2)
+            </div>
+        </div>
+        <div>
+            <label>
+                場域類別
+            </label>
+            <div>
+                @Html.Partial("_C13Partial", new string[] { "CONTENT13", Model.CONTENT13 })
+            </div>
+        </div>
+        <div>
+            <label>
+                連絡地址
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT8)
+            </div>
+        </div>
+        <div>
+            <label>
+                學歷
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT7)
+            </div>
+        </div>
+        <div>
+            <label>
+                聯絡電話
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT9)
+            </div>
+        </div>
+        <div>
+            <label>
+                手機號碼
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT10)
+            </div>
+        </div>
+        <div>
+            <label>
+                緊急聯絡人姓名
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT11)
+            </div>
+        </div>
+        <div>
+            <label>
+                緊急聯絡人電話
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT12)
+            </div>
+        </div>
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            setRequired(true, 'DATETIME1');
+            setRequired(true, 'CONTENT2');
+            setRequired(true, 'CONTENT3');
+            $("#save").click(function () {
+            });
+        });
+    </script>
+}
+

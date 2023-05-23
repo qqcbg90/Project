@@ -1,0 +1,108 @@
+﻿@model DataModel
+@{
+    List<PLUS> fun3001 = Model.plusList.Where(p => "fun3001".Equals(p.PLUS_TYPE)).OrderBy(p => p.CREATE_DATE).ToList();
+}
+<div>
+    <div class="btn_box like">
+        <input type="button" value="新增" title="新增" class="btn org add_bt" onclick="NewPoint();" />
+    </div>
+    <ul id="pointlist">
+        @if (fun3001 != null && fun3001.Count > 0)
+                    {
+                        foreach (var plus in fun3001)
+                        {
+                            string pid = plus.ID;
+                <li id="@pid">
+                    <a href="javascript:Remove('@(pid)');" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')" class="close_bt"><i class="far fa-times-circle"></i></a>
+                    <input type="hidden" name="plusList.index" value="@pid" />
+                    <input type="hidden" name="plusList[@(pid)].ID" value="@pid" />
+                    <input id="@(pid)_DECIMAL5" name="plusList[@(pid)].DECIMAL5" maxlength="50" placeholder="點數" type="number" value="@plus.DECIMAL5.ToInt()" style="width:100px" />
+                    <span class="field-validation-valid" data-valmsg-for="plusList[@(pid)].DECIMAL5" data-valmsg-replace="true"></span>
+                    <span>
+                        <input class="input Datepicker" id="@(pid)_DATETIME1" name="plusList[@(pid)].DATETIME1" placeholder="YYYY/MM/DD 開始" type="text" value="@plus.DATETIME1.ToDefaultString()" style="width:150px" />
+                        <span class="field-validation-valid" data-valmsg-for="plusList[@(pid)].DATETIME1" data-valmsg-replace="true"></span>
+                        &nbsp;&nbsp;至&nbsp;&nbsp;
+                        <input class="input Datepicker" id="@(pid)_DATETIME2" name="plusList[@(pid)].DATETIME2" placeholder="YYYY/MM/DD 結束" type="text" value="@plus.DATETIME2.ToDefaultString()" style="width:150px" />
+                        <span class="field-validation-valid" data-valmsg-for="plusList[@(pid)].DATETIME2" data-valmsg-replace="true"></span>
+                    </span>
+                </li>
+            }
+        }
+    </ul>
+</div>
+<div id="Template" style="display: none">
+    <li id="${mainid}">
+        <a href="javascript:Remove('${mainid}');" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')" class="close_bt"><i class="far fa-times-circle"></i></a>
+        <input type="hidden" name="plusList.index" value="${mainid}" />
+        <input type="hidden" name="plusList[${mainid}].ID" value="${pid}" />
+        <input id="${pid}_DECIMAL5" name="plusList[${mainid}].DECIMAL5" maxlength="50" placeholder="點數" type="number" value="" style="width:100px" />
+        <span class="field-validation-valid" data-valmsg-for="plusList[${mainid}].DECIMAL5" data-valmsg-replace="true"></span>
+        <span>
+            <input class="input Datepicker" id="${pid}_DATETIME1" name="plusList[${mainid}].DATETIME1" placeholder="YYYY/MM/DD 開始" type="text" value="" style="width:150px" />
+            <span class="field-validation-valid" data-valmsg-for="plusList[${mainid}].DATETIME1" data-valmsg-replace="true"></span>
+            &nbsp;&nbsp;至&nbsp;&nbsp;
+            <input class="input Datepicker" id="${pid}_DATETIME2" name="plusList[${mainid}].DATETIME2" placeholder="YYYY/MM/DD 結束" type="text" value="" style="width:150px" />
+            <span class="field-validation-valid" data-valmsg-for="plusList[${mainid}].DATETIME2" data-valmsg-replace="true"></span>
+        </span>
+    </li>
+</div>
+<script>
+    $(function () {
+        $("#pointlist li").each(function () {
+            var _id = $(this).attr("id");
+            var _d5 = _id + '_DECIMAL5';
+            var _d1 = _id + '_DATETIME1';
+            var _d2 = _id + '_DATETIME2';
+            setRequired(true, _d5);
+            setRequired(true, _d1);
+            setRequired(true, _d2);
+            SetDateJS(_d1, _d2);
+        })
+    });
+    var _plusOrder = 1;
+    function NewPoint() {
+        var _id = '_add' + _plusOrder;
+        $("#Template").tmpl({
+            mainid: _id,
+            pid: _id
+        }).appendTo('#pointlist');
+        _plusOrder++;
+        var _d5 = _id + '_DECIMAL5';
+        var _d1 = _id + '_DATETIME1';
+        var _d2 = _id + '_DATETIME2';
+        setRequired(true, _d5);
+        setRequired(true, _d1);
+        setRequired(true, _d2);
+        SetDateJS(_d1, _d2);
+    }
+    function SetDateJS(start, end) {
+        //console.log(start);
+        //console.log(end);
+        $("#" + start).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy/mm/dd',
+            showAnim: 'drop',
+            buttonImage: '@Url.Content("~/images/calendar.gif")',
+            //showOn: 'both',
+            buttonImageOnly: true,
+            buttonText: '開始日期',
+            onSelect: function (selectedDate) {
+                $("#" + end).datepicker("option", "minDate", selectedDate);
+            }
+        });
+        $("#" + end).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy/mm/dd',
+            showAnim: 'drop',
+            buttonImage: '@Url.Content("~/images/calendar.gif")',
+            //showOn: 'both',
+            buttonImageOnly: true,
+            buttonText: '結束日期',
+            onSelect: function (selectedDate) {
+                $("#" + start).datepicker("option", "maxDate", selectedDate);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,346 @@
+﻿@*
+    遊戲js source
+*@
+@model List<string>
+    @{
+
+    }
+
+    <script>
+        $(".black_bg_game").fadeIn();
+        var _addT = $("#zxcv").val();
+        var _add = _addT.split(',');
+        var xPrev = 0;
+        var _divLeft = 360;
+        var _divHeight = 800;
+        var _standTime = 60;
+        var _badgeTop = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        var _interval;
+        var _interval2;
+        var _interval3;
+        var _scope = 0;
+        var _life = 3;
+        var _before = 3;
+        var _timeTotal = _standTime;
+        var collisionDisplay = document.getElementById('collisionDisplay');
+        var timeDisplay = document.getElementById('timeDisplay');
+        var ship = document.getElementById('ship');
+        var m30 = document.getElementById('m30');
+        var m20 = document.getElementById('m20');
+        var m10 = document.getElementById('m10');
+        var m30Y = 0, m20Y = 0, m10Y = 0;
+
+        var life = document.getElementById('life');
+        var lifeY = 0;
+
+        document.addEventListener('touchstart', handleTouchEvent, true);
+        document.addEventListener('touchmove', handleTouchEvent, true);
+        document.addEventListener('touchend', handleTouchEvent, true);
+        document.addEventListener('touchcancel', handleTouchEvent, true);
+
+        function handleTouchEvent(e) {
+            if (e.touches.length === 0) return;
+            e.preventDefault();
+            e.stopPropagation();
+            var touch = e.touches[0];
+            var _left = (touch.pageX - ($("div.ohbear").width / 2)) + 'px';
+            $("div.ohbear").css("left", _left);
+        }
+        function countstart() {
+            timeDisplay.innerHTML = changeTime(_timeTotal);
+            _interval2 = setInterval(countdownfunc, 1000);
+        }
+        function countdownfunc() {
+            _timeTotal--;
+            timeDisplay.innerHTML = changeTime(_timeTotal);
+            if (_timeTotal == 10) {
+                $("#timeDisplay").addClass("timeout");
+            }
+            if (_timeTotal == 0) {
+                end();
+            }
+        }
+        function changeTime(t) {
+            var _v = t + "<i>s</i>";
+            return _v;
+        }
+        function changeLife(t) {
+            $("div.life").find("div.star").eq(t).addClass("active");
+        }
+
+        function animateAdd2() {
+
+            $("img.badge").each(function () {
+                var _id = $(this).attr("id");
+                var _idi = _id.replace("badge", "");
+                _badgeTop[_idi] += 2;
+                $(this).css("top", _badgeTop[_idi] + 'px');
+                var isColliding = funcCollide(document.getElementById(_id));
+                if (isColliding || _badgeTop[_idi] >= _divHeight) {
+                    $(this).remove();
+                    if (isColliding) {
+                        setImage(1, '+50');
+                        _scope += 50;
+                        collisionDisplay.innerHTML = _scope;
+                    }
+                }
+            })
+        }
+        function animate4() {
+            m30Y += getRanInt();
+            m30.style.top = Math.ceil(m30Y) + 'px';
+            var isColliding = funcCollide(m30);
+            if (_timeTotal == 0) {
+                end();
+            }
+            if (isColliding || m30Y >= (_divHeight + 30)) {
+                m30.style.display = 'none';
+                if (isColliding) {
+                    setImage(2, '-30');
+                    _scope -= 30;
+                    collisionDisplay.innerHTML = _scope;
+                }
+                resetM30();
+            }
+        }
+        function animate5() {
+            m20Y += getRanInt();
+            m20.style.top = Math.ceil(m20Y) + 'px';
+            var isColliding = funcCollide(m20);
+            if (_timeTotal == 0) {
+                end();
+            }
+            if (isColliding || m20Y >= (_divHeight + 30)) {
+                m20.style.display = 'none';
+                if (isColliding) {
+                    setImage(2, '-20');
+                    _scope -= 20;
+                    collisionDisplay.innerHTML = _scope;
+                }
+                resetM20();
+            }
+        }
+        function animate6() {
+            m10Y += getRanInt();
+            m10.style.top = Math.ceil(m10Y) + 'px';
+            var isColliding = funcCollide(m10);
+            if (_timeTotal == 0) {
+                end();
+            }
+            if (isColliding || m10Y >= (_divHeight + 30)) {
+                m10.style.display = 'none';
+                if (isColliding) {
+                    setImage(2, '-10');
+                    _scope -= 10;
+                    collisionDisplay.innerHTML = _scope;
+                }
+                resetM10();
+            }
+        }
+        function animate7() {
+            lifeY += getRanInt();
+            life.style.top = Math.ceil(lifeY) + 'px';
+            var isColliding = funcCollide(life);
+            if (_timeTotal == 0) {
+                end();
+            }
+            if (isColliding || lifeY >= (_divHeight + 30)) {
+                life.style.display = 'none';
+                if (isColliding) {
+                    setImage(2, '-1★');
+                    _life -= 1;
+                    changeLife(_life);
+                }
+                resetlife();
+            }
+        }
+
+        function funcCollide(enemi) {
+            var shipPosX = parseInt(ship.style.left);
+            var shipPosY = parseInt(ship.style.top);
+            var shipWidth = ship.width;
+            var shipHeight = ship.height;
+            var badX = parseInt(enemi.style.left);
+            var badY = parseInt(enemi.style.top);
+            var badWidth = enemi.width;
+            var badHeight = enemi.height;
+
+            return bBoxIntersect(shipPosX, shipPosY, shipWidth, shipHeight,
+                badX, badY, badWidth, badHeight);
+        }
+
+        function animate() {
+            if (_life <= 0 || _timeTotal == 0) {
+                end();
+            }
+            animateAdd2();
+            animate4();
+            animate5();
+            animate6();
+            animate7();
+        }
+        function bBoxIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
+            return !(x1 + w1 < x2 || x1 > x2 + w2 || y1 + h1 < y2 || y1 > y2 + w2);
+        }
+
+        document.addEventListener('mousemove', handleMouseEvent);
+        function handleMouseEvent(e) {
+            var _left = _divLeft;
+            var _bear = 86;
+            var _move = e.pageX - _divLeft - _bear;
+            if (_move <= (-_bear + 1)) {
+                _left = -_bear;
+            }
+            else if (_move >= ($("div.w1500").width() - _bear)) {
+                _left = $("div.w1500").width() - _bear;
+            }
+            else {
+                _left = _move;
+            }
+            ship.style.left = _left + 'px';
+            $("div.ohbear").css("left", _left + 'px');
+        }
+        $("div.w1500").mousemove(function (e) {
+            var relativeXPosition = (e.pageX - this.offsetLeft);
+            var relativeYPosition = (e.pageY - this.offsetTop);
+            xPrev < e.pageX ? ship.src = "/images/game/ohbear-right.png" : ship.src = "/images/game/ohbear-left.png";
+            xPrev = e.pageX;
+        });
+        function getRandomArbitrary() {
+            var _min = $("div.w1500").offset().left + 1;
+            var _v = 0;
+            if (_min < 10) {
+                _min = 80;
+                _v = Math.random() * ($("div.w1500").width() - _min);
+            }
+            else {
+                _v = Math.random() * ($("div.w1500").width() - _min) + _min;
+            }
+            return _v;
+        }
+        function getRanInt() {
+            return Math.random() * (4 - 1) + 1;
+        }
+        function beforestart() {
+            _before--;
+            $("#bbbbb").html(_before);
+            if (_before == 0) {
+                $(".black_bg_game").fadeOut();
+                $(".lightbox_gameover").remove();
+                start();
+            }
+        }
+        function start() {
+            _timeTotal = _standTime;
+            _scope = 0;
+            _life = 3;
+            countstart();
+            $("div.Game-cover").css("cursor", "none");
+            _interval = setInterval(animate, 20);
+        }
+        function end() {
+            clearInterval(_interval);
+            clearInterval(_interval2);
+            clearInterval(_interval3);
+            $("div.Game-cover").css("cursor", "");
+            endSave();
+        }
+        function resetM30() {
+            m30Y = 0;
+            m30.style.left = getRandomArbitrary() + 'px';
+            m30.style.display = 'block';
+        }
+        function resetM20() {
+            m20Y = 0;
+            m20.style.left = getRandomArbitrary() + 'px';
+            m20.style.display = 'block';
+        }
+        function resetM10() {
+            m10Y = 0;
+            m10.style.left = getRandomArbitrary() + 'px';
+            m10.style.display = 'block';
+        }
+        function resetlife() {
+            lifeY = 0;
+            life.style.left = getRandomArbitrary() + 'px';
+            life.style.display = 'block';
+        }
+        function endSave() {
+            $(".black_bg_game").fadeIn();
+            $(".lightbox").addClass("focus");
+            $("#loading").show();
+            $.ajax({
+                type: "POST",
+                url: '/EndGame',
+                data: { d1: _scope, d2: _life, d3: _timeTotal },
+                dataType: "html",
+                success: function (response) {
+                    $("div.Game-cover").html(response);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    GoUrl("/");
+                }
+            });
+        }
+        function setImage(t, s) {
+            if (t == 1) {
+                ship.src = "/images/game/ohbear-win.png";
+                $("div.ohbear").append(createSpan(1, s));
+            }
+            else {
+                ship.src = "/images/game/ohbear-lose.png";
+                $("div.ohbear").append(createSpan(2, s));
+            }
+
+        }
+        function createSpan(t, s) {
+            var _class = "";
+            if (t == 1) {
+                _class = "plus";
+            }
+            else {
+                _class = "minus";
+            }
+            return "<span class='" + _class + "'>" + s + "</span>";
+        }
+        function createAdd() {
+            _add.forEach(function (item, i) {
+                if ((parseInt(item) + 1) == _timeTotal) {
+                    var _bb = (i % 3);
+                    var image = document.createElement('img');
+                    image.setAttribute('style', 'position:absolute;display:block');
+                    image.setAttribute('class', 'badge');
+                    image.setAttribute('id', 'badge' + i);
+                    if (_bb == 1)//1
+                    {
+                        image.src = "/images/game/badge1.png";
+                    }
+                    else if (_bb == 2)//2
+                    {
+                        image.src = "/images/game/badge3.png";
+                    }
+                    else//0
+                    {
+                        image.src = "/images/game/badge2.png";
+                    }
+                    image.style.top = 0;
+                    image.style.left = getRandomArbitrary() + 'px';
+                    $("div.w1500").append(image);
+                }
+            });
+        }
+        $(function () {
+            _divHeight = $("div.w1500").height() - 1;
+            _divLeft = $("div.w1500").offset().left + 1;
+            ship.style.left = '0px';
+            m30.style.left = getRandomArbitrary() + 'px';
+            m20.style.left = getRandomArbitrary() + 'px';
+            m10.style.left = getRandomArbitrary() + 'px';
+            life.style.left = getRandomArbitrary() + 'px';
+            ship.style.top = (_divHeight - ship.height) + "px";
+            $("div.ohbear").css("left", '0px');
+            $("div.ohbear").css("top", (_divHeight - ship.height) + "px");
+            _interval3 = setInterval((() => createAdd()), 1000);
+            setInterval((() => beforestart()), 1000);
+        });
+    </script>

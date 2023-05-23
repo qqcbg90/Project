@@ -1,0 +1,33 @@
+﻿@model ForgetModel
+@{
+
+}
+<div class="wrapper">
+    <div class="header_content">
+        <img src="~/Images/logo.svg" />
+        <h2>密碼修改</h2>
+    </div>
+    <div class="hotel-list mb-5 mt-5">
+        <div class="w1500 flex-shrink-0">
+            <div class="box my-5 px-5 pt-5 pb-5">
+                @using (Html.BeginForm())
+                {
+                    <div class="In">
+                        <p class="input">
+                            <label for="email">密碼修改</label>
+                            <input class="w200 valid" data-val="true" data-val-required="*" id="email" maxlength="500" name="email" placeholder="" type="password" value="" aria-describedby="email-error" aria-invalid="false">
+                            <span class="field-validation-valid" data-valmsg-for="email" data-valmsg-replace="true"></span>
+                        </p>
+                        <div class="btn_box">
+                            <input type="submit" name="button" id="button" value="送出" class="btn go form-control" />
+                        </div>
+                        @Html.ValidationSummary(true)
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+}

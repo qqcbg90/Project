@@ -1,0 +1,134 @@
+﻿@model RoleGroupModel
+
+@{
+
+}
+
+@section head{
+	<script type="text/javascript">
+        @*為了hidden驗證*@
+		$.validator.setDefaults({
+			ignore: ""
+		})
+		var setting_role = {
+			view: {
+				dblClickExpand: role_dblClickExpand
+			},
+			check: {
+				enable: true,
+				autoCheckTrigger: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				onClick: role_onClick,
+				onCheck: role_onCheck
+			}
+		};
+		var zNodes_role, zTree_role, _roletreelist = "#ROLETREELIST";
+		function role_onClick(e, treeId, treeNode) {
+			zTree_role.expandNode(treeNode);
+		}
+		function role_dblClickExpand(treeId, treeNode) {
+			return false;
+		}
+		function role_onCheck(e, treeId, treeNode) {
+			role_getSelectedNode();
+		}
+		function role_getSelectedNode() {
+			var nodes = zTree_role.getCheckedNodes(true);
+			var selKeys;
+			if (nodes.length > 0) {
+				selKeys = $.map(nodes, function (node) {
+					return node.id;
+				});
+				$(_roletreelist).val(selKeys.join(","));
+			}
+			else
+				$(_roletreelist).val("");
+		}
+		function role_setRoleSelectedNode() {
+			var tmp = $(_roletreelist).val();
+			$.map(tmp.split(','), function (str) {
+				var _node = zTree_role.getNodesByParam('id', str);
+				if (_node.length > 0)
+					zTree_role.checkNode(_node[0], true);
+			});
+		}
+		$(function () {
+			restr = $.ajax({
+				url: '@Url.Action("AuthorityList", "Json")',
+				type: 'post',
+				dataType: 'json',
+				data: { isCRUD: '@ViewBag.isCRUD' },
+				async: false,
+				error: function () {
+					alert('error_get_authorityList');
+				},
+				success: function () {
+					//alert('ok');
+				}
+			});
+			zNodes_role = $.parseJSON(restr.responseText);
+			$.fn.zTree.init($("#roleGroup"), setting_role, zNodes_role);
+			zTree_role = $.fn.zTree.getZTreeObj("roleGroup");
+
+			$("#selectAll").click(function () {
+				zTree_role.checkAllNodes($(this).is(":checked"));
+				role_getSelectedNode();
+			});
+			role_setRoleSelectedNode();
+			//全展開
+			//zTree_role.expandAll(true);
+		});
+
+	</script>
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	<div class="edit_list">
+		<div>
+			<label>@MyHtml.RedSpan()@Resource.GroupName.ToString()</label>
+			<div>@Html.EditorValidationFor(model => model.TITLE)</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()@Resource.GroupPermissions.ToString()</label>
+			<div class="group_select">
+				<p>
+					@Html.CheckBox("selectAll")@Resource.ALL.ToString()
+					@Html.ValidationMessageFor(model => model.ROLETREELIST)
+				</p>
+				<ul id="roleGroup" class="ztree Special"></ul>
+				@Html.HiddenFor(model => model.ROLETREELIST)
+			</div>
+		</div>
+		<div>
+			<label>@Resource.Remarks.ToString()</label>
+			<div>@Html.EditorValidationFor(model => model.MEMO)</div>
+		</div>
+		@*<div>
+				<label>@Resource.EnTitle.ToString()</label>
+				<div>@Html.EditorValidationFor(model => model.CONTENT2)</div>
+			</div>*@
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

@@ -1,0 +1,99 @@
+﻿@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string k1 = (string)ViewBag.k1;
+	bool bFUN15_02 = ((string)ViewBag.NodeID).CheckStringValue("fun15_02");
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?pageX=' + page
+				+ '&nid=@(ViewBag.NodeID)'
+				+ '&defaultPage=' + $("[name=defaultPage]").val()
+				+ '&kX=' + EncodeParameter($("[name=kX]").val())
+				+ '&k1=' + $("[name=k1]:checked").val()
+				+ '&start=' + $("[name=start]").val()
+				+ '&end=' + $("[name=end]").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box" style="display:block">
+		<label class="key">
+			演出館別：
+			@foreach (SelectListItem sli in (ViewBag.hallType as SelectList))
+			{
+				<label for="k1_@sli.Value">
+					<input type="radio" value="@sli.Value" id="k1_@sli.Value" name="k1" @(k1.CheckStringValue(sli.Value) ? "checked" : "") />@sli.Text
+				</label>
+			}
+		</label><br />
+		<label class="key">
+			問卷類型：
+			@if (bFUN15_02)
+			{
+				<label for="ORDER_3" class="OPT">
+					@Html.RadioButton("k3", 3, new { id = "ORDER_3" }) 桃園鐵玫瑰藝術節
+				</label>
+			}
+			else
+			{
+				<label for="ORDER_1" class="OPT">
+					@Html.RadioButton("k3", 1, new { id = "ORDER_1", @checked = "checked" }) 表演藝術
+				</label>
+				<label for="ORDER_2" class="OPT">
+					@Html.RadioButton("k3", 2, new { id = "ORDER_2" }) 展覽藝術
+				</label>
+				<label for="ORDER_4" id="OPT_4" style="@(((string)ViewBag.k3).CheckStringValue("hall3") ? "" : "display: none;")">
+					@Html.RadioButton("k3", 4, new { id = "ORDER_4" }) 電影活動
+				</label>
+				<label for="ORDER_5" class="OPT">
+					@Html.RadioButton("k3", 5, new { id = "ORDER_5" }) 索票
+				</label>
+			}			
+		</label>
+		<br />
+		@Html.Partial("Input/_DateStartToEndPartial", new string[] { "start", "end", (string)ViewBag.start, (string)ViewBag.end, "1" })
+		<label class="btn_box go">
+			<input type="submit" id="export1" name="export1" value="匯出 EXCEL" class="btn" />
+		</label>
+	</p>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("input[name='k1']").change(function () {
+				if ($(this).val() == "hall3") {
+					$("#ORDER_4").prop("checked", true);
+					$("#OPT_4").show();
+					$(".OPT").hide();
+				} else {
+					$("#OPT_4").hide();
+					$(".OPT").show();
+					$("#ORDER_1").prop("checked", true);
+				}
+			});
+		});
+	</script>
+}

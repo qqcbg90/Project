@@ -1,0 +1,219 @@
+﻿@model DataModel
+@{
+    ATTACHMENT att1 = null, att2 = null, att3 = null, att4 = null, att5 = null ;
+    if (Model.Atts != null)
+    {
+        att1 = Model.Atts.FirstOrDefault(p => p.ORDER == 1);//身分證正
+        att2 = Model.Atts.FirstOrDefault(p => p.ORDER == 2);//身分證反
+        att3 = Model.Atts.FirstOrDefault(p => p.ORDER == 3);//附件1
+        att4 = Model.Atts.FirstOrDefault(p => p.ORDER == 4);//附件2
+        att5 = Model.Atts.FirstOrDefault(p => p.ORDER == 5);//附件3
+
+    }
+    var list_1 = ViewBag.List1;
+    var c4 = ViewBag.c4;
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+}
+
+<div class="header_content">
+    <img src="~/Images/logo.svg" />
+    <h2>得獎者回覆專區</h2>
+</div>
+@using (Html.BeginFileForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="w1400 flex-shrink-0">
+        <div class="box for-store my-5 px-5 pt-3 pb-4">
+            @if (list_1 != null)
+            {
+                <div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+                    @foreach (var p1 in list_1)
+                    {
+                        <p>※ @p1.ToString()</p>
+                    }
+                </div>
+            }
+            <div>
+                <h1> 獎項：@Model.CONTENT1</h1>
+            </div>
+            <div>
+                <h1> 收件人姓名： </h1>
+                <div>
+                    @Html.EditorValidationFor(m => m.CONTENT4, new { @class = "form-control", placeholder = "收件人姓名" })
+                </div>
+            </div>
+            <div>
+                <h1> 身分證字號： </h1>
+                <div>
+                    @Html.EditorValidationFor(m => m.CONTENT10, new { @class = "form-control", placeholder = "身分證字號" })
+                </div>
+            </div>
+            <div>
+                <h1> 寄件地址： </h1>
+                <table class="table gift-boxB">
+                    <tr>
+                        <th scope="col">
+                            @Html.DropDownListFor(m => m.CONTENT6, ViewBag.CityInfo as SelectList, "縣市", new { @class = "form-control" })
+                        </th>
+                        <th scope="col">
+                            <select id="CONTENT7" name="CONTENT7" data-val="true" data-val-required="*" class="form-control">
+                                <option value="">鄉鎮市區</option>
+                            </select>
+                        </th>
+                        <th scope="col">
+                            @Html.EditorValidationFor(m => m.CONTENT8, new { @class = "form-control", placeholder = "地址" })
+                        </th>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <h1> 連絡電話： </h1>
+                <div>
+                    @Html.EditorValidationFor(m => m.CONTENT9, new { @class = "form-control", placeholder = "(獎品寄送如有其他問題，將會與您聯繫)" })
+                </div>
+            </div>
+            @*-----------------------------------------------------附件---------------------------------------------------------------------------*@
+            @if (Model.DECIMAL1 == 1)
+            {
+                <h1>
+                    身分證正反面(扣繳憑單需要)：
+                </h1>
+                <div>
+                    <h3 style="font-size:18px">
+                        正面：<input type="file" id="hpf1" name="hpf1" />
+                    </h3>
+                    <span class="field-validation-valid" data-valmsg-for="hpf1" data-valmsg-replace="true"></span>
+                    @if (att1 != null)
+                    {
+                        <a href="@att1.GetFile()" target="_blank" id="ahpf1">@att1.ORIGINAL_FILE_NAME</a>
+                    }
+                </div>
+                <div>
+                    <h3 style="font-size:18px">
+                        反面：<input type="file" id="hpf2" name="hpf2" />
+                    </h3>
+                    <span class="field-validation-valid" data-valmsg-for="hpf2" data-valmsg-replace="true"></span>
+                    @if (att2 != null)
+                    {
+                        <a href="@att2.GetFile()" target="_blank" id="ahpf2">@att2.ORIGINAL_FILE_NAME</a>
+                    }
+                </div>
+            }
+            @if (Model.CONTENT11 != null)
+            {
+                <h1>
+                    @Model.CONTENT11：
+                </h1>
+                <div>
+                    <h3 style="font-size:18px">
+                        附件：<input type="file" id="hpf3" name="hpf3" />
+                    </h3>
+                    <span class="field-validation-valid" data-valmsg-for="hpf3" data-valmsg-replace="true"></span>
+                    @if (att3 != null)
+                    {
+                        <a href="@att3.GetFile()" target="_blank" id="ahpf3">@att3.ORIGINAL_FILE_NAME</a>
+                    }
+                </div>
+            }
+            @if (Model.CONTENT12 != null)
+            {
+                <h1>
+                    @Model.CONTENT12：
+                </h1>
+                <div>
+                    <h3 style="font-size:18px">
+                        附件：<input type="file" id="hpf4" name="hpf4" />
+                    </h3>
+                    <span class="field-validation-valid" data-valmsg-for="hpf4" data-valmsg-replace="true"></span>
+                    @if (att4 != null)
+                    {
+                        <a href="@att4.GetFile()" target="_blank" id="ahpf4">@att4.ORIGINAL_FILE_NAME</a>
+                    }
+                </div>
+            }
+            @if (Model.CONTENT13 != null)
+            {
+                <h1>
+                    @Model.CONTENT13：
+                </h1>
+                <div>
+                    <h3 style="font-size:18px">
+                        附件：<input type="file" id="hpf5" name="hpf5" />
+                    </h3>
+                    <span class="field-validation-valid" data-valmsg-for="hpf5" data-valmsg-replace="true"></span>
+                    @if (att5 != null)
+                    {
+                        <a href="@att5.GetFile()" target="_blank" id="ahpf5">@att5.ORIGINAL_FILE_NAME</a>
+                    }
+                </div>
+            }
+
+
+            <br />
+            <input type="submit" id="save" value="送出" class="btn btn-primary" style="width: 100%;padding: 10px;font-size: 1.25rem;" />
+            @Html.HiddenFor(m => m.CONTENT1)
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+}
+
+
+@section scripts
+{
+    <script>
+
+        if ($("#CONTENT6").val() != "") {
+            setTown($("#CONTENT6").val(),"@c4");
+        }
+		$("#CONTENT6").change(function () {
+				setTown($(this).val(),"");
+		});
+        function setRequired(isAdd, sID) {
+
+			if (isAdd) {
+				$("#" + sID).rules("add", { required: true, messages: { required: "*必填" } });
+			}
+			else {
+				$("#" + sID).rules("remove");
+				var vClass = $("#" + sID).prop("class");
+				if (vClass != undefined && vClass.indexOf("input-validation-error") != -1) {
+					$("#" + sID).removeClass("input-validation-error");
+					$("#" + sID).next().remove();
+				}
+			}
+			//$("form").valid();
+        }
+
+        function setTown(sCity, select) {
+			$("#CONTENT7 option").not(":eq(0)").remove();
+			$.ajax({
+				url: "@Url.Action("GetCounty", "Json")",
+				type: 'post',
+                dataType: 'json',
+                data: { city: sCity, selected: select },
+				complete: function (data) {
+                    $("#CONTENT7").append(data.responseText);
+
+				}
+			});
+		}
+		$(function () {
+            setRequired(true, "CONTENT4");
+			setRequired(true, "CONTENT5");
+            setRequired(true, "CONTENT6");
+            setRequired(true, "CONTENT7");
+            setRequired(true, "CONTENT8");
+            setRequired(true, "CONTENT9");
+            setRequired(true, "CONTENT10");
+			@Html.Raw(att1==null ? "if ($(\"#ahpf1\").length == 0 ) { setRequired(true, \"hpf1\"); }" : "")
+			@Html.Raw(att2==null ? "if ($(\"#ahpf2\").length == 0 ) { setRequired(true, \"hpf2\"); }" : "")
+            @Html.Raw(att3==null ? "if ($(\"#ahpf3\").length == 0 ) { setRequired(true, \"hpf3\"); }" : "")
+            @Html.Raw(att4==null ? "if ($(\"#ahpf4\").length == 0 ) { setRequired(true, \"hpf4\"); }" : "")
+            @Html.Raw(att5==null ? "if ($(\"#ahpf5\").length == 0 ) { setRequired(true, \"hpf5\"); }" : "")
+        });
+
+    </script>
+}

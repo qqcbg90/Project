@@ -1,0 +1,65 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <title></title>
+    <style>
+        body{
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .wrapper{
+            position: relative;
+            background: url(/images/welcome_bg.png) center center no-repeat;
+            background-size: 100%;
+            width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+        }
+        .logo{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-65%);
+            display: block;
+            width: 100%;
+            max-width: 600px;
+        }
+        h1{
+            font-size: 5vh;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,200%);
+            letter-spacing: .25rem;
+            text-align: center;
+            color:  #3492c1 ;
+        }
+        @@media screen and (max-width: 768px) {
+            .wrapper{
+                background:url(/images/welcome_bg_mb.png) center center no-repeat;
+                background-size: 100%;
+            }
+            .logo{
+                width: 90%;
+                max-width: auto;
+            }
+            h1{
+                transform: translate(-50%,50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <img src="~/images/welcome_logo.png" alt="" class="logo">
+        <h1>即將上線 敬請期待</h1>
+    </div>
+</body>
+</html>

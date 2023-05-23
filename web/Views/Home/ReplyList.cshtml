@@ -1,0 +1,51 @@
+﻿@model IQueryable<PLUS>
+@{
+    var List = Model.Where(p => p.CONTENT20 == "1").OrderBy(p => p.ORDER);
+    var send = ViewBag.s;
+    var noreply = ViewBag.rs;
+}
+
+@section head{
+    @Scripts.Render("~/Content/jquery.lazy-master/jquery.lazy.min.js")
+}
+
+<div class="header_content">
+    <img src="~/Images/logo.svg" />
+    <h2>得獎回覆結果 ：@List.Count()</h2>
+</div>
+<div class="w1400 flex-shrink-0">
+    <div class="box for-store my-5 px-5 pt-3 pb-4">
+        <div id="tab">
+            <ul class="tab-title">
+                <li class="tab-item"><a href="#tab01">未回覆</a></li>
+                <li class="tab-item"><a href="#tab02">已回覆</a></li>
+            </ul>
+            <div id="tab01" class="tab-inner">
+                @Html.Partial("ReplyList2Partial", Model)
+            </div>
+            <div id="tab02" class="tab-inner">
+                @Html.Partial("ReplyList1Partial", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        
+        $(function () {
+            var $li = $('ul.tab-title li');
+
+            $($li.eq(0).addClass('active').find('a').attr('href')).siblings('.tab-inner').hide();
+            
+            $li.click(function () {
+                $($(this).find('a').attr('href')).show().siblings('.tab-inner').hide();
+                $(this).addClass('active').siblings('.active').removeClass('active');
+            });
+        });
+        $(function () {
+            $('.lazy').lazy();
+        });
+
+    </script>
+}

@@ -1,0 +1,185 @@
+﻿@model DataModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                解說場域
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT1, ViewBag.fun9001 as SelectList, new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                語言別
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT6, LanguageType.English.ToSelectList(), "請選擇...", new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                解說員
+                @*<br />
+                <a href="javascript:getData2FromAjax();">搜尋</a>*@
+            </label>
+            <div style="display:block">
+                <div id="_mainUpdate"></div>
+                @Html.HiddenFor(m => m.MAIN_ID)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                預約時間
+            </label>
+            <div>
+                @Html.Partial("Input/_TimeStartToEndPartial", new string[] { "DATETIME1", "DATETIME2", Model.DATETIME1.ToDefaultStringWithTime(), Model.DATETIME2.ToDefaultStringWithTime(), "1" })
+                @*@Html.Partial("Input/_DateStartToEndPartial", new string[] { "DATETIME1", "DATETIME2", Model.DATETIME1.ToDefaultStringWithTime(), Model.DATETIME2.ToDefaultStringWithTime(), "0" })*@
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                預約單位
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT2)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                預約人數
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DECIMAL1)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                預約時間時數
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DECIMAL2)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                聯絡人姓名
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT3)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                聯絡電話
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT4)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                聯絡E-mail
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT5)
+            </div>
+        </div>
+        
+        <div>
+            <label>
+                訂單編號
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT8)
+            </div>
+        </div>
+        <div>
+            <label>
+                備註
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT7)
+            </div>
+        </div>
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            setRequired(true, 'CONTENT2');
+            setRequired(true, 'CONTENT3');
+            setRequired(true, 'CONTENT4');
+            setRequired(true, 'CONTENT5');
+            setRequired(true, 'DECIMAL1');
+            setRequired(true, 'DECIMAL2');
+            //setRequired(true, 'DATETIME1');
+            //setRequired(true, 'DATETIME2');
+            $("#save").click(function () {
+                if ($("#MAIN_ID").val() == "")
+                {
+                    showMsg("解說員尚未選擇!!", 3)
+                    return false;
+                }
+            });
+            $("#CONTENT1").change(function () {
+                getData2FromAjax(0);
+            });
+            $("#CONTENT6").change(function () {
+                getData2FromAjax(0);
+            });
+            getData2FromAjax(1);
+        });
+        function getData2FromAjax(clean)
+        {
+            if (1 != clean)
+            {
+                $("#MAIN_ID").val('');
+            }
+            var _div = "#_mainUpdate";
+            $(_div).html('<img src="@Url.Content("~/images/loader.gif")" /><br /> @Resource.Processing.ToString()...');
+            $(_div).load('@Url.Action("GetData2Data", "Json")'
+                , { CONTENT1: $("#CONTENT1").val(), CONTENT6: $("#CONTENT6").val() }
+                , function (response, status, xhr) {
+                    if (status == "error") {
+                        $(_div).html('@Function.DEFAULT_ERROR');
+                    }
+                });
+        }
+    </script>
+}
+

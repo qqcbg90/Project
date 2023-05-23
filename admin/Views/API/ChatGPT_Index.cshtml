@@ -1,0 +1,100 @@
+﻿@{
+    string result = ViewBag.Response;
+    string[] re = null;
+    string[] lang = ViewBag.lang;
+    int i = 0;
+    if (result != null)
+    {
+        re = result.Split('_');
+    }
+
+}
+
+@section featured_top{
+    <div class="black_bg"></div>
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+    <div class="chat-container">
+        <div class="chat-box">
+            <textarea class="chat-input" name="prompt" placeholder="Type your message here... Or description of the picture...">@ViewBag.prompt</textarea>
+            <button class="send-button" name="action" value="chat"><i class="fas fa-paper-plane"></i></button>
+            <button class="send-button" name="action" value="image"><i class="fas fa-images"></i></button>
+        </div>
+        <div class="langGroup">
+            <label class="langLabel" title="English"><input type="checkbox"  name="language" value="English"><span>🇺🇸<!-- --> <!-- -->English</span></label>
+            <label class="langLabel" title="Japanese"><input type="checkbox" name="language" value="Japanese"><span>🇯🇵<!-- --> <!-- -->Japanese</span></label>
+            <label class="langLabel" title="Korean"><input type="checkbox" name="language" value="Korean"><span>🇰🇷<!-- --> <!-- -->Korean</span></label>
+            <label class="langLabel" title="French"><input type="checkbox" name="language" value="French"><span>🇫🇷<!-- --> <!-- -->French</span></label>
+            <label class="langLabel" title="German"><input type="checkbox" name="language" value="German"><span>🇩🇪<!-- --> <!-- -->German</span></label>
+            <label class="langLabel" title="Spanish"><input type="checkbox" name="language" value="Spanish"><span>🇪🇸<!-- --> <!-- -->Spanish</span></label>
+        </div>
+    </div> 
+    <br />
+    <hr />
+
+}
+@if (ViewBag.Response != null)
+{
+    <div class="chat-container">
+        <div class="chat-box-response" style="width:80%">
+            @foreach (var text in re)
+            {
+                if (text != "")
+                {
+                    <p class="chat-input">@lang[i]：<br />@text</p>
+                    i++;
+                }
+
+            }
+
+        </div>
+    </div>
+}
+@if (ViewBag.imageurl != null)
+{
+    <div class="chat-container">
+        <div class="chat-box">
+            <img src="@ViewBag.imageurl" style="width:500px;" alt="Generated Image" />
+            <hr />
+        </div>
+    </div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        const langLabels = document.querySelectorAll('.langLabel');
+        langLabels.forEach(label => {
+            const checkbox = label.querySelector('input[type="checkbox"]');
+
+            checkbox.addEventListener('change', function () {
+                if (checkbox.checked) {
+                    label.classList.add('checked');
+                } else {
+                    label.classList.remove('checked');
+                }
+            });
+        });
+    
+    $(function () {
+    const textarea = document.querySelector('.chat-input');
+
+    textarea.addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+    });
+    })
+    </script>
+}
+

@@ -1,0 +1,110 @@
+﻿@model PagedList<ROLE_GROUP>
+
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string _edit = "Edit";
+	string _delete = "Delete";
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null,
+		new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword })
+	</div>
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page='
+                + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage='
+                + $("[name=defaultPage]").val()
+                + '&k='
+                + EncodeParameter($("[name=k]").val());
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<div class="search_box">
+		@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Search))
+        {
+			<label class="key">@MyList.KeywordInput(ViewBag.Keyword, Resource.GroupName.ToString())</label>
+			<label class="btn_box go">@MyList.Submit()</label>
+		}
+	</div>
+	<div class="top_bar">
+		<label class="btn_box">
+			@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+			{
+				@MyHtml.Button(Resource.Add.ToString(), Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues), "org")
+			}
+		</label>
+	</div>
+	if (MyList.IsTwoPagers())
+	{
+		@Pager()
+	}
+	<div class="tb_list_box">
+		<table>
+			<tr class="thead">
+				<th>@Resource.GroupName.ToString()</th>
+				<th>@Resource.Remarks.ToString()</th>
+				<th>@Resource.EditUser.ToString()</th>
+				<th>@Resource.Features.ToString()</th>
+			</tr>
+			@foreach (var rg in Model)
+			{
+				<tr>
+					<td data-th="@Resource.GroupName.ToString()">
+						@rg.TITLE
+					</td>
+					<td data-th="@Resource.Remarks.ToString()">
+						@Html.Raw(rg.MEMO.ReplaceToBr())
+					</td>
+					<td data-th="@Resource.EditUser.ToString()">
+						<div class="btn_box">
+							<a href="@Url.MyAction("RoleGroupUser", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = rg.ID })" title="@Resource.SelectUser">
+								<span class="btn org"><i class="fas fa-users"></i></span>
+							</a>
+						</div>
+					</td>
+					<td data-th="@Resource.Features.ToString()">
+						<div class="btn_box">
+							<a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = rg.ID })" title="@Resource.Edit"><span class="btn"><i class="far fa-edit"></i></span></a>
+							@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+							{
+								<a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = rg.ID })" onclick="return confirm('@Resource.msg_01.ToString()')">@MyList.DeleteImage()</a>
+							}
+						</div>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+	@Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

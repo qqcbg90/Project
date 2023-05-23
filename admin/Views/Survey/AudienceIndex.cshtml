@@ -1,0 +1,244 @@
+﻿@model IPagedList<DATA8>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string NodeID = ((string)ViewBag.NodeID);
+	bool fun07_01 = NodeID.CheckStringValue("fun07_01");
+	bool fun07_02 = NodeID.CheckStringValue("fun07_02");
+
+	int iQuizNo = (int)ViewBag.QuizNo;
+	int iQuizCount = 0;
+
+	Dictionary<string, string> dictLoc = Function.getSurveyLoc(false).ToDictionary(p => p.Value, p => p.Text); //現居地
+	Dictionary<string, string> dictLocX = Function.getSurveyLocX(false).ToDictionary(p => p.Value, p => p.Text); //現居地 - 區域
+	Dictionary<string, string> dictAge = Function.getSurveyAge(false).ToDictionary(p => p.Value, p => p.Text); //年齡層
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&k1=' + $("[name=k1]").val()
+				+ '&k2=' + $("[name=k2]:selected").val()
+				+ '&k3=' + $("[name=k3]:checked").val()
+				+ '&start=' + $("[name=start]").val()
+				+ '&end=' + $("[name=end]").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@functions{
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null
+	   , new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, k1 = ViewBag.k1, k2 = ViewBag.k2, k3 = ViewBag.k3, start = ViewBag.start, end = ViewBag.end })
+	</div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	if (fun07_01)
+	{
+		<div style="font-size:1.3rem;margin-bottom:10px;background-color:lightyellow;padding: 8px 5px;font-weight: bold;">【@(Function.GetNodeTitle((string)ViewBag.k1))】@((string)ViewBag.ExName)</div>
+	}
+	<p class="search_box" style="display:block">
+		<label class="key">
+			問卷類型：
+			@if (iQuizNo == -1 || iQuizNo == 1)
+			{
+				<label for="ORDER_1">
+					@Html.RadioButton("k3", 1, new { id = "ORDER_1", @checked = "checked" }) 表演藝術
+				</label>
+				iQuizCount++;
+			}
+			@if (iQuizNo == -1 || iQuizNo == 2)
+			{
+				<label for="ORDER_2">
+					@Html.RadioButton("k3", 2, new { id = "ORDER_2" }) 展覽藝術
+				</label>
+				iQuizCount++;
+			}
+			@*@if (iQuizNo == -1 || iQuizNo == 3)
+			{
+				<label for="ORDER_3">
+					@Html.RadioButton("k3", 3, new { id = "ORDER_3" }) 桃園鐵玫瑰藝術節
+				</label>
+				iQuizCount++;
+			}*@
+			@if (iQuizNo == -1 || iQuizNo == 4)
+			{
+				<label for="ORDER_4">
+					@Html.RadioButton("k3", 4, new { id = "ORDER_4" }) 電影活動
+				</label>
+				iQuizCount++;
+			}
+			@if ((bool)ViewBag.IsRopeTicket)
+			{
+				<label for="ORDER_5">
+					@Html.RadioButton("k3", 5, new { id = "ORDER_5" }) 索票
+				</label>
+				iQuizCount++;
+			}
+		</label><br />
+		@if (fun07_02)
+		{
+			<label class="key">活動館別：<span class="select">@Html.DropDownList("k2", ViewBag.hallType as SelectList, "全部")</span></label><br />
+			@Html.Partial("Input/_DateStartToEndPartial", new string[] { "start", "end", (string)ViewBag.start, (string)ViewBag.end, "1" })
+		}
+		<label class="btn_box go">
+			@if (fun07_01)
+			{
+				if (iQuizCount > 1)
+				{
+					@MyList.Submit()
+				}
+				@Html.Hidden("k1", (string)ViewBag.k1)
+				<input type="button" id="export1" name="export1" value="匯出原始資料" class="btn" />
+				<input type="button" id="export2" name="export2" value="匯出 E-mail" class="btn" />
+				@MyHtml.Button("回上層", Url.MyAction("ExhibitionIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { k1 = ViewBag.k1 }), "gray")
+				@*<a href="@Url.Content("~/Content/各館問卷QRcode.zip")" target="_blank" style="margin-left: 10px">各館問卷QRcode下載</a>*@
+			}
+			else
+			{
+				@MyList.Submit()
+				<input type="button" id="export1" name="export1" value="匯出 EXCEL" class="btn" />
+			}
+		</label>
+	</p>
+	if (fun07_01)
+	{
+		<p class="top_bar">
+			<label class="btn_box">
+				@if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+				{
+					<input type="button" value="新增" title="新增" class="btn org" id="btnAdd">
+				}
+			</label>
+		</p>
+		if (MyList.IsTwoPagers())
+		{
+			@Pager()
+		}
+		<div class="tb_list_box">
+			<table class="tb_list">
+				<tr class="thead">
+					@*<th><input type="checkbox" id="chkAll" name="chkAll" /></th>*@
+					<th>活動館別</th>
+					<th>活動日期</th>
+					<th>性別</th>
+					<th>現居地</th>
+					<th>年齡層</th>
+					<th>問卷</th>
+				</tr>
+				@foreach (var m in Model)
+				{
+					<tr>
+						@*<td data-th="選取欄"><input type="checkbox" id="chk_@m.ID" name="chk" value="@m.ID" /></td>*@
+						<td data-th="活動館別">@Function.GetNodeTitle(m.DATA_TYPE)</td>
+						<td data-th="活動日期">@m.DATETIME1.Value.ToDateString(week: true)</td>
+						<td data-th="性別">
+							@(m.CONTENT2.IsNullOrEmpty() ? "-" : ((SexType)m.CONTENT2.ToInt()).GetDescription())
+						</td>
+						<td data-th="現居地">
+							@if (m.CONTENT4.IsNullOrEmpty())
+							{
+								@:-
+							}
+							else
+							{
+								@(dictLoc[m.CONTENT4])
+								@(m.CONTENT4.Equals("1") ? (m.CONTENT5.IsNullOrEmpty() ? "" : dictLocX[m.CONTENT5]) : "")
+                            }
+						</td>
+						<td data-th="年齡層">@(m.CONTENT7.IsNullOrEmpty() ? "-" : dictAge[m.CONTENT7])</td>
+						<td data-th="問卷">
+							<div class="btn_box">
+								<a href="@(string.Format("{0}/Survey/{1}{2}?surveyID={3}&src=admin", Function.DEFAULT_ROOT_HTTP_AFMC.TrimEnd('/'), m.ORDER, m.STATUS, m.ID))" title="問卷" target="_blank"><span class="btn"><i class="far fa-edit"></i></span></a>
+							</div>
+						</td>
+					</tr>
+				}
+			</table>
+		</div>
+		@Pager()
+	}
+	else
+	{
+		decimal iVal = 0;
+		decimal iSum = (int)ViewBag.Sum;
+		<div class="edit_list">
+			@foreach (DATA8 m in Model)
+			{
+				if (m.ID.CheckStringValue("main"))
+				{
+					<div style="text-align:left;background-color: lightgoldenrodyellow;">@m.CONTENT1</div>
+				}
+				else
+				{
+					iVal = (m.DECIMAL1 ?? 0);
+					<div style="border-bottom: 1px dashed #CCC;">
+						<div style="width:30%;display:inline-block;">@m.CONTENT1</div>
+						<div style="width:50%;" class="percent">
+							<div style="width:@(iSum == 0 ? 0 : Convert.ToInt32((iVal / iSum) * 100))%;background-color:orange;">&nbsp;</div>
+						</div>
+						<div style="width:20%;text-align:right;display:inline-block;">@(iSum == 0 ? 0 : Convert.ToInt32((iVal / iSum) * 100))% (@iVal.ToString("#,0") 票)</div>
+					</div>
+				}
+			}
+		</div>
+	}
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			$("#btnAdd").click(function () {
+				var k3 = $("[name=k3]:checked").val();
+				if (k3 == "") {
+					showMsg("請選擇問卷類型！", 3);
+					return false;
+				} else {
+					var url = "@(Function.DEFAULT_ROOT_HTTP_AFMC + "Survey/")" + k3 + "@((string)ViewBag.exid)?src=admin";
+					window.open(url);
+				}
+			});
+
+			$("#chkAll").click(function () {
+				$("[name=chk]").prop("checked", $(this).prop("checked"));
+			});
+
+			$("[id^=export]").click(function () {
+				var vID = $(this).prop("id");
+				var url = '@Html.Raw(Url.Action("AudienceIndex", new { nid = ViewBag.NodeID, exid = ViewBag.exid, k1 = ViewBag.k1 }))' +
+					'&export=' + (vID == "export1" ? 1 : 2) +
+					'&k3=' + $("[name=k3]:checked").val();
+				window.open(url);
+			});
+		});
+	</script>
+}

@@ -1,0 +1,5 @@
+﻿@{
+    string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    //ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+    }
+<textarea name="@tmpName" id="@tmpName" cols="@(ViewData["cols"] != null ? ViewData["cols"] : 45)" rows="@(ViewData["rows"] != null ? ViewData["rows"] : 10)" class="big_txtarea">@ViewData.TemplateInfo.FormattedModelValue</textarea>

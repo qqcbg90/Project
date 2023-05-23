@@ -1,0 +1,87 @@
+﻿@model BeforeDrivingModel
+@using System.Reflection;
+@{
+	bool IsAdd = (bool)ViewBag.IsAdd;
+	Dictionary<string, string> dict = new Dictionary<string, string>()
+	{
+		{ "CONTENT2", Html.LabelFor(m=>m.CONTENT2_1).ToString() },
+		{ "CONTENT3", Html.LabelFor(m=>m.CONTENT3_1).ToString() },
+		{ "CONTENT4", Html.LabelFor(m=>m.CONTENT4_1).ToString() },
+		{ "CONTENT5", Html.LabelFor(m=>m.CONTENT5_1).ToString() },
+		{ "CONTENT6", Html.LabelFor(m=>m.CONTENT6_1).ToString() },
+		{ "CONTENT7", Html.LabelFor(m=>m.CONTENT7_1).ToString() }
+	};
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			@MyHtml.RedP("請依下表逐一檢查，倘有異常請即刻報修 TEL：03-3170511 轉 8505")
+		</div>
+		@if (!IsAdd)
+		{
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CREATE_DATE)
+			</label>
+			<div>
+				@Html.DisplayFor(m => m.CREATE_DATE)
+			</div>
+		</div>
+		}
+		<div>
+			<label>
+				@Html.LabelFor(m => m.ARTICLE_ID)
+			</label>
+			<div>
+				@Html.DisplayFor(m => m.ARTICLE_ID) - @Html.DisplayFor(m => m.CONTENT1)
+			</div>
+		</div>
+		<div class="tb_list_box">
+			<table class="tb_list">
+				<tr class="thead">
+					<th>檢查項目</th>
+					<th>檢查紀錄</th>
+					<th>備註</th>
+				</tr>
+				@foreach (KeyValuePair<string, string> kvp in dict)
+				{
+					string C1 = Convert.ToString((typeof(BeforeDrivingModel).GetProperty(kvp.Key + "_1") as PropertyInfo).GetValue(Model));
+					string C2 = Convert.ToString((typeof(BeforeDrivingModel).GetProperty(kvp.Key + "_2") as PropertyInfo).GetValue(Model));
+					<tr>
+						<td data-th="檢查項目">@Html.Raw(kvp.Value)</td>
+						<td data-th="檢查紀錄">
+							<label for="@(kvp.Key + "_Y")"><input type="radio" id="@(kvp.Key + "_Y")" name="@(kvp.Key)_1" value="1" checked />正常</label>
+							<label for="@(kvp.Key + "_N")"><input type="radio" id="@(kvp.Key + "_N")" name="@(kvp.Key)_1" value="0" @(C1.Equals("0") ? "checked" : "") />損壞</label>
+						</td>
+						<td data-th="備註">
+							@Html.TextBox(kvp.Key + "_2", C2, new { htmlAttr = new { @class = "w200", maxlength = 200 } })
+						</td>
+					</tr>
+				}
+			</table>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

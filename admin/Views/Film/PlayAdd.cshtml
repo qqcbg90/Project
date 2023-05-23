@@ -1,0 +1,90 @@
+﻿@model List<SelectListItem>
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="@Url.Content("~/favicon.ico")" rel="shortcut icon" type="image/x-icon">
+	<link href="@Url.Content("~/Content/reset.css")" rel="stylesheet" />
+	<link href="@Url.Content("~/Content/style.css")" rel="stylesheet" />
+	<link href="@Url.Content("~/Content/font-awesome.css")" rel="stylesheet" />
+	<script src="@Url.Content("~/Scripts/jquery-3.4.1.js")"></script>
+	<script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.js")"></script>
+	<link href="@Url.Content("~/Content/toastmessage/css/jquery.toastmessage.css")" rel="stylesheet" />
+	<script src="@Url.Content("~/Content/toastmessage/jquery.toastmessage.js")"></script>
+	<title>影片放映清單</title>
+	<style type="text/css">
+		.menuBar {
+			text-align: right;
+			background: #F1ECE6;
+			color: #FFF;
+			border-radius: 3px;
+			padding: 10px;
+		}
+
+			.menuBar .btn {
+				padding: 10px;
+				margin-left: 5px;
+				text-decoration: none;
+				border-radius: 3px;
+				background: #6c4c3a;
+				border: none;
+				cursor: pointer;
+				color: #FFF;
+				font-weight: 500;
+				font-size: 0.9375rem;
+				transition: background 0.15s ease-out;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+			}
+	</style>
+</head>
+<body>
+	<div style="padding: 10px;">
+		@using (Html.BeginForm())
+		{
+			@Html.AntiForgeryToken()
+			<div class="menuBar" style="text-align: right;margin-bottom: 5px;">
+				<p style="float: left;color:#6c4c3a;margin: 10px 0;">新增@((string)ViewBag.ContentTitle2)</p>
+				<input type="submit" id="save" name="save" class="btn" value="新增" />
+				<a href="javascript:void(0)" onclick="javascript:parent.jQuery.fancybox.close();" class="btn">關閉</a>
+			</div>
+		}
+		<p class="colortxt_red" style="font-size:medium;">
+			※ 沒有影片時，請檢查以下情形：<br />
+			1.影片尚未設定放映時間，請先至「影片管理」設定。<br />
+			2.影片已新增至同一主題下的其他單元。
+		</p>
+		<div class="file_notic">可新增影片</div>
+		<ul style="width: 100%">
+			@foreach (SelectListItem m in Model)
+			{
+				<li style="display: inline-block;margin: 10px 5px;min-width:300px;">
+					<label for="chk_@m.Value">
+						<input type="checkbox" id="chk_@m.Value" name="chk" value="@m.Value" title="@m.Text" /> @m.Text
+					</label>
+				</li>
+			}
+		</ul>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<script>
+		$(function () {
+			$("#save").click(function () {
+				$("[name=chk]:checked").each(function (idx) {
+					var vID = (new Date().getTime()) + idx;
+					parent.addFilm(vID, $(this).prop("title"), $(this).val());
+				});
+				parent.jQuery.fancybox.close();
+			});
+		});
+	</script>
+	@Html.Raw(TempData[Function.TEMPDATA_MESSAGE_KEY])
+</body>
+</html>

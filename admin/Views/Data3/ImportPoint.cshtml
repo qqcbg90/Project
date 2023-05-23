@@ -1,0 +1,50 @@
+﻿@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string _fun5002 = "Index";
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            
+        })
+    </script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginFileForm((Dictionary<string, string>)ViewBag.DefaultRouteValues))
+{
+    <p class="search_box" style="display:block">
+        <label class="key">
+            <a href="~/Content/pOrder/匯入發送點數格式.xlsx" title="範例下載" target="blank" class="btn" >範例下載</a>
+        </label>
+        <label class="key"><input type="file" name="fileImport" accept=".xlsx" /></label>
+        <label class="key"></label><br />
+        <label class="btn_box go"><input type="submit" name="updateImport" value="匯入點數" class="btn" /></label>
+    </p>
+    <p class="top_bar">
+        <label class="btn_box">
+            @MyHtml.Button("回紅利點數管理", Url.MyAction(_fun5002, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { }), "org")
+        </label>
+    </p>
+    <p style="width: 100%;">
+        @Html.Raw(ViewBag.msg)
+    </p>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            
+        })
+    </script>
+}

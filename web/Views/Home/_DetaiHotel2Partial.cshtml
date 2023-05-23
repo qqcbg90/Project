@@ -1,0 +1,63 @@
+﻿@*
+    優惠活動旅宿內頁ajax
+*@
+@model DATA2
+@{
+    bool isData = Model != null;
+}
+<!--div的class區分旅館類別-->
+<div class="discount-lightbox @(Model.GetHotelType())">
+    <!--關閉-->
+    <img id="close" src="@Url.Content("~/images/icon_close.png")" height="23">
+    <div class="container">
+        <div class="row">
+            @if (isData)
+            {
+                <div class="col-md-5">
+                    <img class="img-thumbnail" src="~/Images/discount/@(Model.CONTENT13)/@(Model.CONTENT12)/@(Model.CONTENT11).jpg" alt="@Model.CONTENT1" />
+                </div>
+                <div class="content col-md-7">
+
+                    <!--不同的旅館類別會換img及字-->
+                    <b class="category_s"><img src="/Images/@(Model.GetHotelType()).png">@(Model.CONTENT12)</b>
+
+                    <h3>@Model.CONTENT1</h3>
+                    <div class="contact">
+                        <p><span>店家地址</span>@Model.CONTENT3</p>
+                        <p><span>聯絡電話</span>@Model.CONTENT2</p>
+                        <p><span>使用期限</span>@Model.CONTENT6</p>
+                        <p><span>商品類別</span>@Model.CONTENT4</p>
+                        <p><span>活動內容</span>@Model.CONTENT5</p>
+                        <p><span>提供張數</span>@Model.CONTENT7</p>
+                        <p class="notice">
+                            <span>注意事項：</span>
+                            @foreach (var str in Model.CONTENT8.ToSplit('\n'))
+                            {
+                                <span>@str</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @:資料不存在!!
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $(".black_bg1").fadeIn();
+        $(".discount-lightbox").addClass("focus");
+        $(".black_bg1").click(function () {
+            $(".discount-lightbox").removeClass("focus");
+            $(".black_bg1").fadeOut();
+        });
+        $(".discount-lightbox #close").click(function () {
+            $(".black_bg1").fadeOut();
+            $(".discount-lightbox").removeClass("focus");
+        });
+    });
+</script>

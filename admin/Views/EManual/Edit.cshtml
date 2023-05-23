@@ -1,0 +1,85 @@
+﻿@model  EManualModel
+@{
+	bool IsAdd = (bool)ViewBag.IsAdd;
+	string NodeID = (string)ViewBag.NodeID;
+}
+
+@section head{
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				上線日期
+			</label>
+			<div>
+				@Html.Partial("Input/_DateStartToEndPartial", new string[] { "CONTENT6", "CONTENT7", Model.CONTENT6.ToDefaultString(), Model.CONTENT7.ToDefaultString(), "0" })
+			</div>
+		</div>
+		<div>
+			<label>@MyHtml.RedSpan()手冊名稱</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DESCRIPTION)
+			</div>
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = false, iDescType = 1, sPicWH = "750 x 1000" })
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				封面上傳
+			</label>
+			<div class="up_img">
+				<input type="file" id="hpf" name="hpf" multiple accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" />
+				@if (Model != null && !Model.ImgUrl.IsNullOrEmpty())
+				{
+					<div class="show_img">
+						<a href="@Url.Content(Model.ImgUrl)" data-fancybox="images" title="點選圖片可放大檢視">
+							<img src="@Url.Content(Model.ImgUrl)" style="max-width: 200px;border: 1px solid #CCC;" />
+						</a>
+					</div>
+				}
+			</div>
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = false, iDescType = 2, iFileSizeLimit = 20 })
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				手冊上傳
+			</label>
+			<div>
+				<input type="file" id="hpfFile" name="hpfFile" multiple accept="@Function.DEFAULT_FILEUPLOAD_EXT" />
+				@if (Model != null && !Model.CONTENT1.IsNullOrEmpty())
+				{
+					<div>
+						<a href="@Url.Content(Function.UPLOAD_PATH + Model.CONTENT1)" target="_blank"><i class="fa fa-download" style="font-size: x-large;color:#1c70c5;text-shadow: 2px 2px 2px #CCC; margin: 0 10px;"></i></a>
+					</div>
+				}
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			@Html.Raw(IsAdd ? "setRequired(true, 'hpf');" : "")
+			@Html.Raw(IsAdd ? "setRequired(true, 'hpfFile');" : "")
+		});
+	</script>
+}
+

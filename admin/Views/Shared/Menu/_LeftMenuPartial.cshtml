@@ -1,0 +1,154 @@
+﻿<script type="text/javascript">
+	var menu_setting = {
+		view: {
+			dblClickExpand: menu_dblClickExpand,
+			showLine: false
+		},
+		data: {
+			simpleData: {
+				enable: true
+			}
+		},
+		callback: {
+			beforeExpand: Menu_beforeExpand,
+			onExpand: Menu_onExpand,
+			onClick: menu_onClick
+		}
+	};
+	var menu_zNodes, menu_zTree;
+	function menu_dblClickExpand(treeId, treeNode) {
+		return false;
+	}
+	function menu_onClick(e, treeId, treeNode) {
+		menu_zTree.expandNode(treeNode, null, null, null, true);
+	}
+	var curExpandNode = null;
+	function Menu_beforeExpand(treeId, treeNode) {
+		var pNode = curExpandNode ? curExpandNode.getParentNode() : null;
+		var treeNodeP = treeNode.parentTId ? treeNode.getParentNode() : null;
+
+		for (var i = 0, l = !treeNodeP ? 0 : treeNodeP.children.length; i < l; i++) {
+			if (treeNode !== treeNodeP.children[i]) {
+				menu_zTree.expandNode(treeNodeP.children[i], false);
+			}
+		}
+		while (pNode) {
+			if (pNode === treeNode) {
+				break;
+			}
+			pNode = pNode.getParentNode();
+		}
+		if (!pNode) {
+			singlePath(treeNode);
+		}
+	}
+	function singlePath(newNode) {
+		if (newNode === curExpandNode) return;
+		if (curExpandNode && curExpandNode.open == true) {
+
+			if (newNode.parentTId === curExpandNode.parentTId) {
+				menu_zTree.expandNode(curExpandNode, false);
+			} else {
+				var newParents = [];
+				while (newNode) {
+					newNode = newNode.getParentNode();
+					if (newNode === curExpandNode) {
+						newParents = null;
+						break;
+					} else if (newNode) {
+						newParents.push(newNode);
+					}
+				}
+				if (newParents != null) {
+					var oldNode = curExpandNode;
+					var oldParents = [];
+					while (oldNode) {
+						oldNode = oldNode.getParentNode();
+						if (oldNode) {
+							oldParents.push(oldNode);
+						}
+					}
+					if (newParents.length > 0) {
+						for (var i = Math.min(newParents.length, oldParents.length) - 1; i >= 0; i--) {
+							if (newParents[i] !== oldParents[i]) {
+								menu_zTree.expandNode(oldParents[i], false);
+								break;
+							}
+						}
+					} else {
+						menu_zTree.expandNode(oldParents[oldParents.length - 1], false);
+					}
+				}
+			}
+		}
+		curExpandNode = newNode;
+	}
+
+	function Menu_onExpand(event, treeId, treeNode) {
+		curExpandNode = treeNode;
+	}
+	$(function () {
+		var _pid = '@ViewBag.PNodeID', _nid = '@ViewBag.NodeID';
+		$('ul.topnav').find('a').each(function () {
+			if ($(this).attr('id') == _pid) {
+				$(this).attr('class', $(this).attr('class') + ' topnav_select');
+				return false;
+			}
+		});
+		restr = $.ajax({
+			url: '@Url.Action("LeftMenu")',
+			type: 'post',
+			dataType: 'json',
+			data: { pid: _pid },
+			//cache: true,
+			async: false,
+			error: function () {
+				console.log('error_CreateMenu');
+				window.location.href = "@Url.Action("LogOn", "SysUser")";
+			},
+			success: function () {
+			}
+		});
+		menu_zNodes = $.parseJSON(restr.responseText);
+		$.fn.zTree.init($("#treeMenu"), menu_setting, menu_zNodes);
+		menu_zTree = $.fn.zTree.getZTreeObj("treeMenu");
+
+		var menu_currentNode = menu_zTree.getNodesByParam("id", _nid, null);
+		if (menu_currentNode.length > 0)
+			menu_zTree.selectNode(menu_currentNode[0]);
+
+		$(".ztree2 > li").append("<i class='fa fa-chevron-circle-right'></i>");
+
+		$("#menu_zNodes").val(restr.responseText);
+
+
+		//$("#treeMenu_1_a").append("<span style='background:#F00; vertical-align: text-bottom; padding:0 5px; height:18px; line-height:18px; text-align:center; color:#FFF; font-size:2px; font-weight:bolder; margin:0 0 0 5px; display:inline-block; border-radius:5px; transform: scale(0.8);'>New</span>");
+		//$("#treeMenu_2_a").append("<span style='background:#F00; vertical-align: text-bottom; padding:0 5px; height:18px; line-height:18px; text-align:center; color:#FFF; font-size:2px; font-weight:bolder; margin:0 0 0 5px; display:inline-block; border-radius:5px; transform: scale(0.8);'>New</span>");
+		//$("#treeMenu_3_a").append("<span style='background:#F00; vertical-align: text-bottom; padding:0 5px; height:18px; line-height:18px; text-align:center; color:#FFF; font-size:2px; font-weight:bolder; margin:0 0 0 5px; display:inline-block; border-radius:5px; transform: scale(0.8);'>New</span>");
+
+		//lh();
+		//function lh() {
+		//    var wh = $(window).height();
+		//    $(".left_box").css("height", wh-171);
+		//};
+		//GetNew();
+		//$('#treeMenu').click(GetNew);
+	});
+
+	function GetNew() {
+		$(".newIcon").remove();
+		//console.log(menu_zNodes);
+		for (i = 0 ; i < menu_zNodes.length ; i++) {
+			if (menu_zNodes[i].IsNew == true) {
+				$("#treeMenu a[title=" + menu_zNodes[i].name + "]").append("<span class='newIcon' style='background:#F00; vertical-align: text-bottom; padding:0 5px; height:18px; line-height:18px; text-align:center; color:#FFF; font-size:2px; font-weight:bolder; margin:0 0 0 5px; display:inline-block; border-radius:5px; transform: scale(0.8);'>New</span>")
+				//$("#treeMenu a[title=" + menu_zNodes[i].name + "]").append("<span class='newIcon' style='background:#F00; vertical-align: text-bottom; padding:0 5px; height:18px; line-height:18px; text-align:center; color:#FFF; font-size:2px; font-weight:bolder; margin:0 0 0 5px; display:inline-block; border-radius:5px; transform: scale(0.8);'>New</span><span class='newIcon' style='color:#FF0000'>(" + menu_zNodes[i].NewCount + ")</span>")
+			}
+		}
+	}
+
+	function NoAuth() {
+		//showMsg("沒有權限，請洽系統管理員！", 3);
+		alert("沒有權限，請洽系統管理員！");
+	}
+</script>
+<ul id="treeMenu" class="ztree2"></ul>

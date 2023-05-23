@@ -1,0 +1,34 @@
+﻿@model PARAGRAPH
+@{
+	
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<div>
+				@Html.EditorValidationFor(model => model.CONTENT)
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}

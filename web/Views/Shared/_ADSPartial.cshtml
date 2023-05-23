@@ -1,0 +1,22 @@
+﻿@*
+    內頁右邊促銷廣告 通用Partial
+*@
+@model List<ATTACHMENT>
+@foreach (var item in Model)
+{
+    string _url = item.GetValueOnLang(1);
+    <div>
+        @if (_url.IsNullOrEmpty())
+        {
+            <a href="javascript:;" title="@item.GetValueOnLang()">
+                <img class="page1-1_content_banner" src="@item.GetPic(PictureType.Medium)">
+            </a>
+        }
+        else
+        {
+            <a href="@_url" title="@item.GetValueOnLang()" target="_blank">
+                <img class="page1-1_content_banner" src="@item.GetPic(PictureType.Medium)">
+            </a>
+        }
+    </div>
+}

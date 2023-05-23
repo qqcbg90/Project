@@ -1,0 +1,38 @@
+﻿@{
+	Layout = null;
+}
+<script type="text/x-template" id="floatingSearch">
+	<label :class="parent_id">
+		<span v-if="title != null && title != '' ">{{title}}</span>
+		<div class="select_box">
+			<ul class="result">
+				<li v-for="item in targetsValue" v-bind:key="item.Value">
+					<p>
+						<a href="javascript:;" v-on:click="targetsDel(item)"><i class="fas fa-times"></i></a>
+						<label v-html="item.Text"></label>
+					</p>
+				</li>
+				<li class="input_sl">
+					<input type="text" placeholder="搜尋" v-model="keyword" v-on:focus="toFadeln" v-on:click.once="setKeywordEvent($event)" v-on:dblclick="toFadeOut" />
+				</li>
+			</ul>
+			<div class="find" v-if="filterData != null && filterData.length > 0">
+				<ul>
+					<li v-for="item in filterData"
+						v-bind:key="item.Value"
+						v-on:click="targetsAdd(item)"
+						v-bind:class="item.Selected ? 'ready' : '' "
+						v-html="item.Text">
+					</li>
+				</ul>
+				<a href="javascript:;" v-on:click="toFadeOut" class="close"><i class="fas fa-times"></i></a>
+			</div>
+			<div class="find" v-else>
+				<ul>
+					<li class="no">沒有符合的資料!!</li>
+				</ul>
+				<a href="javascript:;" v-on:click="toFadeOut" class="close"><i class="fas fa-times"></i></a>
+			</div>
+		</div>
+	</label>
+</script>

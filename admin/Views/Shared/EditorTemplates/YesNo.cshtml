@@ -1,0 +1,10 @@
+﻿@{ 
+	string selVal = ViewData.TemplateInfo.FormattedModelValue.ToString();
+	selVal = selVal.IsNullOrEmpty() ? YesNo.No.ToIntValue() : selVal;
+}
+@foreach (YesNo item in Enum.GetValues(typeof(YesNo)).Cast<YesNo>().OrderByDescending(p => p.ToIntValue()))
+{
+	<label for="rdo@(item.ToIntValue())" style="margin-right: 15px;">
+		@Html.RadioButton(string.Empty, item.ToIntValue(), item.ToIntValue() == selVal, new { id = "rdo" + item.ToIntValue() })&nbsp;@item.GetDescription()
+	</label>
+}

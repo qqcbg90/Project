@@ -1,0 +1,175 @@
+﻿@model IPagedList<ReportModel>
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon">
+	<title>物品盤存表</title>
+</head>
+<body>
+	<div class="noPrint" id="noArea" style="text-align: right;">
+		<a href="javascript:printPage();" rel="external nofollow" target="_self" class="btn">列印</a>
+		<a href="javascript:void(0)" onclick="javascript:parent.jQuery.fancybox.close();" class="btn">關閉</a>
+	</div>
+	<div class="Print" id="printArea">
+		<style type="text/css">
+			body {
+				font-family: 新細明體;
+			}
+
+			h1 {
+				font-size: 28px;
+				color: #000;
+				font-weight: bold;
+				height: 20px;
+				text-align: center;
+			}
+
+			table {
+				width: 100%;
+			}
+
+				table th, table td {
+					padding: 8px;
+				}
+
+				table th {
+					text-align: center;
+					width: 16%;
+				}
+
+			.tbBorder {
+				border-collapse: collapse;
+			}
+
+				.tbBorder tr {
+					border-collapse: collapse;
+					border: 1px solid #000;
+				}
+
+			.tbDesc {
+				text-align: left;
+				vertical-align: baseline;
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+
+			.noPrint {
+				text-align: right;
+				background: #F1ECE6;
+				color: #FFF;
+				border-radius: 3px;
+				padding: 20px 10px;
+			}
+
+				.noPrint .btn {
+					padding: 10px;
+					margin-left: 5px;
+					text-decoration: none;
+					border-radius: 3px;
+					background: #6c4c3a;
+					border: none;
+					cursor: pointer;
+					color: #FFF;
+					font-weight: 500;
+					font-size: 0.9375rem;
+					transition: background 0.15s ease-out;
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					appearance: none;
+				}
+		</style>
+		<style media="print" type="text/css">
+			.noPrint {
+				display: none;
+			}
+		</style>
+		<h1>【桃園市政府藝文設施管理中心&nbsp;物品盤存表】</h1>
+		<table border="0" cellspacing="0" class="tbDesc">
+			<tr>
+				<td>統計時間：@(ViewBag.k1) 年 @(ViewBag.k2) 月</td>
+				<td style="text-align:right">列印時間：@DateTime.Now.ToString("yyyy年MM月dd日")</td>
+			</tr>
+		</table>
+		<table border="1" class="tbBorder">
+			<tr>
+				<td colspan="4" style="padding: 0px;">
+					<table border="1" class="tbBorder">
+						<tr style="font-size:11px;">
+							<th style="width:5%;">編號</th>
+							<th>物品</th>
+							<th style="width:5%;">單位</th>
+							<th style="width:5%;">上月<br />盤存</th>
+							<th style="width:5%;">本月<br />購進</th>
+							<th style="width:5%;">本月<br />領用</th>
+							<th style="width:5%;">本月<br />盤存</th>
+							<th style="width:8%;">備註</th>
+						</tr>
+						@{ int i = 1;}
+						@foreach (var m in Model)
+						{
+							<tr style="font-size:11px;">
+								<td style="text-align: center;">@i</td>
+								<td>@m.CONTENT1 > @m.CONTENT2</td>
+								<td style="text-align: center;">@m.CONTENT3</td>
+								<td style="text-align: right;">@m.DECIMAL1.Value.ToString("#,0")</td>
+								<td style="text-align: right;">@m.DECIMAL2.Value.ToString("#,0")</td>
+								<td style="text-align: right;">@m.DECIMAL3.Value.ToString("#,0")</td>
+								<td style="text-align: right;">@m.DECIMAL4.Value.ToString("#,0")</td>
+								<td>&nbsp;</td>
+							</tr>
+							i++;
+						}
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<th>製表人</th>
+				<th>保管人員</th>
+				<th>事務主管</th>
+				<th>機關長官</th>
+			</tr>
+			<tr>
+				<td style="height:50px; vertical-align:middle; text-align: center;">@Function.GetSysUserName(User.Identity.Name)</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		var getExplorer = (function () {
+			var explorer = window.navigator.userAgent,
+			compare = function (s) { return (explorer.indexOf(s) >= 0); },
+			ie11 = (function () { return ("ActiveXObject" in window) })();
+			if (compare("MSIE") || ie11) { return 'IE'; }
+			else if (compare("Firefox") && !ie11) { return 'Firefox'; }
+			else if (compare("Chrome") && !ie11) { return 'Chrome'; }
+			else if (compare("Opera") && !ie11) { return 'Opera'; }
+			else if (compare("Safari") && !ie11) { return 'Safari'; }
+		})();
+
+		function printPage() {
+			if (getExplorer == "IE") {
+				var divToPrint = document.getElementById("printArea");
+				var newWin = window.open();
+				var content = "<html>" +
+					"<head><title>物品盤存表</title></head>" +
+					"<body><style type='text/css'>.noPrint { display: none; }</style>" + document.body.innerHTML + "</body>" +
+					"</html>";
+				newWin.document.write(content);
+				newWin.document.close();
+				newWin.print();
+				newWin.close();
+			} else {
+				window.print();
+			}
+			parent.jQuery.fancybox.close();
+		}
+	</script>
+</body>
+</html>

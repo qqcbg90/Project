@@ -1,0 +1,45 @@
+﻿@*
+    NODE 二層選擇器 partial
+    ViewBag.NodeSelect
+    把 model[0] 當 第一層控制項name 傳入
+    把 model[1] 當 第二層控制項name 傳入
+    把 model[2] 當 第一層值 傳入
+    把 model[3] 當 第二層值 傳入
+    把 model[4] 當 第一層第一個選項傳入
+    把 model[5] 當 第二層第一個選項傳入
+*@
+@model string[]
+@{
+    string start = Model[0];
+    string end = Model[1];
+    string startValue = Model[2];
+    string endValue = Model[3];
+    string startAll = Model[4];
+    string endAll = Model[5];
+    SelectList parent = ViewBag.NodeSelect as SelectList;
+        }
+@Html.DropDownList(start, parent, startAll)
+@Html.DropDownList(end, new SelectList("", ""))
+<script type="text/javascript">
+    function setParChild@(start)()
+    {
+        $("#@(start)").val('@startValue');
+        getChild@(start)('@start', '@end', '@endValue');
+    }
+    function getChild@(start)(pid, child, childValue) {
+            var selected = $("#" + pid + " option:selected");
+            //console.log(selected.val());
+            $.post("@Url.Action("GetChild","Json")",
+        { id: selected.val(), v: childValue, first: '@Html.Raw(endAll)' },
+        function (res) {
+            $("#"+child).empty();
+            $("#"+child).append(res);
+        });
+
+        }
+    $(function () {
+        setParChild@(start)();
+        $("#@start").change(function () { getChild@(start)('@(start)', '@(end)'); });
+    });
+
+</script>

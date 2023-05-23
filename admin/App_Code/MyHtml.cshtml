@@ -1,0 +1,189 @@
+﻿@using KingspModel.Resources;
+
+@*按鈕導向url*@
+@helper Button(string value, string url, string css = "")
+{
+	<input type="button" value="@value" title="@value" class="btn @css" onclick="location.href='@(url)';" />
+}
+
+@*另開按鈕導向url*@
+@helper ButtonForWinOpen(string value, string url)
+{
+	<input type="button" value="@value" title="@value" class="btn" onclick="window.open('@(url)')" />
+}
+
+@*另開按鈕導向url 有寬高*@
+@helper ButtonForWinOpen(string value, string url, int width, int height)
+{
+	<input type="button" value="@value" title="@value" class="btn" onclick="window.open('@(url)','','scrollbars=yes,width=@width,height=@height')" />
+}
+
+@*關閉視窗按鈕*@
+@helper ButtonForWinClose(string value = "關閉視窗")
+{
+	<input type="button" value="@value" title="@value" class="btn" onclick="window.close()" />
+}
+
+@*自訂click按鈕*@
+@helper ClickButton(string id, string value)
+{
+	<input type="button" value="@value" title="@value" id="@id" class="btn" />
+}
+
+@*回上一頁*@
+@helper ButtonBack(bool isEdit = true)
+{
+	<div class="bottom_bar">
+		<input type="button" value="回上頁" title="回上頁" class="btn Pink" onclick="back()" />
+	</div>
+}
+
+@*編輯頁三個一組按鈕*@
+@helper EditButton(bool isEdit = true, string backUrl = "")
+{
+	<div class="btn_box">
+		@if (isEdit)
+		{
+			<input type="submit" value="@Resource.Save" title="@Resource.Save" class="btn" id="save" />
+			@*<input type="reset" value="@Resource.Reset" title="@Resource.Reset" class="btn Gray" />*@
+		}
+		@if (string.IsNullOrEmpty(backUrl))
+		{
+			<input type="button" value="@Resource.Back" title="@Resource.Back" class="btn gray" onclick="back()" />
+		}
+		else
+		{
+			<input type="button" value="@Resource.Back" title="@Resource.Back" class="btn gray" onclick="window.location.href='@(backUrl)';" />
+		}
+	</div>
+}
+
+@*計畫分區使用證明申請 / 分發 / 審核 *@
+@helper LandButton(bool isEdit = true, string status = "", bool IsAdd = true)
+{
+	<div class="bottom_bar">
+		@if (isEdit)
+		{
+			if (status == "0") //分文
+			{
+				<input type="submit" value="分文" class="btn Ex" id="part" />
+				<input type="submit" value="存檔" class="btn" id="save" />
+				<input type="reset" value="重新輸入" class="btn Gray" />
+			}
+			else if (status == "1") //審核
+			{
+				<input type="submit" value="套印申請書" class="btn Green" id="print" />
+				<input type="submit" value="存檔" class="btn" id="save">
+				<input type="reset" value="重新輸入" class="btn Gray">
+				@*<input type="reset" value="寄發核發證明" class="btn Orange">*@
+			}
+			else if (status == "2") //通過
+			{
+			}
+		}
+		<input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+	</div>
+}
+
+
+@*物品領用 Btn*@
+@helper TakeBtn(bool isEdit = true, bool IsSee = false, bool Isback = false)
+{
+if (IsSee) //送審
+{
+		<div class="bottom_bar">
+			@if (isEdit)
+			{
+				<input type="submit" value="審核" class="btn" id="save" />
+				<input type="reset" value="重新輸入" class="btn Gray" />
+			}
+			<input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+		</div>
+	}
+	else
+	{
+		<div class="bottom_bar">
+			@if (isEdit)
+			{
+				if (Isback)
+				{
+					<input type="submit" value="送審" class="btn" id="audit" />
+				}
+				else
+				{
+					<input type="submit" value="存檔" class="btn" id="save" />
+				}
+				<input type="reset" value="重新輸入" class="btn Gray" />
+			}
+			<input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+		</div>
+	}
+}
+
+
+@*編輯頁四個一組按鈕 有暫存*@
+@helper ActivitiesBtn()
+{
+	<div class="bottom_bar">
+		@*<input type="submit" value="我要報名" class="btn" id="save" />
+			<input type="submit" value="取消報名" class="btn Gray" id="save2" />*@
+		<input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+	</div>
+}
+
+@*Send 寄信四個一組按鈕*@
+@helper SendButton(bool isEdit = true)
+{
+	<div class="bottom_bar">
+		@if (isEdit)
+		{
+			<input type="submit" value="寄信" class="btn" id="save" />
+			<input type="reset" value="重新輸入" class="btn Gray" />
+		}
+		<input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+	</div>
+}
+
+@*Reply 寄信四個一組按鈕*@
+@helper ReplyButton(bool isEdit = true)
+{
+	<div class="bottom_bar">
+		@if (isEdit)
+		{
+			<input type="submit" value="暫存" class="btn Green" id="save2" />
+			<input type="submit" value="寄信" class="btn" id="save" />
+			<input type="reset" value="重新輸入" class="btn Gray" />
+		}
+		<input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+	</div>
+}
+
+@*編輯頁四個一組按鈕 有暫存*@
+@helper EditButton2(bool isEdit = true)
+{
+	<div class="bottom_bar">
+		@if (isEdit)
+		{
+			<input type="submit" value="存檔" class="btn" id="save" />
+			<input type="reset" value="重新輸入" class="btn Gray" />
+			<input type="submit" value="暫存" class="btn Blue" name="tempBtn" id="tempBtn" />
+		}
+		<input type="button" value="回上頁" class="btn Pink" onclick="back()" />
+	</div>
+}
+
+@*編輯頁頁頭紅字提示訊息*@
+@helper RedP(string msg = null, string add_class = null)
+{
+	<p class="colortxt_red @(string.IsNullOrEmpty(add_class) ? "" : add_class)">
+		@(string.IsNullOrEmpty(msg) ? Resource.Required : msg)
+	</p>
+}
+
+@*編輯頁欄位紅字提示訊息*@
+@helper RedSpan(string msg = null, string add_class = null)
+{
+	<span class="colortxt_red stst @(string.IsNullOrEmpty(add_class) ? "" : add_class)">
+		@(string.IsNullOrEmpty(msg) ? "*" : msg)
+	</span>
+}

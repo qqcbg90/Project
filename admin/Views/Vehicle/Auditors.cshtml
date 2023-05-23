@@ -1,0 +1,108 @@
+﻿@model List<ROLE_USER_MAPPING>
+@{
+	Dictionary<string, string> dict = new Dictionary<string, string>()
+	{
+		{ "D", "申請人主管" }, { "C", "承辦人" }, { "B", "單位主管" }, { "A", "最大權限" }
+	};
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list user" id="app1">
+		@foreach (KeyValuePair<string, string> kvp in dict)
+		{
+			<div id="div@(kvp.Key)">
+				<div>
+					@Html.Hidden(kvp.Key + "Users")
+					<floating-search ref='floating' v-bind:multiple="multiple" v-bind:targets="targets" targets="@string.Join(",", Model.Where(x => x.ROLE_GROUP_ID.Equals("VehicleAuditors" + kvp.Key)).Select(x => x.USER_ID).ToArray())" url="@Url.Action("GetUsersData", "Json")" title="@kvp.Value" parent_id="div@(kvp.Key)" />
+				</div>
+			</div>
+		}
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton()</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script type="text/javascript">
+		$(function () {
+			var appD = new Vue({
+				el: "#divD",
+				data: {
+					parent_id: "divD",
+					targets: "",
+					multiple: true
+				},
+				methods: {
+					toSubmit: function () {
+						$("#DUsers").val(this.$refs.floating.returnData());
+					}
+				}
+			});
+
+			var appC = new Vue({
+				el: "#divC",
+				data: {
+					parent_id: "divC",
+					targets: "",
+					multiple: true
+				},
+				methods: {
+					toSubmit: function () {
+						$("#CUsers").val(this.$refs.floating.returnData());
+					}
+				}
+			});
+
+			var appB = new Vue({
+				el: "#divB",
+				data: {
+					parent_id: "divB",
+					targets: "",
+					multiple: true
+				},
+				methods: {
+					toSubmit: function () {
+						$("#BUsers").val(this.$refs.floating.returnData());
+					}
+				}
+			});
+
+			var appA = new Vue({
+				el: "#divA",
+				data: {
+					parent_id: "divA",
+					targets: "",
+					multiple: true
+				},
+				methods: {
+					toSubmit: function () {
+						$("#AUsers").val(this.$refs.floating.returnData());
+					}
+				}
+			});
+
+			$("#save").click(function () {
+				appD.toSubmit();
+				appC.toSubmit();
+				appB.toSubmit();
+				appA.toSubmit();
+			});
+		});
+	</script>
+}
+

@@ -1,0 +1,134 @@
+﻿@model  BannerModel
+@{
+    bool IsAdd = (bool)ViewBag.IsAdd;
+    bool IsMarquee = (bool)ViewBag.IsMarquee;
+    bool LinkNotRequired = (bool)ViewBag.LinkNotRequired;
+    string typeName = IsMarquee ? "文字" : "圖片";
+
+    string NodeID = (string)ViewBag.NodeID;
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1 }, FormMethod.Post
+                , new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                上下線日期
+            </label>
+            <div>
+                @Html.Partial("Input/_DateStartToEndPartial", new string[] { "CONTENT9", "CONTENT10", Model.CONTENT9.ToDefaultString(), Model.CONTENT10.ToDefaultString(), "1" })
+            </div>
+        </div>
+        @if (!IsMarquee)
+        {
+            @*switch (NodeID)
+                {
+                    case "fun7020": //網站管理＞主視覺圖片
+                        @Html.Raw(Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = false, iDescType = 1, sPicWH = "1024 x 250" }))
+                        break;
+                    case "fun7040": //網站管理＞友善連結
+                        @Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = false, iDescType = 1, sPicWH = "300 x 100" })
+                        break;
+                }*@
+            <div>
+                <label>
+                    @MyHtml.RedSpan()
+                    @(typeName)上傳
+                </label>
+                <div class="up_img">
+                    <input type="file" id="hpf" name="hpf" accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" />
+                    @Html.ValidationMessageFor(m => m.hpf)
+                    @if (Model != null && !Model.ImgUrl.IsNullOrEmpty())
+                    {
+                        <div class="show_img">
+                            <a href="@Url.Content(Model.ImgUrl)" data-fancybox="images" title="點選圖片可放大檢視">
+                                <img src="@Url.Content(Model.ImgUrl)" style="max-width: 200px;border: 1px solid #CCC;" />
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        <div>
+            <label>@MyHtml.RedSpan()@(typeName)說明</label>
+            <div>
+                @Html.EditorValidationFor(m => m.DESCRIPTION)
+            </div>
+        </div>
+        <div>
+            <label>@(typeName)英文說明</label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT6)
+            </div>
+        </div>
+        <div>
+            <label>
+                @if (!LinkNotRequired)
+                {
+                    @MyHtml.RedSpan()
+                }
+                @(typeName)連結
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT1)
+            </div>
+        </div>
+        <div>
+            <label>
+                @(typeName)英文連結
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT2)
+            </div>
+        </div>
+        @if (IsMarquee)
+        {
+            bool IsMobile = Request.Browser.IsMobileDevice;
+            @*<div>
+                    <label>連結取得說明</label>
+                    <div>
+                        <ul style="width: 100%">
+                            @for (int i = 1; i <= 3; i++)
+                            {
+                                string Img = Url.Content("~/Images/YouTube" + i.ToString("00") + (i == 3 && IsMobile ? "_Mobile" : "") + ".png");
+                                <li style="display: inline-block;margin-right: 5px;">
+                                    <a href="@Img" data-fancybox="images" data-caption="步驟 @(i)" title="點選圖片可放大檢視">
+                                        <img src="@Img" alt="" style="height:100px;border: 1px solid #CCC;" />
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>*@}
+
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            setRequired(true, 'CONTENT9');
+            @Html.Raw(IsAdd && !IsMarquee ? "setRequired(true, 'hpf');" : "")
+            @Html.Raw(LinkNotRequired ? "setRequired(false, 'CONTENT1');" : "")
+        });
+    </script>
+}
+

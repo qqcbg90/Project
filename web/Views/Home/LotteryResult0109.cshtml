@@ -1,0 +1,185 @@
+﻿@model IQueryable<USER>
+    @{
+        var lotteryList = Model.Where(p => "20230109".Equals(p.CONTENT21)).GroupBy(p => p.CONTENT22).OrderBy(p => p.Key).ToList();
+        var lotteryList0107 = Model.Where(p => "20230117".Equals(p.CONTENT21)).OrderBy(p => p.CONTENT22).ToList();
+        var lotteryList0213 = Model.Where(p => "20230213".Equals(p.CONTENT21)).OrderBy(p => p.CONTENT22).ToList();
+    }
+
+
+    <div class="header_content">
+        <img src="~/Images/logo.svg" />
+        <h2>抽獎結果</h2>
+    </div>
+    <div class="w1400 flex-shrink-0">
+        <div class="box for-store my-5 px-5 pt-3 pb-4">
+            <h1>抽獎須知</h1>
+            <div class="notice mt-2">
+                <p>1.獲獎者統一以當初登入之信箱聯繫，如在7個日曆天內聯繫未回覆，將視同放棄中獎權益，依序由候補名單補上，候補名單聯繫方式亦同。</p>
+                <p>2.同一個Email帳號，僅限得獎一次，恕不重複給獎，如有重覆得獎情形，以先抽出之獎項為準。</p>
+                <p>3.最終活動獎品將依購買當下而定，活動獎品不得轉讓、轉換、折換現金或更換其他獎項，亦不得將獎項權利轉讓第三人。</p>
+                <p>4.依中華民國稅法，得獎者須遵守以下規定：贈品金額超過＄1,000者，需開立扣繳憑單。贈品金額超過$20,000以上者，須繳交10%機會中獎稅；非國內居住的個人，不限中獎金額，須繳交20%機會中獎稅及需自付運費。中獎人參加本活動而需支付之任何稅捐係屬得獎人依稅法之規定所需履行之義務，概與本局無關，倘有稅務法令適用之爭議者，概由得獎人自行向開徵機關提出申訴。</p>
+            </div>
+            <div class="notice mt-2">
+                ※ 得獎通知信函已於112年01月09日Email寄出，請獲獎的朋友留意信箱郵件(收件匣、垃圾郵件)，如有任何問題歡迎來信、來電詢問！<br />
+                ※ 請於112年01月16日(一) 23:59:59前填寫領獎資料，如回覆資料上有相關疑問，請於112/01/16 17:00前來電洽詢，逾期將視同放棄，謝謝。<br />
+                ※ 備取名單1將於年後公佈。
+            </div>
+            <div class="notice mt-2">
+                ※ 備取得獎1通知信函已於112年01月30日Email寄出，請獲獎的朋友留意信箱郵件(收件匣、垃圾郵件)，如有任何問題歡迎來信、來電詢問！<br />
+                ※ 請於112年02月06日(一) 23:59:59前填寫領獎資料，如回覆資料上有相關疑問，請於112/02/06 17:00前來電洽詢，逾期將視同放棄，謝謝。<br />
+                ※ 備取名單2將於112年02月13日公佈。
+            </div>
+            <div class="notice mt-2">
+                ※ 備取得獎2通知信函已於112年02月13日Email寄出，請獲獎的朋友留意信箱郵件(收件匣、垃圾郵件)，如有任何問題歡迎來信、來電詢問！<br />
+                ※ 請於112年02月20日(一) 23:59:59前填寫領獎資料，如回覆資料上有相關疑問，請於112/02/20 17:00前來電洽詢，逾期將視同放棄，謝謝。
+            </div>
+            @*<div class="notice mt-2">
+            ※ 候補名單-得獎通知信函已於111年9月29日Email寄出，請獲獎的朋友留意信箱郵件(收件匣、垃圾郵件)，如有任何問題歡迎來信、來電詢問！
+        </div>*@
+
+            <div class="abgne_tab">
+                <ul class="tabs">
+                    <li><a href="#tab1">備取名單2</a></li>
+                    <li><a href="#tab2">備取名單1</a></li>
+                    <li><a href="#tab3">得獎名單</a></li>
+                </ul>
+                <div class="tab_container">
+                    <div id="tab1" class="tab_content">
+                        <div>
+                            <table class="table gift-boxB">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No.</th>
+                                        <th scope="col">獎項內容</th>
+                                        <th scope="col">得獎者</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var lottery in lotteryList0213)
+                                    {
+                                        string _prize = lottery.CONTENT22;
+                                        if (_prize.StartsWith("0"))
+                                        {
+                                            _prize = _prize.Replace("0", string.Empty);
+                                        }
+                                        <tr>
+                                            <td scope="col">@(lotteryList0213.IndexOf(lottery) + 1)</td>
+                                            <td scope="col">@_prize</td>
+                                            <td>
+                                                @lottery.CONTENT1.ChangeDisplay(3, 6)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="tab2" class="tab_content">
+                        <div>
+                            <table class="table gift-boxB">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No.</th>
+                                        <th scope="col">獎項內容</th>
+                                        <th scope="col">得獎者</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var lottery in lotteryList0107)
+                                    {
+                                        string _prize = lottery.CONTENT22;
+                                        if (_prize.StartsWith("0"))
+                                        {
+                                            _prize = _prize.Replace("0", string.Empty);
+                                        }
+                                        ATTACHMENT att = lottery.ATTACHMENT.FirstOrDefault(p => p.ORDER == 20230117);
+                                        <tr>
+                                            <td scope="col">@(lotteryList0107.IndexOf(lottery) + 1)</td>
+                                            <td scope="col">@_prize</td>
+                                            <td>
+                                                @lottery.CONTENT1.ChangeDisplay(3, 4)
+                                                @if (att == null)
+                                                {
+                                                    @:&nbsp;&nbsp;(逾期未回覆，取消資格)
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="tab3" class="tab_content">
+                        <div>
+                            @foreach (var lottery in lotteryList)
+                            {
+                                int i = 1;
+                                string _prize = lottery.Key;
+                                if (_prize.StartsWith("0"))
+                                {
+                                    _prize = _prize.Replace("0", string.Empty);
+                                }
+                                <h1>@($"{_prize}({lottery.Count()}名)")</h1>
+
+                                <table class="table gift-boxB">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">No.</th>
+                                            <th scope="col">得獎者</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var email in lottery.OrderBy(p => p.CONTENT1))
+                                        {
+                                            ATTACHMENT att = email.ATTACHMENT.FirstOrDefault(p => p.ORDER == 20230109);
+                                            <tr>
+                                                <td scope="col">@i</td>
+                                                <td>
+                                                    @email.CONTENT1.ChangeDisplay(3, 4)
+                                                    @if (att == null)
+                                                    {
+                                                        @:&nbsp;&nbsp;(逾期未回覆，取消資格)
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            i++;
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @section scripts{
+    <script type="text/javascript">
+        $(function () {
+            // 預設顯示第一個 Tab
+            var _showTab = 0;
+            var $defaultLi = $('ul.tabs li').eq(_showTab).addClass('active');
+            $($defaultLi.find('a').attr('href')).siblings().hide();
+
+            // 當 li 頁籤被點擊時...
+            // 若要改成滑鼠移到 li 頁籤就切換時, 把 click 改成 mouseover
+            $('ul.tabs li').click(function () {
+                // 找出 li 中的超連結 href(#id)
+                var $this = $(this),
+                    _clickTab = $this.find('a').attr('href');
+                // 把目前點擊到的 li 頁籤加上 .active
+                // 並把兄弟元素中有 .active 的都移除 class
+                $this.addClass('active').siblings('.active').removeClass('active');
+                // 淡入相對應的內容並隱藏兄弟元素
+                $(_clickTab).stop(false, true).fadeIn().siblings().hide();
+
+                return false;
+            }).find('a').focus(function () {
+                this.blur();
+            });
+        });
+    </script>
+    }

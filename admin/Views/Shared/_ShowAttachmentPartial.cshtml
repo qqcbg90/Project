@@ -1,0 +1,30 @@
+﻿@model ATTACHMENT
+@{
+
+}
+<div class="show_img del">
+    <ul id="FILEs" class="sortable">
+        @if (Model != null && !Model.ATT_TYPE.IsNullOrEmpty())
+        {
+            string sURL = string.Empty;
+            if (Model.ATT_TYPE.Equals(AttachmentType.Image.ToIntValue()))
+            {
+                sURL = Url.Content(Model.GetPic(PictureType.Small));
+                <li style="display: inline-block;" id="@Model.ID">
+                    <p>
+                        <a href="@sURL" data-fancybox="images" title="點選圖片可放大檢視">
+                            <img src="@sURL" style="height:100px;border: 1px solid #CCC;" />
+                        </a>
+                    </p>
+                </li>
+            }
+            else
+            {
+                sURL = Url.Content(Model.GetFile());
+                <li style="display: inline-block;padding-right: 20px; margin-right: 5px;min-width:300px;position: relative;" id="@Model.ID">
+                    <a href="@sURL" target="_blank" title="@Model.ORIGINAL_FILE_NAME">@Model.ORIGINAL_FILE_NAME</a>
+                </li>
+            }
+        }
+    </ul>
+</div>

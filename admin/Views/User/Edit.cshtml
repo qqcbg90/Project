@@ -1,0 +1,131 @@
+﻿@model USER
+@{
+    ATTACHMENT AttPic = Model.GetFirstAttachment();
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <div class="edit_list" id="app1">
+        <div>
+            <label>
+                會員相片
+            </label>
+            <div>
+                @if (!AttPic.CREATER.IsNullOrEmpty())
+                {
+                    <img src="@AttPic.GetPic(PictureType.Medium)" style="max-width:120px"><br />
+                }
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                會員帳號E-mail
+            </label>
+            <div>
+                @Model.CONTENT1
+                @Html.HiddenFor(m => m.CONTENT1)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                會員姓
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT2)
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                會員名
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT3)
+            </div>
+        </div>
+        <div>
+            <label>
+                性別
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT4, SexType.Female.ToSelectList(), new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                @MyHtml.RedSpan()
+                電話
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT5)
+            </div>
+        </div>
+        <div>
+            <label>
+                生日
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.DATETIME1)
+            </div>
+        </div>
+        <div>
+            <label>
+                會員等級
+            </label>
+            <div>
+                <span class="select">
+                    @Html.DropDownListFor(m => m.CONTENT6, ViewBag.MemberLevel as SelectList, new { @class = "" })
+                </span>
+            </div>
+        </div>
+        <div>
+            <label>
+                來源
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.CONTENT7)
+            </div>
+        </div>
+        <div>
+            <label>
+                變更密碼
+            </label>
+            <div>
+                @Html.EditorValidationFor(m => m.PASSWORD)
+            </div>
+        </div>
+        <div>
+            @Html.ValidationSummary(true)
+        </div>
+    </div>
+    <div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            setRequired(true, 'CONTENT2');
+            setRequired(true, 'CONTENT3');
+            setRequired(true, 'CONTENT5');
+            $("#save").click(function () {
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,159 @@
+﻿@model IQueryable<DATA2>
+@{
+	List<DATA2> list;
+}
+@section head{
+	<style>
+		table, th, td {
+			border: 1px solid;
+		}
+
+		th, td {
+			padding: 5px;
+		}
+
+		input[type=text] {
+			margin-bottom: 3px;
+		}
+	</style>
+}
+<div class="header_content">
+	<img src="~/Images/logo.svg" />
+	<h2>得獎者回覆確認</h2>
+</div>
+<div class="w1400 flex-shrink-0">
+	<div class="box my-5 px-5 pt-5 pb-4">
+		@for (int i = 2; i >= 1; i--)
+		{
+			list = Model.Where(p => p.STATUS.Equals(i.ToString())).ToList();
+			<div style="margin-top:10px;background:@(i == 1 ? "yellow" : "lightyellow");color:red;font-size: 1.75rem;padding: 15px 5px;">@(i == 1 ? "正取" : "備取" + (i - 1)) </div>
+			<div class="input-group my-3">
+				得獎名單：@(list.Count)【已回覆：<span style="color:blue;margin-right:5px;">@(list.Count(p => p.DATETIME1 != null))</span>未回覆：<span style="color: red">@(list.Count(p => p.DATETIME1 == null))</span>】
+			</div>
+			<table style="width: 100%;">
+				<thead>
+					<tr>
+						<th style="width: 25%">獎項</th>
+						<th style="width: 20%">得獎者E-mail</th>
+						<th>收件人姓名</th>
+						<th>寄件地址</th>
+						<th>連絡電話</th>
+						<th>身分證</th>
+						@if (i > 1)
+						{
+							<th>填寫連結</th>
+						}
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (DATA2 item in list)
+					{
+						NODE nZipCode = Function.NodeList.FirstOrDefault(p => p.ID.CheckStringValue(item.CONTENT3));
+						List<ATTACHMENT> lsAtts = item.ATTACHMENT.OrderBy(p => p.ORDER).ToList();
+						<tr id="@(item.ID)tr1">
+							<td>
+								<span style="color:blue">@item.CONTENT12</span><br />
+								@item.CONTENT13
+							</td>
+							<td>
+								@item.CONTENT11
+							</td>
+							<td>
+								@item.CONTENT1
+							</td>
+							<td>
+								@(nZipCode == null ? "" : nZipCode.CONTENT1)@Function.GetNodeTitle(item.CONTENT2)@Function.GetNodeTitle(item.CONTENT3)@item.CONTENT4
+							</td>
+							<td>
+								@item.CONTENT5
+							</td>
+							<td>
+								@if (item.DECIMAL1 == 0)
+								{
+									<span style="color:#666">不用上傳</span>
+								}
+								else
+								{
+									if (lsAtts != null && lsAtts.Count > 0)
+									{
+										foreach (ATTACHMENT att in lsAtts)
+										{
+											<a href="@att.GetFile()" target="_blank">@(att.ORDER == 1 ? "正面" : "反面")</a>
+										}
+									}
+								}
+							</td>
+							@if (i > 1)
+							{
+								<td>
+									<input type="text" value="@(Function.DEFAULT_ROOT_HTTP)Discount/@(item.ID)" id="copy@(item.ID)" style="width:100px;display:block;">
+									<a href="javascript: copyFunction('@(item.ID)');" style="display: inline-block;font-size: 14px;">複製</a>
+									@*<a href="@Url.Action("SendNotice", "Home", new { id = item.ID })" target="_blank" style="display: inline-block;font-size: 14px;">重寄</a>*@
+									@*<br /><button onclick="javascript: confirmFunction('@(item.ID)');">確認</button>*@
+								</td>
+							}
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+
+	</div>
+</div>
+@section scripts{
+	<script>
+		$(function () {
+		});
+		function copyFunction(did) {
+			var copyText = $("#copy" + did);
+			copyText.select();
+			document.execCommand("Copy");
+			showMsg("已複製!!");
+		}
+		function confirmChange(did) {
+			if (confirm('確定要修改?')) {
+				$.ajax({
+					type: "POST",
+					url: '@Url.Action("DiscountCheck", "Home")',
+					data: { id: did },
+					dataType: "html",
+					success: function (response) {
+						if ("1" == response) {
+							$("#" + did + "tr1").remove();
+							$("#" + did + "tr2").remove();
+						}
+						else {
+							showMsg("操作失敗!!");
+						}
+						//$("#s" + did).html(response[1]);
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						GoUrl("/DiscountCheck");
+					}
+				});
+			}
+		}
+		function confirmFunction(did) {
+			if (confirm('確定要確認?')) {
+				$.ajax({
+					type: "POST",
+					url: '@Url.Action("DiscountCheck", "Home")',
+					data: { id: did, c: '1' },
+					dataType: "html",
+					success: function (response) {
+						if ("1" == response) {
+							$("#" + did + "tr1").remove();
+						}
+						else {
+							showMsg("操作失敗!!");
+						}
+						//$("#s" + did).html(response[1]);
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						GoUrl("/DiscountCheck");
+					}
+				});
+			}
+		}
+	</script>
+}

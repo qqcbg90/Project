@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+  <g id="Group_164" data-name="Group 164" transform="translate(-525 -368)">
+    <g id="Ellipse_22" data-name="Ellipse 22" transform="translate(525 368)" fill="#fff" stroke="#d8d8d8" stroke-width="1">
+      <circle cx="13" cy="13" r="13" stroke="none"/>
+      <circle cx="13" cy="13" r="12.5" fill="none"/>
+    </g>
+    <g id="圖層_2" data-name="圖層 2" transform="translate(532 374.998)">
+      <g id="Layer_1" data-name="Layer 1" transform="translate(0 0.003)">
+        <path id="Path_84" data-name="Path 84" d="M7.366,5.79,0,13.156v2.981H2.981L10.418,8.7Z" transform="translate(0 -4.139)" fill="#717171"/>
+        <path id="Path_85" data-name="Path 85" d="M31.713,2.027,29.947.25a.856.856,0,0,0-1.2,0l-.813.8,3.052,2.91.73-.727A.856.856,0,0,0,31.713,2.027Z" transform="translate(-19.962 -0.003)" fill="#717171"/>
+      </g>
+    </g>
+  </g>
+</svg>

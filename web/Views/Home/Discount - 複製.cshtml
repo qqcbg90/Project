@@ -1,0 +1,182 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+    <div id="bbb">
+        <!--<div id='collisionDisplay' style='display:none;'>collision</div>-->
+        <div id='funcDisplay'>
+            <button onclick="end();">停止</button>
+            <button onclick="start();">開始</button>
+        </div>
+        <div id='collisionDisplay'>
+            bbbb
+        </div>
+        <div id='timeDisplay'>
+
+        </div>
+        @*<img src='~/images/game/badge1.png' id='shipBad' style="position:absolute;left : 100px; top : 0px;" />*@
+        <img src='~/images/game/ohbear-normal.png' id='ship' style="position:absolute;top:400px; left:200px;" />
+        <img src='~/images/game/badge3.png' id='addP1' style="position:absolute;left : 100px; top : 0px;" />
+        <img src='~/images/game/badge1.png' id='addP2' style="position:absolute;left : 100px; top : 0px;" />
+        <img src='~/images/game/badge2.png' id='addP3' style="position:absolute;left : 100px; top : 0px;" />
+        <img src='~/images/game/dead.png' id='life' style="position:absolute;left : 100px; top : 0px;" />
+        <img src='~/images/game/other2.png' id='m30' style="position:absolute;left : 100px; top : 0px;" />
+        <img src='~/images/game/other1.png' id='m20' style="position:absolute;left : 100px; top : 0px;" />
+        <img src='~/images/game/other3.png' id='m10' style="position:absolute;left : 100px; top : 0px;" />
+    </div>
+    <script>
+	var xPrev = 0;
+        var _standTime = 15;
+        var _interval;
+        var _interval2;
+        var _scope = 0;
+        var _timeTotal = _standTime;
+		var bbbDisplay = document.getElementById('bbb');
+        var collisionDisplay = document.getElementById('collisionDisplay');
+        var timeDisplay = document.getElementById('timeDisplay');
+        var ship = document.getElementById('ship');
+        ship.onload = launchWhenReady;
+        //  bad ship
+        var shipBad = document.getElementById('addP2');
+        shipBad.onload = launchWhenReady;
+        // image loader
+        imagesCount = 8;
+        function launchWhenReady() {
+            imagesCount--;
+            if (imagesCount) return;
+            //countstart();
+            start();
+        }
+        var shipBadY = 0;
+        // listen any touch event
+        document.addEventListener('touchstart', handleTouchEvent, true);
+        document.addEventListener('touchmove', handleTouchEvent, true);
+        document.addEventListener('touchend', handleTouchEvent, true);
+        document.addEventListener('touchcancel', handleTouchEvent, true);
+        // will adjust ship's x to latest touch
+        function handleTouchEvent(e) {
+            if (e.touches.length === 0) return;
+            e.preventDefault();
+            e.stopPropagation();
+            var touch = e.touches[0];
+            ship.style.left = (touch.pageX - ship.width / 2) + 'px';
+        }
+        function countstart() {
+            timeDisplay.innerHTML = _timeTotal;
+            _interval2 = setInterval(countdownfunc, 1000);
+            //_timeTotal--;
+
+        }
+        function countdownfunc() {
+            _timeTotal--;
+            timeDisplay.innerHTML = _timeTotal;
+            if (_timeTotal == 0) {
+                //alert("time over!!");
+                clearInterval(_interval2);
+                end();
+                _timeTotal = _standTime;
+            }
+
+        }
+        // animation loop
+        function animate() {
+            // move ship
+            shipBadY += 2;
+            shipBad.style.top = Math.ceil(shipBadY) + 'px';
+            // test collision
+            var isColliding = testCollide(shipBad);
+            //collisionDisplay.html = _scope;
+            if (_timeTotal == 0) {
+                end();
+            }
+            if (isColliding || shipBadY >= 400) {
+                if (isColliding) {
+                    _scope++;
+                    collisionDisplay.innerHTML = _scope;
+                    //console.log(_scope);
+                }
+                resetbadship();
+            }
+        }
+        function animate1() {
+            // move ship
+            shipBadY += 2;
+            shipBad.style.top = Math.ceil(shipBadY) + 'px';
+            // test collision
+            var isColliding = testCollide(shipBad);
+            //collisionDisplay.html = _scope;
+            if (_timeTotal == 0) {
+                end();
+            }
+            if (isColliding || shipBadY >= 400) {
+                if (isColliding) {
+                    _scope++;
+                    collisionDisplay.innerHTML = _scope;
+                    //console.log(_scope);
+                }
+                resetbadship();
+            }
+        }
+        // collision test
+        function testCollide(enemi) {
+            var shipPosX = parseInt(ship.style.left);
+            var shipPosY = parseInt(ship.style.top);
+            var shipWidth = ship.width;
+            var shipHeight = ship.height;
+            var badX = parseInt(enemi.style.left);
+            var badY = parseInt(enemi.style.top);
+            var badWidth = enemi.width;
+            var badHeight = enemi.height;
+            return bBoxIntersect(shipPosX, shipPosY, shipWidth, shipHeight,
+            badX, badY, badWidth, badHeight);
+        }
+        function bBoxIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
+            return !(x1 + w1 < x2 || x1 > x2 + w2 || y1 + h1 < y2 || y1 > y2 + w2);
+        }
+        // -----------------------------------------------------
+        // Handle mouse event for easy testing on Browser
+        document.addEventListener('mousemove', handleMouseEvent);
+		bbbDisplay.addEventListener('mousemove', handleMouseEvent2);
+		function handleMouseEvent2(e) {
+		var relativeXPosition = (e.pageX - this.offsetLeft); //offset -> method allows you to retrieve the current position of an element 'relative' to the document
+            var relativeYPosition = (e.pageY - this.offsetTop);
+
+           xPrev<e.pageX ? ship.src="/images/game/ohbear-right.png" : ship.src="/images/game/ohbear-left.png";
+           xPrev=e.pageX;
+
+
+
+        }
+        function handleMouseEvent(e) {
+
+            ship.style.left = (e.pageX - ship.width / 2) + 'px';
+        }
+        
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+        function start() {
+            _timeTotal = _standTime;
+            _scope = 0;
+            countstart();
+            collisionDisplay.innerHTML = _scope;
+            _interval = setInterval(animate, 20);
+            console.log('start:' + _interval);
+        }
+        function end() {
+            console.log('end:' + _interval);
+            clearInterval(_interval);
+        }
+        function resetbadship() {
+            shipBadY = 0;
+            shipBad.style.left = getRandomArbitrary(1, document.documentElement.clientWidth) + 'px';
+        }
+    </script>
+</body>
+</html>

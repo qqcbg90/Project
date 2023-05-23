@@ -1,0 +1,124 @@
+﻿@model IPagedList<DATA2>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string _edit = "Edit";
+    string _delete = "Delete";
+    string _setup = "Index2";
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            InputGo("@ViewBag.DefaultPage");
+        })
+        //select by dropdownlist
+        function SelectGo(page) {
+            $('div .pager').find('select').each(function () {
+                $(this).val(page);
+            });
+            var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&k1=' + $("[name=k1]").val()
+                + '&k2=' + $("[name=k2]").val()
+				+ '&start=' + $("#start").val()
+				+ '&end=' + $("#end").val();
+            GoUrl(url);
+        }
+    </script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+    <div class="pager">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null, new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end })
+    </div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+    <p class="search_box" style="display:block">
+        <label class="key"><span class="select">@Html.DropDownList("k1", ViewBag.DATA2_fun9003_PT as SelectList, "場域類別")</span></label>
+        <label class="key"><span class="select">@Html.DropDownList("k2", LanguageType.English.ToSelectList(), "語言別")</span></label><br />
+        <label class="key">@MyList.KeywordInput(ViewBag.Keyword, "解說員中、英文姓名")</label>
+        <br />
+        <label class="btn_box go">@MyList.Submit()</label>
+    </p>
+    <p class="top_bar">
+        <label class="btn_box">
+            @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Add))
+            {
+                @MyHtml.Button("新增", Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { }), "org")
+                @:&nbsp;&nbsp;&nbsp;&nbsp;
+                @MyHtml.Button("匯出資料", Url.MyAction("ExportIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end }), "org")
+            }
+        </label>
+    </p>
+    if (MyList.IsTwoPagers())
+    {
+        @Pager()}
+    <div class="tb_list_box">
+        <table class="tb_list">
+            <tr>
+                <th width="10%">建立日期</th>
+                <th width="10%">中文姓名</th>
+                <th width="10%">英文姓名</th>
+                <th>場域類別</th>
+                <th width="10%">語言別</th>
+                <th width="15%">E-mail</th>
+                <th width="10%">手機</th>
+                <th width="10%">身份證字號</th>
+                <th width="10%">功能</th>
+            </tr>
+            @foreach (DATA2 m in Model)
+            {
+                <tr>
+                    <td data-th="建立日期">@m.CREATE_DATE.ToDefaultString()</td>
+                    <td data-th="中文姓名">@m.CONTENT1</td>
+                    <td data-th="英文姓名">@m.CONTENT4</td>
+                    <td data-th="場域類別">@m.GetValueOnLang()</td>
+                    <td data-th="語言別">@m.GetValueOnLang(6)</td>
+                    <td data-th="E-mail">@m.CONTENT2</td>
+                    <td data-th="手機">@m.CONTENT10</td>
+                    @*<td data-th="性別">@m.GetValueOnLang(5)</td>*@
+                    <td data-th="身份證字號">@m.CONTENT3</td>
+                    @*<td data-th="相關設定">
+                        <div class="btn_box">
+                            <a href="@Url.MyAction(_setup, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end })" title="設定"><span class="btn"><i class="far fa-edit"></i></span></a>
+                        </div>
+                    </td>*@
+                    <td data-th="功能">
+                        <div class="btn_box">
+                            <a href="@Url.MyAction(_setup, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { k1 = m.ID })" title="回訓資料"><span class="btn">回訓</span></a>
+                            <a href="@Url.MyAction(_edit, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = m.ID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end })" title="編輯"><span class="btn"><i class="far fa-edit"></i></span></a>
+                            @if (MyList.CheckAuthority(ViewBag.NodeID, Authority_Right.Delete))
+                            {
+                                <a href="@Url.MyAction(_delete, (Dictionary<string, string>)ViewBag.DefaultRouteValues, new {  id = m.ID, k1 = ViewBag.k1, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+                            }
+                        </div>
+                    </td>
+                </tr>}
+        </table>
+    </div>
+    @Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            
+        })
+    </script>
+}

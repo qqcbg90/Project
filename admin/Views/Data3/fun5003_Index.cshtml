@@ -1,0 +1,110 @@
+﻿@model IPagedList<USER>
+@{
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string _edit = "Edit";
+    string _export = "Export";
+}
+
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            InputGo("@ViewBag.DefaultPage");
+        })
+        //select by dropdownlist
+        function SelectGo(page) {
+            $('div .pager').find('select').each(function () {
+                $(this).val(page);
+            });
+            var url = '@_action?page=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&k=' + EncodeParameter($("[name=k]").val())
+				+ '&start=' + $("#start").val()
+				+ '&end=' + $("#end").val();
+            GoUrl(url);
+        }
+        function setUserDataFromAjax(uid) {
+            var _div = "#td" + uid;
+            $(_div).html('<img src="@Url.Content("~/images/loader.gif")" /><br /> @Resource.Processing.ToString()...');
+            $(_div).load('@Url.Action("SetUserData", "Json")'
+                , { CONTENT1: uid }
+                , function (response, status, xhr) {
+                    if (status == "error") {
+                        $(_div).html('@Function.DEFAULT_ERROR');
+                    }
+                });
+        }
+    </script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+    <div class="pager">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null, new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, k = ViewBag.Keyword, k1 = ViewBag.k1, k2 = ViewBag.k2, k3 = ViewBag.k3, start = ViewBag.start, end = ViewBag.end })
+    </div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+    <p class="search_box" style="display:block">
+        <label class="key">@MyList.KeywordInput(ViewBag.Keyword, "會員姓、名、E-mail")</label>
+        <br />
+        <label class="btn_box go">@MyList.Submit()</label>
+    </p>
+    <p class="top_bar">
+        <label class="btn_box">
+        </label>
+    </p>
+    if (MyList.IsTwoPagers())
+    {
+        @Pager()}
+    <div class="tb_list_box">
+        <table class="tb_list">
+            <tr>
+                @*<th width="15%">新增日期</th>*@
+                <th width="20%">兌換情形</th>
+                <th>會員帳號<br />E-mail</th>
+                <th width="10%">會員姓</th>
+                <th width="10%">會員名</th>
+            </tr>
+            @foreach (USER m in Model)
+            {
+                <tr>
+                    <td data-th="兌換情形" id="td@(m.USER_ID)">
+                        @if (m.CONTENT8.IsNullOrEmpty())
+                        {
+                            <a href="javascript:setUserDataFromAjax('@m.USER_ID');" title="兌換" onclick="return confirm('確定要兌換嗎？')"><span class="btn"><i class="far fa-edit"></i></span></a>
+                        }
+                        else
+                        {
+                            @m.DATETIME4.ToDefaultString()
+                        }
+                    </td>
+                    <td data-th="會員帳號E-mail">@m.CONTENT1</td>
+                    <td data-th="會員姓">@m.CONTENT2</td>
+                    <td data-th="會員名">@m.CONTENT3</td>
+                </tr>
+            }
+        </table>
+    </div>
+    @Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+    <script>
+        $(function () {
+            
+        })
+    </script>
+}

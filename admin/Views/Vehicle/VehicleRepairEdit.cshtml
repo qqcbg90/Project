@@ -1,0 +1,108 @@
+﻿@model VehicleRepairModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.CONTENT1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DATETIME1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.DATETIME1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DECIMAL1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.DECIMAL1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.CONTENT2)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.DECIMAL2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.DECIMAL2)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.DECIMAL3)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.DECIMAL3)
+			</div>
+		</div>
+		<div>
+			<label>累積</label>
+			<div id="SUM">0</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT3)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.CONTENT3)
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			calcSUM();
+			$("#DECIMAL2,#DECIMAL3").blur(function () {
+				calcSUM();
+			});
+		});
+		function calcSUM() {
+			var D2 = $("#DECIMAL2").val().trim();
+			var D3 = $("#DECIMAL3").val().trim();
+			D2 = isNaN(D2) ? 0 : parseInt(D2, 0);
+			D3 = isNaN(D3) ? 0 : parseInt(D3, 0);
+			$("#SUM").html(D2 * D3);
+		}
+	</script>
+}
+

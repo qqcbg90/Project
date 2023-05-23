@@ -1,0 +1,146 @@
+﻿@*
+    FB 通用Partial
+     function checkFB() 要在各頁面自行定義
+    使用上通常都是呼叫 fb()
+*@
+<script>
+	@*
+	appId
+		本機測試 xxxxx  https://localhost/
+		正式機 342003301429358 https://2022taiwanstay.com.tw/
+	*@
+
+	//var loginStatus;
+
+	window.fbAsyncInit = function () {
+		FB.init({
+			appId: '246007157885740',
+			xfbml: false, @*如果您未在頁面上使用社交插件，則設置xfbml為false將改善頁面加載時間*@
+			version: 'v14.0',
+			status: true
+		});
+	};
+
+    function fb() {
+        //檢查是否登入
+        FB.getLoginStatus(function (response) {
+            if (statusChangeCallback(response)) {
+                //已登入
+                checkFB();
+            } else {
+                //先登入
+                FBLogin();
+            }
+        });
+	}
+
+	function FBLogin() {
+		isLook = true;
+
+		//if (iOS() && isAlert) {
+		//	showMsg('請先確認"阻擋彈出式視窗"功能是否關閉');
+		//	isAlert = false;
+		//}
+
+		FB.login(function (response) {
+			if (response.status === 'connected') {
+				checkFB();
+			}
+		}, { scope: 'public_profile,email' });
+
+	}
+
+	function statusChangeCallback(response) {
+		//console.log(response);
+		if (response.status === 'connected')
+			return true;
+		else
+			return false;
+	}
+
+	function parse2Json(response) {
+		if (typeof response === 'string') { return response; }
+		jsonText = JSON.stringify(response);
+		return jsonText;
+	}
+
+	function checkFB() {
+	    //console.log(loginStatus.authResponse.userID);
+	    FB.api('/me?fields=id,name,email', function (response) {
+	        if (undefined == response.id) {
+	            showMsg('現在有太多用戶，請稍後再試。 謝謝。');
+	        }
+	        else {
+	            $.ajax({
+	                type: "POST",
+	                url: '@Url.Action("RegisterByFB", "Home")', @*確認是否有註冊*@
+	                data: { JSON: parse2Json(response) },
+	                dataType: "html",
+	                success: function (response) {
+	                    @*未註冊 0*@
+	                    if ("1" == response) {
+	                        GoUrl("/Game");
+	                    }
+	                    else {
+	                        showMsg(response, 2);
+	                    }
+	                },
+	                error: function (xhr, ajaxOptions, thrownError) {
+	                    //console.log('RegisterByFB error');
+	                    GoUrl("/");
+	                }
+	            });
+	        }
+	    });
+	}
+
+	@*開始抽獎*@
+    @*function GameRun() {
+
+		$.ajax({
+			type: 'post',
+			url: '@Url.Action("CheckQuestionDate", "Home")',
+			success: function (response) {
+				if (response === "1") {
+					$('.screenQa').addClass('show');
+					$('.qBoard').eq(0).addClass('show');
+					$(".qBoard").eq(0).removeClass('hide');
+
+					$MainGameStart = new mainGame();//問答遊戲初始化
+					$Next = $('.nextBtnContent a');//指定"下一題"按鈕
+					$Next.click(function () {
+						$MainGameStart.Qaprocess();//下一題
+					})
+				}
+				else {
+					$('.screenQa').removeClass('show');
+					$(".qBoard").addClass('hide');
+					$.ajax({
+						type: "POST",
+						url: '@Url.Action("GetResult", "Active")',
+						data: { id: loginStatus.authResponse.userID },
+						dataType: 'html',
+						success: function (response) {
+							$(".gameAlert").removeClass("hide");
+							//$('body').addClass('bodyLock');
+							//$('html').addClass('bodyLock');
+							$(".gameAlert").html(response);
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							console.log('GameRun error');
+							GoUrl("/");
+						}
+					});
+				}
+			}
+		})
+	}*@
+
+	(function (d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) { return; }
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/zh_TW/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+</script>

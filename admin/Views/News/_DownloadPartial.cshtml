@@ -1,0 +1,18 @@
+﻿@model NewsModel
+<div>
+    <label>
+        @MyHtml.RedSpan()
+        檔案名稱
+    </label>
+    <div>
+        @Html.EditorValidationFor(m => m.CONTENT1)
+    </div>
+</div>
+@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = false, iDescType = 2 })
+<div>
+    <label>@MyHtml.RedSpan()檔案上傳</label>
+    <div class="up_img">
+        <input type="file" name="HPF" accept="@Function.DEFAULT_FILEUPLOAD_EXT" /><br />
+        @Html.Partial("_AttachmentPartial", Model.ATTAs)
+    </div>
+</div>

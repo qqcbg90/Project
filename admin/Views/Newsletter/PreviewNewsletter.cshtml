@@ -1,0 +1,269 @@
+﻿@model ROLE_GROUP
+@using System.Data;
+@{
+	Layout = null;
+}
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+	<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+	<title>桃園市政府 藝文設施管理中心</title>
+	<style type="text/css">
+		@@charset "utf-8";
+		/* CSS Document */
+		html, body, div, span, applet, object, iframe,
+		h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+		a, abbr, acronym, address, big, cite, code,
+		del, dfn, em, img, ins, kbd, q, s, samp,
+		small, strike, strong, sub, sup, tt, var,
+		b, u, i, center,
+		dl, dt, dd, ol, ul, li,
+		fieldset, form, label, legend,
+		table, caption, tbody, tfoot, thead, tr, th, td,
+		article, aside, canvas, details, embed,
+		figure, figcaption, footer, header, hgroup,
+		menu, nav, output, ruby, section, summary,
+		time, mark, audio, video {
+			margin: 0;
+			padding: 0;
+			border: 0;
+			font-size: 100%;
+			font: inherit;
+		}
+		/* HTML5 display-role reset for older browsers */
+		article, aside, details, figcaption, figure,
+		footer, header, hgroup, menu, nav, section {
+			display: block;
+		}
+
+		body {
+			line-height: 1;
+		}
+
+		ol, ul {
+			list-style: none;
+		}
+
+		blockquote, q {
+			quotes: none;
+		}
+
+			blockquote:before, blockquote:after,
+			q:before, q:after {
+				content: '';
+				content: none;
+			}
+
+		table {
+			border-collapse: collapse;
+			border-spacing: 0;
+		}
+
+		html, body {
+			font-family: "微軟正黑體",Arial, Helvetica, sans-serif;
+			font-size: 15px;
+			line-height: 1.5;
+			text-align: center;
+		}
+
+		img {
+			max-width: 100%;
+		}
+
+		a:hover {
+		}
+	</style>
+</head>
+<body>
+	@if (Model.ORDER == 0)
+	{
+		List<ARTICLE> lsNews = ViewBag.News as List<ARTICLE>;
+		<table border="0" cellspacing="0" cellpadding="0" width="977">
+			<tbody>
+				<tr>
+					<td colspan="3">
+						<table border="0" cellspacing="0" cellpadding="0" width="100%">
+							<tbody>
+								<tr>
+									<td><img src="@(Function.DEFAULT_ROOT_HTTP_AFMC)/Images/EDM_01.jpg" style="vertical-align: bottom;" /></td>
+									<td width="141">
+										<img src="@(Function.DEFAULT_ROOT_HTTP_AFMC)/Images/EDM_02.jpg" style="vertical-align: bottom;" />
+										<br />
+										<a href="@Function.DEFAULT_ROOT_HTTP_AFMC" target="_blank"><img src="@(Function.DEFAULT_ROOT_HTTP_AFMC)/Images/EDM_03.jpg" style="vertical-align: bottom;" /></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="10" style="background:#7d71b3;"></td>
+					<td width="957">
+						<table border="0" cellspacing="0" cellpadding="0" width="100%">
+							<tbody>
+								<tr>
+									<td style="padding:25px; text-align:left;">
+										<div style="font-size:19px; font-weight:600; border-left:5px solid #7d71b3; color:#7d71b3; padding:3px 0 3px 10px; margin:0 0 10px 0;">最新訊息</div>
+										<table border="0" cellspacing="0" cellpadding="0" width="100%">
+											<tbody>
+												@foreach (ARTICLE a in lsNews)
+												{
+													<tr>
+														<td width="100" style="color:#888; padding:8px; border-bottom:1px dashed #DDD;">@a.DATETIME1.ToDateString()</td>
+														<td style="border-bottom:1px dashed #DDD;"><a href="@(Function.DEFAULT_ROOT_HTTP_AFMC)/News_detail/@a.ID" target="_blank" style="text-decoration:none; color:#333; padding:8px 0; display:block;">@a.CONTENT1</a></td>
+													</tr>
+												}
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<table border="0" cellspacing="0" cellpadding="0" width="100%">
+											<tbody>
+												<tr>
+													<td style="background:#7d71b3;" width="50%" height="10"></td>
+													<td style="background:#87caae;" width="50%" height="10"></td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:25px;">
+										<div style="font-size:19px; font-weight:600; border-left:5px solid #87caae; color:#87caae; padding:3px 0 3px 10px; margin:0 0 10px 0; text-align:left;">當月表演節目</div>
+										<table border="0" cellspacing="0" cellpadding="0" width="100%">
+											<thead>
+												<tr style="font-weight:600; color:#489877;">
+													<th style="padding:8px 0; border-bottom:3px double #489877;">活動日期</th>
+													<th style="padding:8px 0; border-bottom:3px double #489877;">名稱</th>
+													<th style="padding:8px 0; border-bottom:3px double #489877;">演出時間</th>
+													<th style="padding:8px 0; border-bottom:3px double #489877;">地點</th>
+													<th style="padding:8px 0; border-bottom:3px double #489877;">展演者</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach (DataRow dr in (ViewData["performance1"] as IEnumerable<DataRow>))
+												{
+													<tr>
+														<td width="100" valign="middle" style="color:#888; padding:8px; border-bottom:1px dashed #DDD;">@Convert.ToDateTime(dr["日期"]).ToDateString()</td>
+														<td valign="middle" style="border-bottom:1px dashed #DDD;"><a href="@Function.DEFAULT_ROOT_HTTP_AFMC/Activity_detail/@dr["ID"].ToString()" target="_blank" style="text-decoration:none; color:#333; padding:8px 0; display:block;">@dr["名稱"].ToString()</a></td>
+														<td width="140" valign="middle" style="padding:8px; border-bottom:1px dashed #DDD;">@dr["展演時間說明"].ToString()</td>
+														<td width="150" valign="middle" style="padding:8px; border-bottom:1px dashed #DDD;">@Function.GetNodeTitle(dr["館別"].ToString())-@Function.GetNodeTitle(dr["場地"].ToString())</td>
+														<td width="150" valign="middle" style="padding:8px; border-bottom:1px dashed #DDD;">@dr["展演者"].ToString()</td>
+													</tr>
+												}
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<table border="0" cellspacing="0" cellpadding="0" width="100%">
+											<tbody>
+												<tr>
+													<td style="background:#7d71b3;" width="50%" height="10"></td>
+													<td style="background:#87caae;" width="50%" height="10"></td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:25px;">
+										<div style="font-size:19px; font-weight:600; border-left:5px solid #f08e88; color:#f08e88; padding:3px 0 3px 10px; margin:0 0 10px 0; text-align:left;">當月展覽節目</div>
+										<table border="0" cellspacing="0" cellpadding="0" width="100%">
+											<thead>
+												<tr style="font-weight:600; color:#cc605a;">
+													<th style="padding:8px 0; border-bottom:3px double #cc605a;">活動日期</th>
+													<th style="padding:8px 0; border-bottom:3px double #cc605a;">名稱</th>
+													<th style="padding:8px 0; border-bottom:3px double #cc605a;">演出時間</th>
+													<th style="padding:8px 0; border-bottom:3px double #cc605a;">地點</th>
+													<th style="padding:8px 0; border-bottom:3px double #cc605a;">展演者</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach (DataRow dr in (ViewData["performance2"] as IEnumerable<DataRow>))
+												{
+													<tr>
+														<td width="100" valign="middle" style="color:#888; padding:8px; border-bottom:1px dashed #DDD;">@Convert.ToDateTime(dr["日期"]).ToDateString()</td>
+														<td valign="middle" style="border-bottom:1px dashed #DDD;"><a href="@Function.DEFAULT_ROOT_HTTP_AFMC/Activity_detail/@dr["ID"].ToString()" target="_blank" style="text-decoration:none; color:#333; padding:8px 0; display:block;">@dr["名稱"].ToString()</a></td>
+														<td width="140" valign="middle" style="padding:8px; border-bottom:1px dashed #DDD;">@dr["展演時間說明"].ToString()</td>
+														<td width="150" valign="middle" style="padding:8px; border-bottom:1px dashed #DDD;">@Function.GetNodeTitle(dr["館別"].ToString())-@Function.GetNodeTitle(dr["場地"].ToString())</td>
+														<td width="150" valign="middle" style="padding:8px; border-bottom:1px dashed #DDD;">@dr["展演者"].ToString()</td>
+													</tr>
+												}
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:25px;">
+										<table border="0" cellspacing="0" cellpadding="0" width="100%">
+											<tbody>
+												<tr>
+													<td valign="middle" style="text-align:left;">
+														版權所有©桃園市政府藝文設施管理中心Copyright 2020 Arts Facilities Management Center. All Rights Reserved.
+														<br />
+														330010 桃園市桃園區中正路 1188 號 TEL：(03) 317-0511
+													</td>
+													<td width="60" valign="middle">
+														<img src="@(Function.DEFAULT_ROOT_HTTP_AFMC)/Images/afmcqc.jpg" width="60" style="vertical-align: bottom;" />
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<table border="0" cellspacing="0" cellpadding="0" width="100%">
+											<tbody>
+												<tr>
+													<td style="background:#7d71b3;" width="50%" height="10"></td>
+													<td style="background:#87caae;" width="50%" height="10"></td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+					<td width="10" style="background:#87caae;"></td>
+				</tr>
+			</tbody>
+		</table>
+	}
+	else
+	{
+		List<ATTACHMENT> PICs = ViewBag.PICs as List<ATTACHMENT>;
+		if (PICs != null && PICs.Any())
+		{
+			<table border="0" align="center">
+				<tr>
+					<td>
+						@foreach (ATTACHMENT pic in PICs)
+						{
+							if (pic.CONTENT1.IsNullOrEmpty())
+							{
+								<img src="@(Function.DEFAULT_ROOT_HTTP_AFMC)/Upload/@pic.FILE_NAME" border="0" style="max-width: 800px" />
+							}
+							else
+							{
+								<a href="@pic.CONTENT1" target="_blank"><img src="@(Function.DEFAULT_ROOT_HTTP_AFMC)/Upload/@pic.FILE_NAME" border="0" style="max-width: 800px" /></a>
+							}
+							<br />
+						}
+					</td>
+				</tr>
+			</table>
+		}
+		else
+		{
+			<div style="text-align: center; color: #ba3939;font-size:1.8rem;margin-top: 20%;font-weight: bold;">自訂電子報：圖片未上傳</div>
+		}
+	}
+</body>
+</html>

@@ -1,0 +1,167 @@
+﻿@model InventoryRequisitionModel
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon">
+	<title>領物單_@Html.DisplayFor(m => m.ID)</title>
+</head>
+<body>
+	<div class="noPrint" id="noArea" style="text-align: right;">
+		<a href="javascript:printPage();" rel="external nofollow" target="_self" class="btn">列印</a>
+		<a href="javascript:void(0)" onclick="javascript:parent.jQuery.fancybox.close();" class="btn">關閉</a>
+	</div>
+	<div class="Print" id="printArea">
+		<style type="text/css">
+			body {
+				font-family: 新細明體;
+			}
+
+			h1 {
+				font-size: 28px;
+				color: #000;
+				font-weight: bold;
+				height: 20px;
+				text-align: center;
+			}
+
+			table {
+				width: 100%;
+			}
+
+				table th, table td {
+					padding: 8px;
+				}
+
+				table th {
+					text-align: center;
+					width: 16%;
+				}
+
+			.tbBorder {
+				border-collapse: collapse;
+			}
+
+				.tbBorder tr {
+					border-collapse: collapse;
+					border: 1px solid #000;
+				}
+
+			.tbDesc {
+				text-align: left;
+				vertical-align: baseline;
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+
+			.noPrint {
+				text-align: right;
+				background: #F1ECE6;
+				color: #FFF;
+				border-radius: 3px;
+				padding: 20px 10px;
+			}
+
+				.noPrint .btn {
+					padding: 10px;
+					margin-left: 5px;
+					text-decoration: none;
+					border-radius: 3px;
+					background: #6c4c3a;
+					border: none;
+					cursor: pointer;
+					color: #FFF;
+					font-weight: 500;
+					font-size: 0.9375rem;
+					transition: background 0.15s ease-out;
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					appearance: none;
+				}
+		</style>
+		<style media="print" type="text/css">
+			.noPrint {
+				display: none;
+			}
+		</style>
+		<h1>【桃園市政府藝文設施管理中心領物單】</h1>
+		<table border="0" cellspacing="0" class="tbDesc">
+			<tr>
+				<td>編號：</td>
+				<td>@Html.DisplayFor(m => m.ID)</td>
+				<td>請領日期：</td>
+				<td>@Html.DisplayFor(m => m.CREATE_DATE)</td>
+			</tr>
+		</table>
+		<table border="1" class="tbBorder">
+			<tr>
+				<th>請領單位</th>
+				<td>@Html.DisplayFor(m => m.DATA_TYPE)</td>
+				<th>請領人</th>
+				<td>@Function.GetSysUserName(Model.CREATER)</td>
+			</tr>
+			<tr>
+				<th>請領原因</th>
+				<td colspan="3">
+					@Html.DisplayFor(m => m.CONTENT1)
+				</td>
+			</tr>
+			<tr>
+				<th>請領物品</th>
+				<td colspan="3" style="padding:0px;">
+					<table border="1" class="tbBorder">
+						@{ int i = 1;}
+						@foreach (var d in Model.DETAILs)
+						{
+							<tr><td style="text-align: center;">@(i)</td><td>@d.PLUS_TYPE_TITLE</td><td>@d.DECIMAL1.Value (@d.PLUS_TYPE_UNIT)</td></tr>
+							i++;
+						}
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2">領用人簽章(個人領用物品時簽章)</th>
+				<th colspan="2">具領人簽章(單位領用物品時,單位主管簽章)</th>
+			</tr>
+			<tr>
+				<td colspan="2" style="height:100px;">&nbsp;</td>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		var getExplorer = (function () {
+			var explorer = window.navigator.userAgent,
+			compare = function (s) { return (explorer.indexOf(s) >= 0); },
+			ie11 = (function () { return ("ActiveXObject" in window) })();
+			if (compare("MSIE") || ie11) { return 'IE'; }
+			else if (compare("Firefox") && !ie11) { return 'Firefox'; }
+			else if (compare("Chrome") && !ie11) { return 'Chrome'; }
+			else if (compare("Opera") && !ie11) { return 'Opera'; }
+			else if (compare("Safari") && !ie11) { return 'Safari'; }
+		})();
+
+		function printPage() {
+			if (getExplorer == "IE") {
+				var divToPrint = document.getElementById("printArea");
+				var newWin = window.open();
+				var content = "<html>" +
+					"<head><title>領物單_@Html.DisplayFor(m => m.ID)</title></head>" +
+					"<body><style type='text/css'>.noPrint { display: none; }</style>" + document.body.innerHTML + "</body>" +
+					"</html>";
+				newWin.document.write(content);
+				newWin.document.close();
+				newWin.print();
+				newWin.close();
+			} else {
+				window.print();
+			}
+			parent.jQuery.fancybox.close();
+		}
+	</script>
+</body>
+</html>

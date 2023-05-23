@@ -1,0 +1,88 @@
+﻿@model string[]
+@{
+    int _width = Model[1].ToInt();
+    int _height = Model[2].ToInt();
+    int _widthB = _width + 100;
+    int _heightB = _height + 100;
+    string tmpName = "croppieFileUpload" + Model[0];
+    string tmpNameFileName = tmpName + "_orginalFileName";
+}
+<input type="hidden" name="croppieFileUpload.index" value="@tmpName" />
+<input type="hidden" name="croppieFileUpload[@(tmpName)]" value="" />
+<input type="hidden" name="croppieFileUpload_orginalFileName.index" value="@tmpNameFileName" />
+<input type="hidden" name="croppieFileUpload_orginalFileName[@(tmpNameFileName)]" value="" />
+
+<div class="demo-wrap upload-demo@(tmpName)">
+    <p>
+        <input type="file" id="upload@(tmpName)" name="hpf" accept="image/*" />
+    </p>
+    <br />
+    <div class="upload-demo-wrap">
+        <div id="upload-demo@(tmpName)"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    var $uploadCrop@(tmpName);
+    $(function () {
+        demoUpload@(tmpName)();
+    });
+    function demoUpload@(tmpName)() {
+        function readFile(input) {
+            if (input.files && input.files[0]) {
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.upload-demo@(tmpName)').addClass('ready');
+                    $uploadCrop@(tmpName).croppie('bind', {
+                        url: e.target.result
+                    }).then(function () {
+                        //alert(input.files[0].name);
+                        $('input[name="croppieFileUpload_orginalFileName[@(tmpNameFileName)]"]').val(input.files[0].name);
+                        getCroppieResult@(tmpName)();
+                        $uploadCrop@(tmpName).on('update.croppie', function (ev, cropData) {
+                            getCroppieResult@(tmpName)();
+                        });
+                        //console.log('jQuery bind complete');
+                    });
+
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                //swal("Sorry - you're browser doesn't support the FileReader API");
+            }
+        }
+
+        $uploadCrop@(tmpName) = $('#upload-demo@(tmpName)').croppie({
+            viewport: {
+                width: @_width,
+                height: @_height,
+                type: 'square'
+            },
+            enableExif: true,
+            showZoomer: false,
+            boundary: {
+                width: @_widthB,
+                height: @_heightB
+            }
+        });
+
+        $('#upload@(tmpName)').on('change', function () { readFile(this); });
+    }
+    function getCroppieResult@(tmpName)() {
+        $uploadCrop@(tmpName).croppie('result', {
+            type: 'canvas',
+            size: 'viewport'
+        }).then(function (resp) {
+            //$('#result-image').attr('src', resp);
+            $('input[name="croppieFileUpload[@(tmpName)]"]').val(resp);
+            //popupResult({
+            //    src: resp
+            //});
+        });
+    }
+</script>
+
+
+

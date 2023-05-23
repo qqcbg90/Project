@@ -1,0 +1,151 @@
+﻿@model DataModel
+@{
+    DateTime dtEndDate = new DateTime(2023, 2, 7);
+    int iY = dtEndDate.Year - 1911;
+    string sEndDate = iY.ToString() + dtEndDate.AddSeconds(-1).ToString("/MM/dd HH:mm:ss");
+    ATTACHMENT att1 = null, att2 = null, att3 = null;
+    if (Model.Atts != null)
+    {
+        att1 = Model.Atts.FirstOrDefault(p => p.ORDER == 3);
+        att2 = Model.Atts.FirstOrDefault(p => p.ORDER == 4);
+        att3 = Model.Atts.FirstOrDefault(p => p.ORDER == 20230117);
+    }
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    string _prize = Model.CONTENT22;
+    if (_prize.StartsWith("0"))
+    {
+        _prize = _prize.Replace("0", string.Empty);
+    }
+}
+
+<div class="header_content">
+    <img src="~/Images/logo.svg" />
+    <h2>得獎者回覆專區</h2>
+</div>
+@using (Html.BeginFileForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="w1400 flex-shrink-0">
+        <div class="box for-store my-5 px-5 pt-3 pb-4">
+            @if (Model.DATETIME1.HasValue)
+            {
+                @*正取-回覆時間*@
+                @*<div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+                ※ 已收到您的領獎資訊，若需修改資料，可於111/9/22 23:59:59前，點選得獎通知信中的網址進行修改，謝謝您的參與。
+            </div>*@
+                @*備取1-回覆時間*@
+            <div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+                ※ 已收到您的領獎資訊。<br />
+                ※ 若需修改資料，可於@(sEndDate)前，點選得獎通知信中的網址進行修改，謝謝您的參與。<br />
+                ※ 修改附件，請重新上傳即可。<br />
+                ※ 住宿憑證請提供當天住宿證明或可證明之住宿相關憑證(如：入住當日結帳發票、民宿房費收據...等)。<br />
+                ※ 請於112年02月06日(一) 23:59:59前填寫領獎資料，如回覆資料上有相關疑問，請於112/02/06 17:00前來電洽詢，逾期將視同放棄，謝謝。
+            </div>
+            }
+            else
+            {
+        <div style="color:#CC0000;background:yellow;padding: 5px;font-size:1.25rem;">
+            ※ 資料填寫完成後，按「送出」即回覆成功。<br />
+            ※ 若需修改資料，可於@(sEndDate)前，點選得獎通知信中的網址進行修改，謝謝您的參與。<br />
+            ※ 修改附件，請重新上傳即可。<br />
+            ※ 住宿憑證請提供當天住宿證明或可證明之住宿相關憑證(如：入住當日結帳發票、民宿房費收據...等)。<br />
+            ※ 請於112年02月06日(一) 23:59:59前填寫領獎資料，如回覆資料上有相關疑問，請於112/02/06 17:00前來電洽詢，逾期將視同放棄，謝謝。
+        </div>
+            }
+            <div>
+                <h1> 獎項：@_prize</h1>
+            </div>
+            <div>
+                <h1> 收件人姓名： </h1>
+                <div>
+                    @Html.EditorValidationFor(m => m.CONTENT2, new { @class = "form-control", placeholder = "收件人姓名" })
+                </div>
+            </div>
+            <div>
+                <h1> 寄件地址(含郵遞區號)： </h1>
+                <div>
+                    @Html.EditorValidationFor(m => m.CONTENT3, new { @class = "form-control", placeholder = "寄件地址(含郵遞區號)" })
+                </div>
+            </div>
+            <div>
+                <h1> 連絡電話： </h1>
+                <div>
+                    @Html.EditorValidationFor(m => m.CONTENT4, new { @class = "form-control", placeholder = "(獎品寄送如有其他問題，將會與您聯繫)" })
+                </div>
+            </div>
+            <h1>
+                身分證正反面(扣繳憑單需要)：
+            </h1>
+            <div>
+                <h3 style="font-size:18px">
+                    正面：<input type="file" id="hpf1" name="hpf1" />
+                </h3>
+                <span class="field-validation-valid" data-valmsg-for="hpf1" data-valmsg-replace="true"></span>
+                @if (att1 != null)
+                {
+                    <a href="@att1.GetFile()" target="_blank" id="ahpf1">@att1.ORIGINAL_FILE_NAME</a>
+                }
+            </div>
+            <div>
+                <h3 style="font-size:18px">
+                    反面：<input type="file" id="hpf2" name="hpf2" />
+                </h3>
+                <span class="field-validation-valid" data-valmsg-for="hpf2" data-valmsg-replace="true"></span>
+                @if (att2 != null)
+                {
+                    <a href="@att2.GetFile()" target="_blank" id="ahpf2">@att2.ORIGINAL_FILE_NAME</a>
+                }
+            </div>
+            <h1>
+                住宿憑證：
+            </h1>
+            <div>
+                <h3 style="font-size:18px">
+                    憑證：<input type="file" id="hpf3" name="hpf3" />
+                </h3>
+                <span class="field-validation-valid" data-valmsg-for="hpf3" data-valmsg-replace="true"></span>
+                @if (att3 != null)
+                {
+                    <a href="@att3.GetFile()" target="_blank" id="ahpf3">@att3.ORIGINAL_FILE_NAME</a>
+                }
+            </div>
+            <br />
+            <input type="submit" id="save" value="送出" class="btn btn-primary" style="width: 100%;padding: 10px;font-size: 1.25rem;" />
+            @Html.HiddenFor(m => m.CONTENT1)
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+}
+
+
+@section scripts
+{
+    <script>
+		function setRequired(isAdd, sID) {
+			if (isAdd) {
+				$("#" + sID).rules("add", { required: true, messages: { required: "*必填" } });
+			}
+			else {
+				$("#" + sID).rules("remove");
+				var vClass = $("#" + sID).prop("class");
+				if (vClass != undefined && vClass.indexOf("input-validation-error") != -1) {
+					$("#" + sID).removeClass("input-validation-error");
+					$("#" + sID).next().remove();
+				}
+			}
+			//$("form").valid();
+		}
+
+		$(function () {
+			setRequired(true, "CONTENT2");
+			setRequired(true, "CONTENT3");
+			setRequired(true, "CONTENT4");
+			@Html.Raw(att1==null ? "if ($(\"#ahpf1\").length == 0 ) { setRequired(true, \"hpf1\"); }" : "")
+			@Html.Raw(att2==null ? "if ($(\"#ahpf2\").length == 0 ) { setRequired(true, \"hpf2\"); }" : "")
+            @Html.Raw(att3==null ? "if ($(\"#ahpf3\").length == 0 ) { setRequired(true, \"hpf3\"); }" : "")
+		});
+    </script>
+}

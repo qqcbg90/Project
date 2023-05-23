@@ -1,0 +1,298 @@
+﻿@model List<IGrouping<string, DATA1>>
+@{
+    bool isLogon = User.Identity.IsAuthenticated;
+    string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+    string dt = ViewBag.dt as string;
+    DataTable dvote = ViewBag.dvote as DataTable;
+    DateTime _start = Function.GetConfigSetting("VoteStart").ToDateTime();
+    DateTime _end = Function.GetConfigSetting("VoteEnd").ToDateTime();
+    bool isStart = _start <= DateTime.Now;
+    bool isEnd = _end < DateTime.Now;
+}
+
+@helper showNotice(int c1, string c2, DataTable dt)
+{
+if (dt != null)
+{
+    var results = dt.Rows.Cast<DataRow>()
+              .Any(x => x.Field<int>("COL1") == c1 && (c2.IsNullOrEmpty() || x.Field<string>("COL2").Equals(c2))
+              && x.Field<string>("MAIN_ID").IsNullOrEmpty());
+    if (results)
+    {
+            <i class="bi bi-exclamation-circle-fill"></i>
+    }
+}
+}
+
+@helper Pager()
+{
+    @*<div class="tab_control">
+            @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 1, null, new { o = ViewBag.o, start = ViewBag.start, end = ViewBag.end })
+        </div>*@
+}
+
+<div class="header_content">
+    <img src="~/Images/main2.png" />
+    <h2>人氣票選</h2>
+</div>
+<div class="hotel-list mb-5 mt-5">
+    <!--右邊固定bar-->
+    <div class="fly-content">
+        <a href="#top">
+            <i class="bi bi-arrow-up-square"></i>
+            <span>TOP</span>
+        </a>
+        <em></em>
+        <a href="#tourist-Inn">
+            @showNotice(dt.ToInt(), "h1", dvote)
+            @*<i class="bi bi-exclamation-circle-fill"></i>*@
+            <img src="~/Images/tourist-Inn.png" />
+            <span>觀光旅館</span>
+        </a>
+        <em></em>
+        <a href="#hotel">
+            @showNotice(dt.ToInt(), "h2", dvote)
+            <img src="~/Images/hotel.png" />
+            <span>一般旅館</span>
+        </a>
+        <em></em>
+        <a href="#homestay">
+            @showNotice(dt.ToInt(), "h3", dvote)
+            <img src="~/Images/homestay.png" />
+            <span>民宿</span>
+        </a>
+    </div>
+
+
+    <div class="w1500">
+        <!--lightbox-->
+        <div id="lbdiv"></div>
+        <div class="container px-1 mb-3 notice">
+            <p>一個帳號每天可投「不同區(北部、中部、南部、東部、離島)、不同類別(觀光旅館、一般旅館、民宿)」共15張票，登入後若出現 <i class="bi-exclamation-circle-fill"></i> 代表還沒投過哦！(更多資訊請看<a href="@Url.Action("About")">活動辦法</a>)</p>
+        </div>
+        <!--分區-->
+        @using (Html.BeginForm())
+            {
+            <div class="category mb-4">
+                <a href="@Url.Action("Hotels", new { dt = "0" })" class="North @("0".Equals(dt)?"active":"")">@(showNotice(0, "", dvote))北部</a>
+                <a href="@Url.Action("Hotels",new { dt = "1" })" class="Central @("1".Equals(dt)?"active":"")">@(showNotice(1, "", dvote))中部</a>
+                <a href="@Url.Action("Hotels",new { dt = "2" })" class="South @("2".Equals(dt)?"active":"")">@(showNotice(2, "", dvote))南部</a>
+                <a href="@Url.Action("Hotels",new { dt = "3" })" class="East @("3".Equals(dt)?"active":"")">@(showNotice(3, "", dvote))東部</a>
+                <a href="@Url.Action("Hotels",new { dt = "4" })" class="Islands @("4".Equals(dt)?"active":"")">@(showNotice(4, "", dvote))離島</a>
+                <div class="input-group">
+                    <input type="search" name="k" class="form-control" placeholder="先選擇區域，再輸入旅宿名稱關鍵字" aria-label="Search" aria-describedby="button-addon2" value="@ViewBag.k">
+                    <input class="btn btn-outline-secondary" type="submit" id="button-addon2" value="搜尋" />
+                </div>
+
+            </div>
+        }
+
+        @foreach (var k in Model)
+            {
+                if ("h1".Equals(k.Key))//觀光旅館
+                {
+                        <!--觀光旅館-->
+                <div id="tourist-Inn" class="container px-5 pt-3 pb-5 mt-3 tourist-Inn">
+                    <!--以地區 分顏色-->
+                    <div class="row">
+                        <div class="col-md-12 px-3 py-3 hotel-category">
+                            <img src="~/Images/tourist-Inn.png" />
+                            <h2>觀光旅館</h2>
+                            <em></em>
+                        </div>
+                        @foreach (var item in k.OrderByRandom())
+                        {
+                            <div class="col-md-4 col-lg-3 my-3 hotel-box">
+                                <a href="javascript:lbshow('@(item.ID)');">
+                                    <h3>@item.CONTENT1</h3>
+                                    <div class="image_sameHeight">
+                                        <img class="lazyload" alt="@item.CONTENT1" data-src="@item.GetImages().FirstOrDefault()">
+                                        <span class="number" id="v@(item.ID)">@item.DECIMAL1.ToInt().ReplaceNumToThousand()<i>票</i></span>
+                                    </div>
+                                </a>
+                                <div class="buttons text-center mt-2">
+                                    <a href="javascript:share('@(item.ID)');" class="share"><i class="bi bi-facebook"></i> 我要分享</a>
+                                    <a href="javascript:vote('@(item.ID)');" class="vote">我要投票</a>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            }
+            else if ("h2".Equals(k.Key))//一般旅館
+            {
+                <!--一般旅館-->
+                <div id="hotel" class="container px-5 pt-3 pb-5 mt-3 hotel">
+                    <!--以地區 分顏色-->
+                    <div class="row">
+                        <div class="col-md-12 px-3 py-3 hotel-category">
+                            <img src="~/Images/hotel.png" />
+                            <h2>一般旅館</h2>
+                            <em></em>
+                        </div>
+                        @foreach (var item in k.OrderByRandom())
+                        {
+                            <div class="col-md-4 col-lg-3  my-3 hotel-box hideme">
+                                <a href="javascript:lbshow('@(item.ID)');">
+                                    <h3>@item.CONTENT1</h3>
+                                    <div class="image_sameHeight">
+                                        <img class="lazyload" alt="@item.CONTENT1" data-src="@item.GetImages().FirstOrDefault()">
+                                        <span class="number" id="v@(item.ID)">@item.DECIMAL1.ToInt().ReplaceNumToThousand()<i>票</i></span>
+                                    </div>
+                                </a>
+                                <div class="buttons text-center mt-2">
+                                    <a href="javascript:share('@(item.ID)');" class="share"><i class="bi bi-facebook"></i> 我要分享</a>
+                                    <a href="javascript:vote('@(item.ID)');" class="vote">我要投票</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else//h3 民宿
+            {
+                <!--民宿-->
+                <div id="homestay" class="container px-5 pt-3 pb-5 mt-3 homestay">
+                    <!--以地區 分顏色-->
+                    <div class="row">
+                        <div class="col-md-12 px-3 py-3 hotel-category">
+                            <img src="~/Images/homestay.png" />
+                            <h2>民宿</h2>
+                            <em></em>
+                        </div>
+                        @foreach (var item in k.OrderByRandom())
+                        {
+                            <div class="col-md-4 col-lg-3  my-3 hotel-box hideme">
+                                <a href="javascript:lbshow('@(item.ID)');">
+                                    <h3>@item.CONTENT1</h3>
+                                    <div class="image_sameHeight">
+                                        <img class="lazyload" alt="@item.CONTENT1" data-src="@item.GetImages().FirstOrDefault()">
+                                        <span class="number" id="v@(item.ID)">@item.DECIMAL1.ToInt().ReplaceNumToThousand()<i>票</i></span>
+                                    </div>
+                                </a>
+                                <div class="buttons text-center mt-2">
+                                    <a href="javascript:share('@(item.ID)');" class="share"><i class="bi bi-facebook"></i> 我要分享</a>
+                                    <a href="javascript:vote('@(item.ID)');" class="vote">我要投票</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/lazysizes.min.js")"></script>
+    <script>
+        if (navigator.userAgent.indexOf("Line") > -1) {
+            location.href = "https://www.2022bikefriendly.com.tw/Hotels?openExternalBrowser=1";
+        }
+        $(".black_bg1").click(function () {
+            $(".hotel-lightbox").removeClass("focus");
+            $(".black_bg1").fadeOut();
+        });
+        /* Every time the window is scrolled ... */
+        $(window).scroll(function () {
+
+            /* Check the location of each desired element */
+            $('.hideme').each(function (i) {
+
+                var bottom_of_object = $(this).offset().top + $(this).outerHeight();
+                var bottom_of_window = $(window).scrollTop() + $(window).height();
+
+                /* If the object is completely visible in the window, fade it it */
+                if (bottom_of_window > bottom_of_object) {
+
+                    $(this).animate({ 'opacity': '1' }, 500);
+
+                }
+
+            });
+
+        });
+        function lbshow(did) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ShowD1", "Home")',
+                data: { id: did },
+                dataType: "html",
+                success: function (response) {
+                    $("#lbdiv").html(response);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    GoUrl("/");
+                }
+            });
+        }
+        function vote(did) {
+            @if(isEnd)
+            {
+                @:showMsg('活動已結束!!', 2);
+                                                                            @:return false;
+                                                                        }
+            @if(!isLogon)
+            {
+                @:login();
+                                                                            @:return false;
+                                                                        }
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("VoteD1", "Home")',
+                data: { id: did },
+                dataType: "json",
+                success: function (response) {
+                    @*未註冊 0*@
+                    //console.log(response);
+                    showMsg(response[0]);
+                    if ("0" != response[1]) {
+                        $("#v" + did).html(response[1] + "<i>票</i>");
+                        //console.log($("#v" + did).closest('.container').prop('id'));
+                        var _dddid = $("#v" + did).closest('.container').prop('id');
+                        $("a[href='#" + _dddid + "']").children('i').remove();
+                        if ($("div.fly-content").find('i.bi-exclamation-circle-fill').length == 0) {
+                            $('a[href*="dt=@(dt)"]').children('i').remove();
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    GoUrl("/");
+                }
+            });
+        }
+        function share(did) {
+            @if(isEnd)
+            {
+                @:showMsg('活動已結束!!', 2);
+                                                                            @:return false;
+                                                                        }
+            @if(!isLogon)
+            {
+                @:login();
+                                                                            @:return false;
+                                                                        }
+            var _share = '@(Function.DEFAULT_ROOT_HTTP)Hotels/' + did;
+            var url = "http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(_share) + '&hashtag=%232022自行車友善旅宿';
+            window.open(url, 'share', config = 'height=600,width=800');
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ShareD1", "Home")',
+                data: { id: did },
+                dataType: "json",
+                success: function (response) {
+                    @*未註冊 0*@
+                    console.log(response);
+                    showMsg(response[0]);
+                    //$("#s" + did).html(response[1]);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    GoUrl("/");
+                }
+            });
+        }
+    </script>
+}

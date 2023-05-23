@@ -1,0 +1,50 @@
+﻿@*
+    日期與時分 partial
+*@
+@model DateTime?
+@{
+    ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+    string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    int hour = Model.HasValue ? Model.Value.Hour : 0;
+    int minute = Model.HasValue ? Model.Value.Minute : 0;
+    int hourMin = ViewData["hourMin"] != null ? ((string)ViewData["hourMin"]).ToInt() : 0;
+    int hourMax = ViewData["hourMax"] != null ? ((string)ViewData["hourMax"]).ToInt() : 23;
+    int minuteMin = ViewData["minuteMin"] != null ? ((string)ViewData["minuteMin"]).ToInt() : 0;
+    int minuteMax = ViewData["minuteMax"] != null ? ((string)ViewData["minuteMax"]).ToInt() : 59;
+    int minuteStep = ViewData["minuteStep"] != null ? ((string)ViewData["minuteStep"]).ToInt() : 1;
+}
+@Html.Hidden(string.Empty, Model.ToDefaultStringWithTime())
+@Html.TextBox("date", Model.HasValue ? Model.Value.ToDefaultString() : string.Empty, new { Style = ViewData["width"] != null ? ViewData["width"] : "", @class = "datepicker input" })
+<select id="@(tmpName)hour">
+    @for (int i = hourMin; i <= hourMax; i++)
+    {
+        <option value="@i.ToString()" @(hour == i ? "selected" : "")>@i.IntToStringAddZero(2)</option>
+    }
+</select>
+:&nbsp;&nbsp;
+<select id="@(tmpName)minute">
+    @for (int i = minuteMin; i <= minuteMax; i += minuteStep)
+    {
+        <option value="@i.ToString()" @(minute == i ? "selected" : "")>@i.IntToStringAddZero(2)</option>
+    }
+</select>
+<script type="text/javascript">
+    $(function () {
+        $(".datepicker").datepicker(
+            {
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy/mm/dd',
+                showAnim: 'drop',
+                //minDate: new Date()
+                buttonImage: '@Url.Content("~/images/calendar.gif")',
+                showOn: 'both', buttonImageOnly: true,
+                yearRange: "1911:+20"
+            });
+        $('#@(tmpName)_date, #@(tmpName)hour, #@(tmpName)minute').on('change', Set@(tmpName));
+    });
+    function Set@(tmpName)()
+    {
+        $("#@(tmpName)").val($("#@(tmpName)_date").val() + " " + $("#@(tmpName)hour").val() + ":" + $("#@(tmpName)minute").val());
+    }
+</script>

@@ -1,0 +1,162 @@
+﻿@model DataModel
+@{
+    bool isAdd = Model.ID.IsNullOrEmpty();
+    string start = Model.DATETIME1.ToString();
+    string end = Model.DATETIME2.ToString();
+    string decimal1 = Model.DECIMAL1.ToString();
+    if (decimal1.IsNullOrEmpty())
+    {
+        decimal1 = "0";
+    }
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, ViewBag.DefaultPage, page = ViewBag.page, k = ViewBag.k, dt = ViewBag.dt, k2 = ViewBag.k2, start = ViewBag.start, end = ViewBag.end }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @MyHtml.RedP()
+    @Html.AntiForgeryToken()
+    <table class="tb_con">
+        <tr>
+            <th>@MyHtml.RedSpan() 回覆日期</th>
+            <td>
+                @Html.Partial("Input/_TimeStartToEndPartial", new string[] { "start", "end", start, end, "2" })
+            </td>
+        </tr>
+        <tr>
+            <th>@MyHtml.RedSpan() 活動標題</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT1)</td>
+        </tr>
+        <tr>
+            <th>@MyHtml.RedSpan() 活動網址</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT2)</td>
+        </tr>
+        <tr>
+            <th>@MyHtml.RedSpan() 通知信主題</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT3)</td>
+        </tr>
+        <tr>
+            <th>@MyHtml.RedSpan() 寄件者名稱</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT4)</td>
+        </tr>
+        <tr>
+            <th>@MyHtml.RedSpan() 寄件者Email</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT5)</td>
+        </tr>
+        <tr>
+            <th>@MyHtml.RedSpan() 通知信Html名稱</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT6)</td>
+        </tr>
+        <tr>
+            <th>是否要上傳身分證反面</th>
+            <td>
+                <label class="input_radio">
+                    <input type="radio" value="1" name="DECIMAL1">
+                    <b class="radio"></b><span>是</span>
+                </label>
+                <label class="input_radio">
+                    <input type="radio" value="0" name="DECIMAL1" />
+                    <b class="radio"></b><span>否</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th>回覆提示內容</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT)</td>
+        </tr>
+        <tr>
+            <th>附件一說明</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT11)</td>
+        </tr>
+        <tr>
+            <th>附件二說明</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT12)</td>
+        </tr>
+        <tr>
+            <th>附件三說明</th>
+            <td>@Html.EditorValidationFor(m => m.CONTENT13)</td>
+        </tr>
+
+
+
+    </table>
+    <br />
+    <br />
+    <div class="bottom_bar">
+
+        @if (isAdd)
+        {
+            <input type="submit" value="送出" title="送出" class="btn" name="save" id="send" />
+        }
+        else
+        {
+            <input type="submit" value="儲存" title="儲存" class="btn" name="action" id="send" />
+        }
+        <input type="button" value="回上頁" title="回上頁" class="btn Pink" onclick="back()" />
+    </div>
+}
+@*網頁內容end*@
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $('input[value='+@decimal1+']').prop('checked', true);
+            $("#send").click(function () {
+                return checkDataSend();
+            });
+        });
+
+        function checkDataSend() {
+            var _msg = "";
+            if ($("#CONTENT1").val() == "") {
+                _msg += ("請填寫標題！！</br>");
+            }
+            if ($("#CONTENT2").val() == "") {
+                _msg += ("活動網址！！</br>");
+            }
+            if ($("#CONTENT3").val() == "") {
+                _msg += ("請填寫通知信主題！！</br>");
+            }
+            if ($("#CONTENT4").val() == "") {
+                _msg += ("請填寫寄件者名稱！！</br>");
+            }
+            if ($("#CONTENT5").val() == "") {
+                _msg += ("請填寫寄件者Email！！</br>");
+            }
+            if ($("#CONTENT6").val() == "") {
+                _msg += ("請填寫通知信Html名稱！！</br>");
+            }
+            if ($("#startdate").val() == "" || $("#enddate").val() == "") {
+                _msg += ("請填寫回覆日期！！</br>");
+            }
+            if (_msg !== "") {
+                showMsg(_msg, 4);
+                return false;
+            }
+            if ($("form").valid() == true) {
+                $.blockUI({ message: '<h1>上傳中，請稍等...</h1>' });
+                return true;
+            }
+        }
+
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                console.log(event.target);
+                var $target = $(event.target);
+                if ($target.is(":button")) {
+                    event.preventDefault();
+                    return false;
+                }
+            }
+        });
+
+    </script>
+}

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="598476ec2f974038ac1b5c66264182de" Name="Diagram1" ZoomLevel="82">
+        <EntityTypeShape EntityType="DBModel.ARTICLE" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.ARTICLE_PLUG" Width="1.5" PointX="2.75" PointY="1.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.ATTACHMENT" Width="1.5" PointX="1.125" PointY="5.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.AUTHORITY" Width="1.5" PointX="12.125" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.DATA1" Width="1.5" PointX="9.75" PointY="3.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.DATA2" Width="1.5" PointX="8.5" PointY="1.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.DATA3" Width="1.5" PointX="10.25" PointY="1.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.DATA4" Width="1.5" PointX="12" PointY="1.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.DATA5" Width="1.5" PointX="14" PointY="1.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.DATA6" Width="1.5" PointX="15.375" PointY="0.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.DATA7" Width="1.5" PointX="9.25" PointY="0.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.DATA8" Width="1.5" PointX="13.625" PointY="2.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.LOG" Width="1.5" PointX="1.25" PointY="8" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.MESSAGE" Width="1.5" PointX="2.625" PointY="10.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.MESSAGE_LOG" Width="1.5" PointX="2.75" PointY="11.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.NODE" Width="1.5" PointX="4.875" PointY="2.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.PARAGRAPH" Width="1.5" PointX="1.25" PointY="6" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.PLUS" Width="1.5" PointX="15.875" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.ROLE_USER_MAPPING" Width="1.5" PointX="5.125" PointY="6.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.SYSUSER" Width="1.5" PointX="4.625" PointY="7.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="DBModel.USER" Width="1.5" PointX="7.875" PointY="9.125" IsExpanded="true" />
+        <AssociationConnector Association="DBModel.ARTICLEARTICLE_PLUG" />
+        <AssociationConnector Association="DBModel.NODEARTICLE" />
+        <AssociationConnector Association="DBModel.SYSUSERROLE_USER_MAPPING" />
+        <AssociationConnector Association="DBModel.USERROLE_USER_MAPPING" />
+        <AssociationConnector Association="DBModel.NODEAUTHORITY" />
+        <AssociationConnector Association="DBModel.MESSAGEMESSAGE_LOG" />
+        <AssociationConnector Association="DBModel.SYSUSERMESSAGE_LOG" />
+        <AssociationConnector Association="DBModel.USERMESSAGE_LOG" />
+        <AssociationConnector Association="DBModel.SYSUSERLOG" />
+        <AssociationConnector Association="DBModel.USERLOG" />
+        <AssociationConnector Association="DBModel.MESSAGEATTACHMENT" />
+        <AssociationConnector Association="DBModel.SYSUSERATTACHMENT" />
+        <AssociationConnector Association="DBModel.USERATTACHMENT" />
+        <AssociationConnector Association="DBModel.ARTICLEATTACHMENT" />
+        <AssociationConnector Association="DBModel.ARTICLEPARAGRAPH" />
+        <AssociationConnector Association="DBModel.NODEATTACHMENT" />
+        <AssociationConnector Association="DBModel.NODEPARAGRAPH" />
+        <AssociationConnector Association="DBModel.DATA1ATTACHMENT" />
+        <AssociationConnector Association="DBModel.DATA1PARAGRAPH" />
+        <AssociationConnector Association="DBModel.DATA1PLUS" />
+        <AssociationConnector Association="DBModel.DATA2PLUS" />
+        <AssociationConnector Association="DBModel.DATA2ATTACHMENT" />
+        <AssociationConnector Association="DBModel.DATA2PARAGRAPH" />
+        <AssociationConnector Association="DBModel.DATA3PLUS" />
+        <AssociationConnector Association="DBModel.DATA3ATTACHMENT" />
+        <AssociationConnector Association="DBModel.DATA3PARAGRAPH" />
+        <AssociationConnector Association="DBModel.DATA4PLUS" />
+        <AssociationConnector Association="DBModel.DATA4ATTACHMENT" />
+        <AssociationConnector Association="DBModel.DATA4PARAGRAPH" />
+        <AssociationConnector Association="DBModel.DATA5PLUS" />
+        <AssociationConnector Association="DBModel.DATA5ATTACHMENT" />
+        <AssociationConnector Association="DBModel.DATA5PARAGRAPH" />
+        <AssociationConnector Association="DBModel.DATA6PLUS" />
+        <AssociationConnector Association="DBModel.DATA6ATTACHMENT" />
+        <AssociationConnector Association="DBModel.DATA6PARAGRAPH" />
+        <AssociationConnector Association="DBModel.DATA7PLUS" />
+        <AssociationConnector Association="DBModel.DATA7ATTACHMENT" />
+        <AssociationConnector Association="DBModel.DATA7PARAGRAPH" />
+        <AssociationConnector Association="DBModel.DATA8PLUS" />
+        <AssociationConnector Association="DBModel.DATA8ATTACHMENT" />
+        <AssociationConnector Association="DBModel.DATA8PARAGRAPH" />
+        <AssociationConnector Association="DBModel.ARTICLE_PLUGATTACHMENT" />
+        <AssociationConnector Association="DBModel.ARTICLE_PLUGPARAGRAPH" />
+        <EntityTypeShape EntityType="DBModel.ROLE_GROUP" Width="1.5" PointX="10.25" PointY="5.625" />
+        <AssociationConnector Association="DBModel.ROLE_GROUPROLE_USER_MAPPING" />
+        <AssociationConnector Association="DBModel.ROLE_GROUPAUTHORITY" />
+        <AssociationConnector Association="DBModel.PLUSATTACHMENT" />
+        <AssociationConnector Association="DBModel.PLUSPARAGRAPH" />
+        <AssociationConnector Association="DBModel.USERPARAGRAPH" />
+        <EntityTypeShape EntityType="DBModel.COUNTER" Width="1.5" PointX="17.875" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

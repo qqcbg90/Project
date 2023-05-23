@@ -1,0 +1,58 @@
+﻿@{
+    string _v = ViewBag.p99 as string;
+}
+
+@section featured_top{
+	<div class="black_bg"></div>
+}
+
+@section head{
+	
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+    @MyHtml.RedP("※ 請記得按下方存檔 ※")
+	<div class="edit_list user" id="app1">
+		<div>
+			<div id="divSelect">
+				<input type="hidden" name="users" id="users" />
+				<floating-search ref='floating' v-bind:multiple="multiple" v-bind:targets="targets" url="@Url.Action("GetData1Data", "Json",new { nid = ViewBag.NodeID })" title="@Resource.Add.ToString()" parent_id="divSelect" />
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+			var app1 = new Vue({
+				el: '#app1',
+				data: {
+					targets: '@(_v)',
+					multiple: true
+				},
+				methods: {
+					toSubmit: function () {
+						$("#users").val(this.$refs.floating.returnData());
+					}
+				}
+			})
+
+			$("#save").click(function () {
+				app1.toSubmit();
+			})
+		})
+	</script>
+}
+

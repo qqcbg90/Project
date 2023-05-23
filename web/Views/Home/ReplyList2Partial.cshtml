@@ -1,0 +1,37 @@
+﻿@model IQueryable<PLUS>
+@{
+
+}
+<table class="table gift-boxB">
+    <thead>
+        <tr>
+            <th>寄信</th>
+            <th>獎項</th>
+            <th>得獎者Email</th>
+            <th>寄信日期</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(p => p.CONTENT20 == "0").OrderBy(p => p.ORDER))
+        {
+            <tr>
+                <td>
+                <a href="@Url.MyAction("SendNotice",(Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = item.ID,k = ViewBag.k,start = ViewBag.start,end = ViewBag.end ,mid = ViewBag.b1})">寄信</a>
+                </td>
+                <td>@item.CONTENT1</td>
+                <td>@item.CONTENT2</td>
+                <td>@item.DATETIME4</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $('.lazy').lazy();
+        });
+    </script>
+}

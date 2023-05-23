@@ -1,0 +1,135 @@
+﻿@*
+    gameStart頁面ajax
+*@
+@model List<string>
+@{
+    bool isData = Model.Count > 0 && User.Identity.IsAuthenticated;
+    bool isCount = Model[1].ToInt() > 0;
+}
+
+@*<div class="timing" id="timeDisplay">60<i>s</i></div>*@
+<div class="score">
+    <p id="collisionDisplay">0</p>
+    @*<div class="life">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>*@
+</div>
+
+<div id="game-container">
+    <div id="bear"></div>
+    <button id="jump-btn">Jump</button>
+    <div class="wrapper">
+        <div class="marquee">
+            <div class="marquee__group">
+                <img class="Marquee_image" src='~/Images/game/badge3.png' alt="good" />
+                <img class="Marquee_image" src='~/Images/game/dead.png' alt="bad" />
+                <img class="Marquee_image" src='~/Images/game/dead.png' alt="bad" />
+                <img class="Marquee_image" src='~/Images/game/other1.png' alt="bad" />
+                <img class="Marquee_image" src='~/Images/game/badge2.png' alt="good" />
+            </div>
+            <div aria-hidden="true" class="marquee__group">
+                <img class="Marquee_image" src='~/Images/game/badge3.png' alt="good" />
+                <img class="Marquee_image" src='~/Images/game/dead.png' alt="bad" />
+                <img class="Marquee_image" src='~/Images/game/dead.png' alt="bad" />
+                <img class="Marquee_image" src='~/Images/game/other1.png' alt="bad" />
+                <img class="Marquee_image" src='~/Images/game/badge2.png' alt="good" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="scoreplus" id="scoreplus">+10</div>
+<div class="scoremiss" id="scoremiss">-10</div>
+<div class="w1500">
+    <div class="front">
+        <img src="~/Images/game/front1.png" />
+        <img src="~/Images/game/front2.png" />
+    </div>
+</div>
+
+<script>
+    // 獲取HTML元素
+    const bear = document.getElementById("bear");
+    const jumpBtn = document.getElementById("jump-btn");
+    const scoreDisplay = document.querySelector("#collisionDisplay");
+    const scoreplus = document.getElementById("scoreplus");
+    const missplus = document.getElementById("scoremiss");
+    // 定義遊戲數據
+    let bearBottom = 0;
+    let isJumping = false;
+    let jumpInterval;
+    let currentScore = 0;
+    document.body.addEventListener('keydown', function (e) {
+        console.log(e.key);
+        if (e.key === " ") { // 如果按下的是空白鍵
+            jump();
+        }
+    });
+    jumpBtn.addEventListener("click", () => {
+        jump();
+    });
+    // 設置跳躍事件
+    function jump() {
+        if (!isJumping && bearBottom === 0) {
+            isJumping = true;
+            jumpInterval = setInterval(() => {
+                bearBottom += 20;
+                bear.style.bottom = bearBottom + "px";
+                if (bearBottom > 200) {
+                    checkCollision();
+                    clearInterval(jumpInterval);
+                    isJumping = false;
+                    jumpDown();
+                }
+            }, 10);
+        }
+    }
+    
+
+    // 定義熊跳起來再掉下來的動畫
+    function jumpDown() {
+        jumpInterval = setInterval(() => {
+            bearBottom -= 5;
+            bear.style.bottom = bearBottom + "px";
+            if (bearBottom === 0) {
+                scoreplus.style.display = 'none';
+                missplus.style.display = 'none';
+                clearInterval(jumpInterval);
+                isJumping = false;
+            }
+        }, 10);
+    }
+
+    // 定義碰撞檢測和計分
+    function checkCollision() {
+        const badgesList = document.querySelectorAll(".marquee__group");
+        const bearRect = bear.getBoundingClientRect();
+        for (let i = 0; i < badgesList.length; i++) {
+            const badges = badgesList[i];
+            for (let j = 0; j < badges.children.length; j++) {
+                const badge = badges.children[j];
+                const badgeRect = badge.getBoundingClientRect();
+                
+                if (bearRect.bottom >= badgeRect.top && bearRect.top <= badgeRect.bottom &&
+                    bearRect.right >= badgeRect.left && bearRect.left <= badgeRect.right) {
+                    const alt = badge.getAttribute("alt");
+                    console.log(alt);
+                    if (alt == "good") {
+                        scoreplus.style.display = 'block';
+                        currentScore+=10;
+                    } else if (alt == "bad") {
+                        missplus.style.display = 'block';
+                        currentScore-=10;
+                    }
+                    scoreDisplay.textContent = currentScore;
+                    badge.style.opacity = 0;
+                    setTimeout(() => {
+                        badge.style.opacity = 1;
+                    }, 1000);
+                }
+            }
+        }
+    }
+
+</script>

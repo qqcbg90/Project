@@ -1,0 +1,190 @@
+﻿@model BudgetRegModel
+@{
+	string NodeID = ViewBag.NodeID;
+	bool IsAdd = ViewBag.IsAdd;
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		@if (!IsAdd)
+		{
+			<div>
+				<label>
+					@Html.LabelFor(m => m.ID)
+				</label>
+				<div>
+					@Html.DisplayFor(m => m.ID)
+				</div>
+			</div>
+			<div>
+				<label>
+					類別
+				</label>
+				<div>
+					@Html.DisplayFor(m => m.CONTENT1_NAME)
+					@Html.HiddenFor(m => m.CONTENT11)@Html.HiddenFor(m => m.CONTENT12)@Html.HiddenFor(m => m.CONTENT13)@Html.HiddenFor(m => m.CONTENT1)
+				</div>
+			</div>
+		}
+		else
+		{
+			<div>
+				<label>
+					@MyHtml.RedSpan()
+					類別
+				</label>
+				<div>
+					<span class="select">@Html.DropDownListFor(m => m.CONTENT11, ViewBag.BudgetItemSelect as SelectList, "-- 組別 --")</span>
+					<span class="select"><select id="CONTENT12" name="CONTENT12" data-val="true" data-val-required="*"><option value="">-- 類別 --</option></select></span>
+					<span class="select"><select id="CONTENT13" name="CONTENT13" data-val="true" data-val-required="*"><option value="">-- 細目 --</option></select></span>
+					<span class="select"><select id="CONTENT1" name="CONTENT1" data-val="true" data-val-required="*"><option value="">-- 說明 --</option></select></span>
+				</div>
+			</div>
+		}
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT2, new { htmlAttr = new { style = "width: 95%" } })
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.DECIMAL3)
+			</label>
+			<div id="DECIMAL3">
+				@(Model.DECIMAL3.HasValue ? Model.DECIMAL3.Value : 0)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.DECIMAL5)
+			</label>
+			<div id="DECIMAL5">
+				@(Model.DECIMAL5.HasValue ? Model.DECIMAL5.Value : 0)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.DECIMAL1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DECIMAL1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.DECIMAL2)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.DECIMAL2)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.DECIMAL4)
+			</label>
+			<div id="DECIMAL4">
+				@(Model.DECIMAL4.HasValue ? Model.DECIMAL4.Value : 0)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT3)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT3)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT4)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT4)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT5)
+			</label>
+			<div>
+				@Html.EditorValidationFor(m => m.CONTENT5)
+			</div>
+		</div>
+		@Html.ValidationSummary(true)
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.isEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script type="text/javascript">
+		$(function () {
+			getChild("@Model.CONTENT11", "@Model.CONTENT12", '-- 類別 --', 2);
+			getChild("@Model.CONTENT12", "@Model.CONTENT13", '-- 細目 --', 3);
+			getChild("@Model.CONTENT13", "@Model.CONTENT1", '-- 說明 --', 4);
+			$('[name=CONTENT11]').change(function () {
+				var k1 = $(this).val();
+				var k2 = $("#CONTENT12").val();
+				var k3 = $("#CONTENT13").val();
+				var k4 = $("#CONTENT1").val();
+				if (k1 == "") k1 = -1;
+				k2 = k3 = k4 = -1;
+				getChild(k1, '', '-- 類別 --', 12);
+				getChild(k2, '', '-- 細目 --', 13);
+				getChild(k3, '', '-- 說明 --', 1);
+			});
+			$('[name=CONTENT12]').change(function () {
+				var k2 = $(this).val();
+				var k3 = $("#CONTENT13").val();
+				var k4 = $("#CONTENT1").val();
+				if (k2 == "") k2 = -1;
+				k3 = k4 = -1;
+				getChild(k2, '', '-- 細目 --', 13);
+				getChild(k3, '', '-- 說明 --', 1);
+			});
+			$('[name=CONTENT13]').change(function () {
+				var k3 = $(this).val();
+				var k4 = $("#CONTENT1").val();
+				if (k3 == "") k3 = -1;
+				k4 = -1;
+				getChild(k3, '', '-- 說明 --', 1);
+			});
+			$("[name=CONTENT1]").change(function () {
+				$.post("@Url.Action("GetBudgetData", "Json")", { c1: $(this).val() }, function (data) {
+					$("#DECIMAL3").html(data.budget);
+					$("#DECIMAL5").html(data.exec);
+				});
+			});
+
+			$("#DECIMAL2").blur(function () {
+				var D3 = parseInt($("#DECIMAL3").text());
+				var D5 = parseInt($("#DECIMAL5").text());
+				var D2 = parseInt(($(this).val() == "" ? 0 : $(this).val()));
+				$("#DECIMAL4").text(D3 - D5 - D2);
+			});
+		});
+		function getChild(arg1, arg2, firstTextVal, idx) {
+			$.post("@Url.Action("GetChild", "Json")", { id: arg1, v: arg2, first: firstTextVal }, function (data) {
+				$("#CONTENT" + idx).html(data);
+			});
+		}
+	</script>
+}
+

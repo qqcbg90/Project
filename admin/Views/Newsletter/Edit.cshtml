@@ -1,0 +1,211 @@
+﻿@model NewsletterModel
+@{
+	bool IsAdd = (bool)ViewBag.IsAdd;
+	List<SelectListItem> GROUPs = ViewBag.GROUPs as List<SelectListItem>;
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@helper PicAdd(string sID = "", string sMAIN_ID = "", string sCONTENT1 = "", string PIC_URL = "", bool IsAdd = true)
+{
+if (IsAdd)
+{
+	sID = "${ID}";
+	sMAIN_ID = "${MAIN_ID}";
+	sCONTENT1 = "${CONTENT1}";
+}
+	<li id="@sID" style="border-bottom: 1px dashed #CCC; padding-bottom: 7px; margin: 7px 0px;">
+		@Html.Hidden("PICs.index", sID)
+		@Html.Hidden("PICs[" + sID + "].ID", sID)
+		@Html.Hidden("PICs[" + sID + "].MAIN_ID", sMAIN_ID)
+		<p>
+			@if (PIC_URL.IsNullOrEmpty())
+			{
+				<input type="file" id="PICs[@sID].HPF" name="PICs[@sID].HPF" accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" style="margin: 5px 0;" />
+			}
+			else
+			{
+				<a href="@Url.Content(PIC_URL)" data-fancybox="images" title="點選圖片可放大檢視">
+					<img src="@Url.Content(PIC_URL)" style="max-width: 50px;border: 1px solid #CCC;" />
+				</a>
+			}
+		</p>
+		<input type="text" id="PICs[@sID].CONTENT1" name="PICs[@sID].CONTENT1" value="@sCONTENT1" maxlength="500" placeholder="圖片連結" />
+		<a href="javascript:delPic('@sID')" title="刪除" class="close_bt" style="position: inherit;"><i class="far fa-times-circle"></i></a>
+	</li>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k = ViewBag.Keyword }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				電子報類別
+			</label>
+			<div>
+				@if (IsAdd)
+				{
+					<label for="ORDER_0">
+						<input type="radio" id="ORDER_0" name="ORDER" value="0" checked /> 原電子報
+					</label>
+					<label for="ORDER_1">
+						<input type="radio" id="ORDER_1" name="ORDER" value="1" @(Model.ORDER == 1 ? "checked" : "") /> 自訂電子報
+					</label>
+				}
+				else
+				{
+					@(Model.ORDER == 0 ? "原電子報" : "自訂電子報")
+					@Html.HiddenFor(m => m.ORDER)
+				}
+			</div>
+		</div>
+		<div class="CUSTOM" style="@(Model.ORDER == 1 ? "" : "display:none;")">
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.TITLE)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.TITLE)
+			</div>
+		</div>
+		<div class="NOT_CUSTOM" style="@(Model.ORDER == 0 ? "" : "display:none;")">
+			<label>
+				@MyHtml.RedSpan()
+				資料抓取日期
+			</label>
+			<div>
+				@Html.Partial("Input/_DateStartToEndPartial", new string[] { "CONTENT3", "CONTENT4", Model.CONTENT3, Model.CONTENT4, "0" })
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.CONTENT1)
+			</div>
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = false, iDescType = 1 })
+		<div class="file_notic" style="@(Model.ORDER == 1 ? "display:none;" : "")">
+			自訂電子報：至少 1 張圖片；新增／刪除圖片後，請按「存檔」。
+		</div>
+		<div class="CUSTOM" style="@(Model.ORDER == 1 ? "" : "display:none;")">
+			<label>
+				@MyHtml.RedSpan()
+				圖片上傳<br />
+				<input type="button" id="btnAdd" name="btnAdd" value="新增" />
+			</label>
+			<div class="up_img">
+				<div class="show_img del">
+					<ul id="pic_list" style="width: 100%;">
+						@if (Model.PICs != null && Model.PICs.Count > 0)
+				{
+					foreach (ATTACHMENT atta in Model.PICs)
+					{
+								@PicAdd(atta.ID, atta.MAIN_ID, atta.CONTENT1, atta.GetPic(), false)
+					}
+				}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				發送群組
+			</label>
+			<div id="GROUPs">
+				@foreach (SelectListItem sli in GROUPs)
+				{
+					<label for="chk_@sli.Value">
+						@Html.Hidden("MEMO.index", sli.Value)
+						<input type="checkbox" id="MEMO[@sli.Value]" name="MEMO[@sli.Value]" value="@sli.Value" @(Model.MEMO.Contains(sli.Value) ? "checked" : "") /> @sli.Text
+					</label>
+				}
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+	@Html.Hidden("lsDel")
+}
+@*網頁內容end*@
+<script type="text/x-jquery-tmpl" id="tmplPic">
+	@PicAdd()
+</script>
+@section scripts{
+	<script>
+		$(function () {
+			@Html.Raw("setNewsletterType('" + Model.ORDER + "');")
+			$("[name=ORDER]").change(function () {
+				setNewsletterType($(this).val());
+			});
+			$("#save").click(function () {
+				var order = @Html.Raw(IsAdd ? "$('[name=ORDER]:checked').val();" : "\"" + Model.ORDER.ToString() + "\"");
+				if (order == "1") {
+					var HPFs = 0;
+					$("input[type=file]").map(function () { HPFs += ($(this).val() != "" ? 1 : 0); });
+					HPFs += $("#pic_list li").length;
+					if (HPFs == 0) {
+						showMsg("自訂電子報：至少 1 張圖片！", 3);
+						return false;
+					}
+				}
+				var len = $("#GROUPs input[type='checkbox']:checked").length;
+				if (len == 0) {
+					showMsg("發送群組：至少選擇 1 個！", 3);
+					return false;
+				}
+			});
+
+			$("#btnAdd").click(function () {
+				$("#tmplPic").tmpl({
+					ID: (new Date().getTime()) + "" + ($("#pic_list li").length + 1),
+					FILM_NAME: "",
+					MAIN_ID: "@Model.ID",
+					CONTENT1: ""
+				}).appendTo("#pic_list");
+			});
+		});
+
+		function setNewsletterType(order) {
+			if (order == "0") {
+				$(".CUSTOM").hide();
+				$(".NOT_CUSTOM").show();
+				$(".file_notic").hide();
+				$("#TITLE").val("");
+				setRequired(true, "TITLE");
+			} else {
+				$(".CUSTOM").show();
+				$(".NOT_CUSTOM").hide();
+				$(".file_notic").show();
+				setRequired(true, "CONTENT3");
+				setRequired(true, "CONTENT4");
+			}
+		}
+
+		function delPic(vID) {
+			if ($("#pic_list li").length > 1) {
+				var lsDel = $("#lsDel").val();
+				$("#lsDel").val(vID + ";" + lsDel);
+
+				$("#" + vID).remove();
+			} else {
+				showMsg("自訂電子報：至少 1 張圖片（請先新增 1 個，再進行刪除）！", 3);
+			}
+		}
+	</script>
+}

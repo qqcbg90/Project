@@ -1,0 +1,114 @@
+﻿@model IQueryable<USER>
+@{
+    var lotteryList = Model.GroupBy(p => p.CONTENT22).OrderBy(p => p.Key).ToList();
+}
+
+@section head{
+    @Scripts.Render("~/Content/jquery.lazy-master/jquery.lazy.min.js")
+}
+
+<div class="header_content">
+    <img src="~/Images/logo.svg" />
+    <h2>得獎回覆結果</h2>
+</div>
+<div class="w1400 flex-shrink-0">
+    <div class="box for-store my-5 px-5 pt-3 pb-4">
+        @foreach (var lottery in lotteryList)
+        {
+            int i = 1;
+            <h1>@($"{lottery.Key.Replace("0", string.Empty)}({lottery.Count()}名)")</h1>
+            <table class="table gift-boxB">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">得獎者</th>
+                        <th scope="col">回覆時間(姓名等資料)</th>
+                        <th scope="col">身份證(正)</th>
+                        <th scope="col">身份證(反)</th>
+                        <th scope="col">住宿憑證</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var email in lottery.OrderBy(p => p.CONTENT1))
+                    {
+                        List<ATTACHMENT> atts = email.ATTACHMENT.Where(p => p.ORDER > 2).ToList();
+                        ATTACHMENT att1 = null, att2 = null, att3 = null;
+                        if (atts != null && atts.Count > 0)
+                        {
+                            att1 = atts.FirstOrDefault(p => p.ORDER == 3);
+                            att2 = atts.FirstOrDefault(p => p.ORDER == 4);
+                            att3 = atts.FirstOrDefault(p => p.ORDER == 20230109);
+                        }
+                        if (att3 == null)
+                        {
+                            continue;
+                        }
+                        <tr class="eat">
+                            <td scope="col">@i</td>
+                            <td>
+                                @email.CONTENT1
+                            </td>
+                            <td>
+                                @if (att3 != null)
+                                {
+                                    <input type="checkbox" @(att3.CONTENT7.IsTrue() ? "checked" : "") onclick="javascript:changeC7('@att3.ID');" />
+                                    @($"{att3.CREATE_DATE.ToDefaultStringWithTime()} / {att3.CONTENT1} / {att3.CONTENT2} / {att3.CONTENT3}")
+                                }
+                            </td>
+                            <td>
+                                @if (att1 != null)
+                                {
+                                    <a href="@att1.GetFile()" target="_blank" title="@att1.ORIGINAL_FILE_NAME">
+                                        <img class="lazy" src="@att1.GetFile()" style="max-width:300px;" />
+                                    </a>
+                                }
+                            </td>
+                            <td>
+                                @if (att2 != null)
+                                {
+                                    <a href="@att2.GetFile()" target="_blank" title="@att2.ORIGINAL_FILE_NAME">
+                                        <img class="lazy" src="@att2.GetFile()" style="max-width:300px;" />
+                                    </a>
+                                }
+                            </td>
+                            <td>
+                                @if (att3 != null)
+                                {
+                                    <a href="@att3.GetFile()" target="_blank" title="@att3.ORIGINAL_FILE_NAME">
+                                        <img class="lazy" src="@att3.GetFile()" style="max-width:300px;" />
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            $('.lazy').lazy();
+           
+        });
+        function changeC7(attid) {
+			$.ajax({
+				url: "@Url.Action("PicList3", "Home")",
+				type: 'post',
+				dataType: 'html',
+                data: { id: attid },
+                complete: function (data) {
+                    if ("0" == data.responseText) {
+                        alert('發生錯誤!!');
+                    }
+                    else {
+
+                    }
+				}
+			});
+		}
+    </script>
+}

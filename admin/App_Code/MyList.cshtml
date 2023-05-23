@@ -1,0 +1,80 @@
+﻿@using KingspModel.Resources;
+
+@functions{
+
+	/// <summary>
+	/// 檢查權限
+	/// </summary>
+	/// <param name="id"></param>
+	/// <param name="right"></param>
+	/// <param name="isContinue">忽略權限，測試用</param>
+	/// <returns></returns>
+	public static bool CheckAuthority(string id, KingspModel.Enum.Authority_Right right, bool isContinue = false)
+	{
+		List<KingspModel.DataModel.AuthorityRight> lsAR = Session[KingspModel.Function.SESSION_ROLE] as List<KingspModel.DataModel.AuthorityRight> ?? new List<KingspModel.DataModel.AuthorityRight>();
+		if (lsAR.Count == 0)
+		{
+			string sUSER_ID = User.Identity.Name;
+			Dictionary<string, List<KingspModel.DataModel.AuthorityRight>> dict = KingspModel.Function.AllUsersAuthorityRight;
+			if (dict.ContainsKey(sUSER_ID))
+			{
+				lsAR = dict[sUSER_ID];
+			}
+		}
+		return (isContinue || KingspModel.Function.CheckAuthority(id, lsAR, right));
+	}
+
+	/// <summary>
+	/// 是否要上下兩個分頁
+	/// </summary>
+	/// <returns></returns>
+	public static bool IsTwoPagers()
+	{
+		return false;
+	}
+
+	/// <summary>
+	/// 取得SelectList的比對值
+	/// </summary>
+	/// <returns></returns>
+	public static string GetValueFromSelectList(System.Web.Mvc.SelectList list, string id)
+	{
+		return list == null ? string.Empty : (list.FirstOrDefault(p => p.Value.Equals(id)) != null ? list.FirstOrDefault(p => p.Value.Equals(id)).Text : string.Empty);
+	}
+
+}
+@*關鍵字*@
+@helper KeywordInput(string value, string polaceholder = "", string name = "k")
+{
+	<input type="text" id="@name" name="@name" value="@value" class="search w400" Placeholder="@polaceholder" />
+}
+@*關鍵字*@
+@helper CustomInput(string name, string value, string polaceholder = "")
+{
+	<input type="text" id="@name" name="@name" value="@value" class="search w400" Placeholder="@polaceholder" />
+}
+@*搜尋*@
+@helper Submit()
+{
+	<input type="submit" value="@Resource.Search" title="@Resource.Search" class="btn" />
+}
+@*編輯*@
+@helper EditImage(string txt = "", string css = "")
+{
+var page = (System.Web.Mvc.WebViewPage)PageContext.Page;
+string nid = page.ViewBag.NodeID;
+string _txt = string.IsNullOrEmpty(txt) ? CheckAuthority(nid, KingspModel.Enum.Authority_Right.Update) ?
+Resource.Edit.ToString() : Resource.Browse.ToString() : txt;
+	<span class="btn @css" title="@_txt">@_txt</span>
+}
+@*自訂文字*@
+@helper CustomImage(string txt)
+{
+	<span class="btn Ex" title="@txt">@txt</span>
+}
+@*刪除*@
+@helper DeleteImage(string txt = "", string cls = "red")
+{
+	txt = string.IsNullOrEmpty(txt) ? Resource.Delete.ToString() : txt;
+	<span class="btn @cls" title="@txt"><i class="far fa-trash-alt"></i></span>
+}

@@ -1,0 +1,111 @@
+﻿@model IPagedList<DATA1>
+@{
+	string _action = Url.Action(ViewContext.RouteData.Values["action"].ToString());
+	string k1 = (string)ViewBag.k1;
+}
+
+@section head{
+	<script type="text/javascript">
+		$(function () {
+			InputGo("@ViewBag.DefaultPage");
+		})
+		//select by dropdownlist
+		function SelectGo(page) {
+			$('div .pager').find('select').each(function () {
+				$(this).val(page);
+			});
+			var url = '@_action?pageX=' + page
+                + '&nid=@(ViewBag.NodeID)'
+                + '&defaultPage=' + $("[name=defaultPage]").val()
+                + '&kX=' + EncodeParameter($("[name=kX]").val())
+				+ '&k1=' + $("[name=k1]:checked").val();
+			GoUrl(url);
+		}
+	</script>
+}
+
+@section featured_top {
+
+}
+
+@section featured {
+
+}
+
+@*分頁*@
+@helper Pager()
+{
+	<div class="pager">
+		@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, 0, null
+	   , new { nid = ViewBag.NodeID, defaultPage = ViewBag.DefaultPage, kX = ViewBag.KeywordX, k1 = ViewBag.k1 }, "pageX")
+	</div>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	<p class="search_box" style="display:block">
+		<label class="key">
+			演出館別：
+			@foreach (SelectListItem sli in (ViewBag.hallType as SelectList))
+			{
+				<label for="k1_@sli.Value">
+					<input type="radio" value="@sli.Value" id="k1_@sli.Value" name="k1" @(k1.CheckStringValue(sli.Value) ? "checked" : "") />@sli.Text
+				</label>
+			}
+		</label><br />
+		<label class="key">
+			@MyList.KeywordInput(ViewBag.KeywordX, "片名、片名(英)", "kX")
+		</label>
+		<br />
+		<label class="btn_box go">@MyList.Submit()</label>
+	</p>
+	<p class="top_bar">
+		<label class="btn_box">
+		</label>
+	</p>
+	if (MyList.IsTwoPagers())
+	{
+		@Pager()
+	}
+	<div class="tb_list_box">
+		<table class="tb_list">
+			<tr>
+				<th>建立日期</th>
+				<th>片名</th>
+				<th>年份</th>
+				<th>問卷QRCode</th>
+				<th>問卷管理</th>
+			</tr>
+			@foreach (DATA1 m in Model)
+			{
+				string sORDER = m.ORDER.ToString();
+				<tr>
+					<td data-th="建立日期">@m.CREATE_DATE.ToDateString()</td>
+					<td data-th="片名">@(m.CONTENT1 + (m.CONTENT14.IsNullOrEmpty() ? "" : " / " + m.CONTENT14))</td>
+					<td data-th="年份">@m.DECIMAL1.ToInt()</td>
+					<td data-th="問卷QRCode">
+						<div class="btn_box">
+							<a href="@Url.MyAction("ZipQRCode", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { exid = m.ID, k1 = "hall3" })" title="問卷QRCode"><span class="btn" style="background: #1c70c5;"><i class="fa fa-download"></i></span></a>
+						</div>
+					</td>
+					<td data-th="問卷管理">
+						<div class="btn_box">
+							<a href="@Url.MyAction("AudienceIndex", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { exid = m.ID, kX = ViewBag.KeywordX, k1 = ViewBag.k1 })" title="問卷管理"><span class="btn"><i class="far fa-edit"></i></span></a>
+						</div>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+	@Pager()
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+
+		});
+	</script>
+}

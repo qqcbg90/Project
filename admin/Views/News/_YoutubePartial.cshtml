@@ -1,0 +1,38 @@
+﻿@model NewsModel
+<div>
+    <label>
+        @MyHtml.RedSpan()
+        影片說明
+    </label>
+    <div>
+        @Html.EditorValidationFor(m => m.CONTENT1)
+    </div>
+</div>
+<div>
+    <label>@MyHtml.RedSpan()影片連結</label>
+    <div>
+        @Html.EditorValidationFor(m => m.CONTENT11)
+    </div>
+</div>
+<div>
+    <label>連結取得說明</label>
+    <div>
+        <ul style="width: 100%">
+            <li style="display: inline-block;margin-right: 5px;">
+                <a href="@Url.Content("~/Images/YouTube01.png")" data-fancybox="images" data-caption="步驟 1" title="點選圖片可放大檢視">
+                    <img src="@Url.Content("~/Images/YouTube01.png")" alt="" style="height:100px;border: 1px solid #CCC;">
+                </a>
+            </li>
+            <li style="display: inline-block;margin-right: 5px;">
+                <a href="@Url.Content("~/Images/YouTube02.png")" data-fancybox="images" data-caption="步驟 2" title="點選圖片可放大檢視">
+                    <img src="@Url.Content("~/Images/YouTube02.png")" alt="" style="height:100px;border: 1px solid #CCC;">
+                </a>
+            </li>
+            <li style="display: inline-block;margin-right: 5px;">
+                <a href="@Url.Content("~/Images/YouTube03.png")" data-fancybox="images" data-caption="步驟 3" title="點選圖片可放大檢視">
+                    <img src="@Url.Content("~/Images/YouTube03.png")" alt="" style="height:100px;border: 1px solid #CCC;">
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

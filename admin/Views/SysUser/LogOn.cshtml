@@ -1,0 +1,75 @@
+﻿@model LogOnModel
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon">
+	@*<meta name="viewport" content="width=device-width" />*@
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>@Function.PAGE_TITLE</title>
+	@Styles.Render("~/BaseCss/css", "~/OtherCss/css")
+	@Scripts.Render("~/bundles/basejquery", "~/bundles/customjquery")
+	<script type="text/javascript">
+		$(function () {
+			$("label").inFieldLabels();
+			$('#UserName').focus();
+		});
+	</script>
+</head>
+<body>
+	<div class="mobile_remind" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">請旋轉您的螢幕</h4>
+			</div>
+			<div class="modal-body">
+				為確保功能正常，且讓您有最好的使用體驗，請將您的螢幕旋轉為直向，謝謝！
+			</div>
+		</div>
+	</div>
+	<div class="overlay-landscape"></div>
+	<div class="Login">
+		<div class="bg"></div>
+		<div class="box">
+			@using (Html.BeginForm())
+			{
+				@Html.AntiForgeryToken()
+				<div class="In">
+					<p style="text-align: center; margin-bottom: 10px;"><img src="@Url.Content("~/Images/brand_logo.png")" alt="" /></p>
+					<p class="title">
+						@Function.PAGE_TITLE
+					</p>
+					<p class="input"><b><i class="fas fa-user-circle"></i></b><label for="UserName">@Resource.Account</label>@Html.EditorValidationFor(model => model.UserName)</p>
+					<p class="input"><b><i class="fas fa-key"></i></b><label for="Password">@Resource.password</label>@Html.EditorValidationFor(model => model.Password)</p>
+					@*<p class="input">
+							@{ Html.RenderPartial("Captcha/_CaptchaPartial"); }
+						</p>*@
+					<div class="btn_box">
+						<input type="submit" name="button" id="button" value="登入" class="btn go" />
+					</div>
+					@Html.ValidationSummary(true)
+				</div>
+			}
+		</div>
+		<div class="footer out">
+			@Html.Partial("Menu/_FooterRightPartial")
+		</div>
+	</div>
+	@StackExchange.Profiling.MiniProfiler.RenderIncludes(StackExchange.Profiling.RenderPosition.Left)
+	@Html.Raw(TempData[Function.TEMPDATA_MESSAGE_KEY])
+	<script type="text/javascript">
+		//判斷手機方向：
+		window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
+			if (window.orientation === 180 || window.orientation === 0) {
+				$('.mobile_remind').removeClass('active');
+			}
+			if (window.orientation === 90 || window.orientation === -90) {
+				$('.mobile_remind').addClass('active');
+			}
+		}, false);
+	</script>
+</body>
+</html>

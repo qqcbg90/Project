@@ -1,0 +1,98 @@
+﻿@*
+    gameEnd頁面ajax
+*@
+@model List<string>
+@{
+    bool isData = Model.Count > 0 && User.Identity.IsAuthenticated;
+    int _count = Model[1].ToInt();
+    List<DATA1> hotels = ViewBag.hotels as List<DATA1>;
+    int _score = Model[2].ToInt();
+    string _msg = "再加加油~";
+    if (_score >= 500)
+    {
+        _msg = "太強了~";
+    }
+    else if (_score >= 401)
+    {
+        _msg = "有厲害喔~";
+    }
+    else if (_score >= 301)
+    {
+        _msg = "再接再厲~";
+    }
+}
+
+@if (isData)
+{
+    <div class="lightbox_gameover focus">
+        @*<img id="close" src="/images/icon_close.png" height="23">*@
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="final-score"><span>您的積分 : </span><span>@Model[2]</span><b>@_msg</b></p>
+                    <div class="buttons text-center mt-2">
+                        @if (_count > 0)
+                        {
+                            <a href="@Url.Action("Game")" class="again">再試一次<b>@Model[1]</b></a>
+                        }
+                        <a href="@Url.Action("Index")" class="over">結束遊戲</a>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-4">
+                    <div class="hotel-introduce">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="sign">
+                                    <img src="~/Images/game/badge1.png" />
+                                    <img src="~/Images/game/badge2.png" />
+                                    <img src="~/Images/game/badge3.png" />
+                                    <p>合法旅宿標章</p>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <p>到哪找全台合法旅宿? <a href="https://taiwanstay.net.tw/" target="_blank">點我前往</a></p>
+                                @foreach (var item in hotels)
+                                {
+                                    <a href="@($"https://www.taiwanstay.net.tw/room/{item.CONTENT8}")" class="hotel-img" target="_blank">
+                                        <div class="image_sameHeight">
+                                            <img class="lazyloaded" alt="@item.CONTENT1" data-src="@item.CONTENT11" src="@item.CONTENT11">
+                                        </div>
+                                        <p>@item.CONTENT1</p>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.removeEventListener('touchstart', handleTouchEvent, true);
+        document.removeEventListener('touchmove', handleTouchEvent, true);
+        document.removeEventListener('touchend', handleTouchEvent, true);
+        document.removeEventListener('touchcancel', handleTouchEvent, true);
+        document.removeEventListener('mousemove', handleMouseEvent);
+    $(function () {
+        showMsg('@(Model[0])');
+        //$(".lightbox_gameover #close").click(function () {
+        //    $(".black_bg_game").fadeOut();
+        //    $(".lightbox_gameover").removeClass("focus");
+        //});
+    });
+    </script>
+}
+@*<div class="timing">60<i>s</i></div>
+    <div class="score">
+        <p>0</p>
+        <div class="life">
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star active"></div>
+        </div>
+    </div>*@
+<div class="w1500">
+    <div class="ohbear">
+        <img src="~/Images/game/ohbear-normal.png" />
+    </div>
+</div>

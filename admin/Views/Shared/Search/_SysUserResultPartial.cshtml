@@ -1,0 +1,29 @@
+﻿@model List<SYSUSER>
+@if (Model != null)
+{
+	<p>@Resource.SearchResults.ToString() <input type="checkbox" id="all" /><label for="all">@Resource.ALL.ToString()</label></p>
+	<div class="ul_box">
+		<ul class="five" id="roleuserlist">
+			@foreach (SYSUSER m in Model)
+			{
+				<li>
+					<div>
+						<input type="checkbox" class="choosed" value="@m.USER_ID" title="@m.NAME" id="@m.USER_ID" />&nbsp;
+						<label for="@m.USER_ID">
+							@m.NAME (@m.CONTENT1 / @m.CONTENT2)
+						</label>
+					</div>
+				</li>
+			}
+		</ul>
+	</div>
+}
+
+<script type="text/javascript">
+	$("#all").click(function () {
+		var tmp = this.checked;
+		$(".choosed").each(function () {
+			this.checked = tmp;
+		});
+	});
+</script>

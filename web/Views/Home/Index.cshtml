@@ -1,0 +1,46 @@
+﻿@{
+    bool isLogon = User.Identity.IsAuthenticated;
+}
+@section head{
+
+}
+@section top{
+
+}
+<div class="Main-cover">
+    @*<img class="tree1 animate__animated animate__bounce animate__slideInRight  animate__delay-1s" src="~/Images/tree1.png" />
+        <img class="tree2 animate__animated animate__bounce animate__slideInLeft  animate__delay-1s"  src="~/Images/tree2.png" />
+        <img class="ohbear animate__animated animate__bounce animate__lightSpeedInLeft  animate__delay-2s"  src="~/Images/ohbear.png" />*@
+    <div class="content">
+        <div class="main">
+            <img class="" src="~/Images/logo2.svg" />
+            <img class="" src="~/Images/main.png" />
+        </div>
+        <img class="people1 animate__animated animate__delay-2s animate__bounce animate__fadeInDown" src="~/Images/people1.png" />
+        <img class="people2 animate__animated animate__delay-2s animate__bounce animate__fadeInDown" src="~/Images/people2.png" />
+        <img class="people3 animate__animated animate__delay-2s animate__bounce animate__fadeInDown" src="~/Images/people3.png" />
+        <img class="people4 animate__animated animate__bounce animate__slow animate__infinite animate__infinite" src="~/Images/people4.png" />
+
+        <a href="@Url.Action("Reply")" id="btnGo" class="vote content animate__animated animate__pulse animate__infinite ">
+            回覆中獎資料<i class="bi bi-caret-right-fill"></i>
+        </a>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        if (navigator.userAgent.indexOf("Line") > -1) {
+            location.href = "https://www.2022taiwanstay.com.tw?openExternalBrowser=1";
+        }
+        $(function () {
+            $("#btnGo").click(function () {
+        @if(!isLogon)
+            {
+            @:showMsg('請先登入!!');
+                @:login();
+                                                                            @:return false;
+                                                                        }
+            });
+        })
+    </script>
+}

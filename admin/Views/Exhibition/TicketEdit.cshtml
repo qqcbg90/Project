@@ -1,0 +1,171 @@
+﻿@model DATA2
+@{
+	bool fun13_06_03 = ((string)ViewBag.NodeID).CheckStringValue("fun13_06_03");
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				名稱
+			</label>
+			<div>
+				@Html.DisplayFor(model => model.CONTENT7)
+			</div>
+		</div>
+		<div>
+			<label>
+				館別／場地
+			</label>
+			<div>
+				@Html.DisplayFor(model => model.CONTENT3)／@Html.DisplayFor(model => model.CONTENT4)
+			</div>
+		</div>
+		<div>
+			<label>
+				類型
+			</label>
+			<div>
+				@Html.DisplayFor(model => model.CONTENT5)／@Html.DisplayFor(model => model.CONTENT6)
+			</div>
+		</div>
+		@if (fun13_06_03)
+		{
+			<div>
+				<label>
+					活動日期
+				</label>
+				<div>
+					@Html.Raw(Model.CONTENT13)
+				</div>
+			</div>
+		}
+		else
+		{
+			<div>
+				<label>
+					活動日期+時間
+				</label>
+				<div>
+					@Html.Raw(Model.CONTENT)
+				</div>
+			</div>
+		}
+		<div>
+			<label>
+				索票規則
+			</label>
+			<div>
+				@Html.Raw(Model.CONTENT21.IsNullOrEmpty() ? "無" : Model.CONTENT21.ReplaceToBr())
+			</div>
+		</div>
+		<div>
+			<label>
+				索票開放時間
+			</label>
+			<div>
+				@(Model.DATETIME1.HasValue ? Model.DATETIME1.Value.ToString("yyyy/MM/dd HH:mm") : "無")
+			</div>
+		</div>
+		@if (fun13_06_03)
+		{
+			int i = 1;
+			string selectDate = (string)ViewBag.selectDate;
+			string sID = string.Empty, sDate = string.Empty;
+			if (!selectDate.IsNullOrEmpty())
+			{
+				string[] arr = selectDate.Split(Function.DELIMITER);
+				if (arr.Length >= 2)
+				{
+					sID = arr[0];
+					sDate = arr[1];
+				}
+			}
+			<div>
+				<label>展演日期</label>
+				<div>
+					@Html.DropDownList("k", ViewBag.DateList as SelectList, "全部")
+					<input type="submit" value="查詢" title="查詢" id="btnSearch" name="btnSearch" class="btn" />
+				</div>
+			</div>
+			<div class="tb_list_box">
+				<table class="tb_list">
+					<tr>
+						<th>登記順序</th>
+						<th>演出時間</th>
+						<th>殘障手冊編號</th>
+						<th>姓名</th>
+						<th>性別</th>
+						<th>聯絡電話</th>
+						<th>E-mail</th>
+						<th>索票票種</th>
+						<th>刪除</th>
+					</tr>
+					@foreach (PLUS plus in Model.GetPlusList(0, "DISABILITY")
+						.Where(p => selectDate.IsNullOrEmpty() || (p.CONTENT7.CheckStringValue(sID) && p.DATETIME1.Value.ToDateTimeString().Equals(sDate)))
+						.OrderBy(p => p.CREATE_DATE))
+					{
+						<tr>
+							<td data-th="登記順序">@(i)</td>
+							<td data-th="演出時間">@plus.DATETIME1.Value.ToDateString(week: true)</td>
+							<td data-th="殘障手冊編號">@plus.CONTENT1</td>
+							<td data-th="姓名">@plus.CONTENT2</td>
+							<td data-th="性別">@plus.CONTENT3</td>
+							<td data-th="聯絡電話">@plus.CONTENT4</td>
+							<td data-th="E-mail">@plus.CONTENT5</td>
+							<td data-th="索票票種">@plus.CONTENT6</td>
+							<td data-th="刪除">
+								<div class="btn_box">
+									<a href="@Url.MyAction("DeletePlus", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = plus.MAIN_ID, pid = plus.ID, actionName = "TicketEdit" })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE');"><span class="btn red"><i class="far fa-trash-alt"></i></span></a>
+								</div>
+							</td>
+						</tr>
+						i++;
+					}
+				</table>
+			</div>
+		}
+		else
+		{
+			<div>
+				<label>
+					發放張數
+				</label>
+				<div>
+					@(Convert.ToInt32(Model.DECIMAL5 ?? 0))
+				</div>
+			</div>
+			<div>
+				<label>
+					索取張數
+				</label>
+				<div>
+					@Html.TextBoxFor(model => model.DECIMAL6, "{0:#0}")
+					@Html.ValidationMessageFor(model => model.DECIMAL6)
+				</div>
+			</div>
+			<div>
+				@Html.ValidationSummary(true)
+			</div>
+		}
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(!fun13_06_03 ? ViewBag.IsEdit : false)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

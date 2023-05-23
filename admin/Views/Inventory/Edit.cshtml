@@ -1,0 +1,197 @@
+﻿@model InventoryRequisitionModel
+@{
+	string NodeID = ViewBag.NodeID;
+	bool IsAdd = ViewBag.IsAdd;
+	bool IsAudit = ViewBag.IsAudit;
+	bool isEdit = ViewBag.isEdit;
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@helper InventoryAdd(string _ID = "", string _PLUS_TYPE = "", string _NAME = "", string _UNIT = "", string _LIMIT = "", string _NUM = "", int _ORDER = 0, bool IsAdd = true, bool IsView = false, string _C8 = "", string _IMG = "")
+{
+string sID = "${ID}";
+string sPLUS_TYPE = "${PLUS_TYPE}";
+string sNAME = "${NAME}";
+string sUNIT = "${UNIT}";
+string sLIMIT = "${LIMIT}";
+string sNUM = "${NUM}";
+string sIMG = "${IMG}";
+if (!IsAdd)
+{
+	sID = _ID.IsNullOrEmpty() ? sID : _ID;
+	sPLUS_TYPE = _PLUS_TYPE.IsNullOrEmpty() ? sPLUS_TYPE : _PLUS_TYPE;
+	sNAME = _NAME.IsNullOrEmpty() ? sNAME : _NAME;
+	sUNIT = _UNIT.IsNullOrEmpty() ? sUNIT : _UNIT;
+	sLIMIT = _LIMIT.IsNullOrEmpty() ? sLIMIT : _LIMIT;
+	sNUM = _NUM.IsNullOrEmpty() ? sNUM : _NUM;
+	sIMG = _IMG.IsNullOrEmpty() ? "" : _IMG;
+}
+	<li id="@sPLUS_TYPE" style="padding-bottom: 5px;">
+		@Html.Hidden("DETAILs.index", sID)
+		@Html.Hidden("DETAILs[" + sID + "].ID", sID)
+		@Html.Hidden("DETAILs[" + sID + "].PLUS_TYPE", sPLUS_TYPE)
+		@if (!sIMG.IsNullOrEmpty())
+		{
+			<a href="@Url.Content("~/Upload/" + sIMG)" data-fancybox="img@(sID)" data-toolbar="false"><img src="@Url.Content("~/Upload/" + sIMG)" style="width:50px;" /></a>
+		}
+		@sNAME
+		<input type="text" id="DETAILs[@sID].DECIMAL1" name="DETAILs[@sID].DECIMAL1" value="@sNUM" class="w200 valid" maxlength="5" placeholder="數量" style="max-width: 100px;" @(IsView ? "readonly" : "") />
+		(<span class="unit colortxt_red2">@sUNIT</span>)&nbsp;(可申請庫存量：<span class="limit colortxt_red" style="font-weight: bold;">@sLIMIT</span>)
+		@if (IsAdd || (!IsView && _ORDER == 2))
+		{
+			<a href="javascript:delInventory('@sPLUS_TYPE')" title="刪除"><i class="fa fa-times" style="font-size: x-large;color: #dd4b39;text-shadow: 2px 2px 2px #CCC;"></i></a>
+		}
+		@if (_C8.CheckStringValue("0"))
+		{
+			<span class="obj_offline" style="margin-left:10px;color: red;background-color:yellow;">【物品已下線，不可申請】</span>
+		}
+	</li>
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		@if (!IsAdd)
+		{
+			<div>
+				<label>
+					@Html.LabelFor(m => m.ID)
+				</label>
+				<div>
+					@Html.DisplayFor(m => m.ID)
+				</div>
+			</div>
+			<div>
+				<label>
+					@Html.LabelFor(m => m.CREATE_DATE)
+				</label>
+				<div>
+					@Html.DisplayFor(m => m.CREATE_DATE)
+				</div>
+			</div>
+		}
+		<div>
+			<label>
+				@Html.LabelFor(m => m.DATA_TYPE)
+			</label>
+			<div>
+				@Model.DATA_TYPE
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CREATER)
+			</label>
+			<div>
+				@Function.GetSysUserName(Model.CREATER)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.CONTENT1)
+			</label>
+			<div>
+				@if (!IsAudit && isEdit)
+				{
+					@Html.EditorValidationFor(m => m.CONTENT1, new { htmlAttr = new { @class = "big_txtarea" } })
+				}
+				else
+				{
+					@Html.DisplayFor(m => m.CONTENT1)
+				}
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				請領項目
+			</label>
+			<div>
+				@if (!IsAudit && isEdit)
+				{
+					<p class="top_bar">
+						<label class="btn_box">
+							<a data-fancybox="print" data-type="iframe" data-ng-model="true" href="@Url.Action("InventoryAdd", new { nid = NodeID, id = ViewBag.ID, k1 = ViewBag.k1 })" title="新增" class="btn org">新增</a>
+						</label>
+					</p>
+					@Html.Hidden("ORDER", "0")
+				}
+				<ul id="Inventory_list" style="width: 100%;">
+					@foreach (InventoryRequisitionDetailModel m in Model.DETAILs)
+					{
+						@InventoryAdd(m.ID, m.PLUS_TYPE, m.PLUS_TYPE_TITLE, m.PLUS_TYPE_UNIT
+					   , m.DECIMAL2.Value.ToString("#0"), m.DECIMAL1.Value.ToString("#0"), (Model.ORDER ?? 0), false, !isEdit, m.CONTENT8, m.PLUS_TYPE_IMG)
+					}
+				</ul>
+			</div>
+		</div>
+		@if (!IsAdd)
+		{
+			<div>
+				<label>狀態</label>
+				<div>
+					@if (IsAudit && Model.ORDER <= 0)
+					{
+						<label for="ORDER_0" style="display: none;">@Html.RadioButtonFor(m => m.ORDER, "0", new { id = "ORDER_0" }) @AuditStatus.Type0.GetDescription()</label>
+						<label for="ORDER_1">@Html.RadioButtonFor(m => m.ORDER, "1", new { id = "ORDER_1" }) @AuditStatus.Type1.GetDescription()</label>
+						<label for="ORDER_2">@Html.RadioButtonFor(m => m.ORDER, "2", new { id = "ORDER_2" }) @AuditStatus.Type2.GetDescription()</label>
+						@Html.EditorValidationFor(m => m.CONTENT28, new { htmlAttr = new { placeholder = "原因" } })
+					}
+					else
+					{
+						@(((AuditStatus)Model.ORDER).GetDescription())
+						@(Model.CONTENT28.IsNullOrEmpty() ? "" : "，原因：" + Model.CONTENT28)
+					}
+				</div>
+			</div>
+		}
+		@Html.ValidationSummary(true)
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.isEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script type="text/x-jquery-tmpl" id="tmplInventory">
+		@InventoryAdd()
+	</script>
+	<script>
+		$(function () {
+			$("#save").click(function () {
+				if ($("#Inventory_list>li").length == 0) {
+					showMsg("請領項目：至少新增 1 項！", 3);
+					return false;
+				}
+			});
+		});
+
+		function addInventory(vID, vPLUS_TYPE, vNAME, vUNIT, vLIMIT, vNUM, vIMG) {
+			if ($("#Inventory_list li[id='" + vPLUS_TYPE + "']").length == 0) {
+				$("#tmplInventory").tmpl({
+					ID: vID,
+					PLUS_TYPE: vPLUS_TYPE,
+					NAME: vNAME,
+					UNIT: vUNIT,
+					LIMIT: vLIMIT,
+					NUM: vNUM,
+					IMG: vIMG
+				}).appendTo("#Inventory_list");
+			}
+		}
+
+		function delInventory(vPLUS_TYPE) {
+			$("#" + vPLUS_TYPE).remove();
+		}
+	</script>
+}
+

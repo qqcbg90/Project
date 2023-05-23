@@ -1,0 +1,29 @@
+﻿@{
+	ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+}
+@*@Scripts.Render("~/ckeditor/js")*@
+@Html.TextArea(string.Empty, null, new { cols = ViewData["cols"] != null ? ViewData["cols"] : 45, rows = ViewData["rows"] != null ? ViewData["rows"] : 10, @class = "editors ckrequired" })
+<style type="text/css">
+	textarea.ckrequired {
+		display: block !important;
+		visibility:visible !important;
+		position: absolute;
+		opacity: 0;
+		z-index: -999999;
+	}
+</style>
+<script type="text/javascript">
+	var editor = CKEDITOR.replace('@ViewData.TemplateInfo.HtmlFieldPrefix', {
+		toolbar: 'MyBar',
+		width: '100%',
+		height: '350px'
+	});
+
+    $(function () {
+        $("#save").click(function () {
+            $('.editors').each(function () {
+                CKEDITOR.instances[$(this).attr('name')].updateElement();
+            });
+        });
+    });
+</script>

@@ -1,0 +1,57 @@
+﻿@model VehicleModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm())
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.TITLE)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.TITLE)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.URL)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.URL)
+			</div>
+		</div>
+		<div>
+			<label>
+				@Html.LabelFor(m => m.UPDATE_DATE)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.UPDATE_DATE)
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+
+}
+

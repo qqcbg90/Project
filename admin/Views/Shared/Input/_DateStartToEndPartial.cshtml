@@ -1,0 +1,79 @@
+﻿@*
+	日期範圍 partial
+	model[0]：日期起控制項name 傳入
+	model[1]：日期迄控制項name 傳入
+	model[2]：日期起值 傳入
+	model[3]：日期迄值 傳入
+	model[4]：查詢用(1:是，0:否)
+*@
+@model string[]
+@{
+    string start = Model[0];
+    string end = Model[1];
+    string startValue = Model[2];
+    string endValue = Model[3];
+    if (endValue.ToDateTime() == Function.DEFAULT_TIME)
+    {
+        endValue = string.Empty;
+    }
+    string isQuery = Model[4].IsNullOrEmpty() ? "0" : Model[4];
+}
+<script type="text/javascript">
+	$(function () {
+		$("#@(start)").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'yy/mm/dd',
+			showAnim: 'drop',
+			buttonImage: '@Url.Content("~/images/calendar.gif")',
+			//showOn: 'both',
+			buttonImageOnly: true,
+			buttonText: '開始日期',
+			onSelect: function (selectedDate) {
+				$("#@(end)").datepicker("option", "minDate", selectedDate);
+			}
+		});
+		$("#@(end)").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'yy/mm/dd',
+			showAnim: 'drop',
+			buttonImage: '@Url.Content("~/images/calendar.gif")',
+			//showOn: 'both',
+			buttonImageOnly: true,
+			buttonText: '結束日期',
+			onSelect: function (selectedDate) {
+				$("#@(start)").datepicker("option", "maxDate", selectedDate);
+			}
+		});
+	});
+</script>
+@if (isQuery.CheckStringValue("0"))
+{
+	<span>
+		@Html.TextBox(start, startValue, new { @class = "input", placeholder = "YYYY/MM/DD", data_val = "true", data_val_required = "*" })&nbsp;&nbsp;至&nbsp;&nbsp;@Html.TextBox(end, endValue, new { @class = "input", placeholder = "YYYY/MM/DD", data_val = "true", data_val_required = "*" })
+	</span>
+}
+else if (isQuery.CheckStringValue("1"))
+{
+	@*<label class="key">@Html.TextBox(start, startValue, new { @class = "input", placeholder = "YYYY/MM/DD",style="width:80%" })</label>
+    @:～&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label class="key">
+            @Html.TextBox(end, endValue, new { @class = "input", placeholder = "YYYY/MM/DD", style = "width:80%" })
+        </label>
+        <font color="red">(下線日期未填表示永久上線)</font>
+    <br />*@
+    <span>
+        @Html.TextBox(start, startValue, new { @class = "input", placeholder = "YYYY/MM/DD" })&nbsp;&nbsp;至&nbsp;&nbsp;@Html.TextBox(end, endValue, new { @class = "input", placeholder = "YYYY/MM/DD" })
+    </span>
+    <font color="red">(下線日期未填表示永久上線)</font>
+}
+else
+{
+    <label class="key">@Html.TextBox(start, startValue, new { @class = "input", placeholder = "YYYY/MM/DD" })</label>
+    @:至&nbsp;&nbsp;&nbsp;&nbsp;
+    <label class="key">
+        @Html.TextBox(end, endValue, new { @class = "input", placeholder = "YYYY/MM/DD" })
+    </label>
+        <br />
+}

@@ -1,0 +1,74 @@
+﻿@model List<ROLE_USER_MAPPING>
+@{
+	Layout = "~/Views/Shared/_popupLayout.cshtml";
+	ViewBag.ContentTitle3 = "訂閱名單管理";
+}
+@section head{
+
+}
+
+@section bottonList{
+	<input type="submit" id="save" name="save" class="btn" value="存檔" style="visibility:hidden" />
+}
+<p class="search_box" style="display:block; margin-top: 10px;">
+	<label class="key">單筆新增：@MyList.CustomInput("EMAIL", "", "E-mail")</label>
+	<br />
+	<label class="key">批次匯入(.txt)：<input type="file" id="HPF" name="HPF" accept=".txt" /></label>
+	<a href="@Url.Content("~/Content/Email_Import.zip")" target="_blank">下載匯入格式</a>
+	<br />
+	<label class="btn_box go">
+		<input type="submit" id="btnImport" name="btnImport" value="匯入" class="btn" />
+		@MyHtml.Button("回訂閱名單", Url.MyAction("SubscriberEdit", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = ViewBag.ID, k1 = ViewBag.k1, start = ViewBag.start, end = ViewBag.end }), "gray")
+	</label>
+</p>
+@if (ViewBag.ErrorMsg != null)
+{
+	<div class="tb_list_box">
+		@((string)ViewBag.ErrorMsg)<br /><br />
+		@if (ViewBag.ErrorList != null)
+		{
+			@:失敗名單：
+			<ul class="EMAILs">
+				@foreach (string sEmail in ((List<string>)ViewBag.ErrorList))
+				{
+					<li>
+						@sEmail
+					</li>
+				}
+			</ul>
+		}
+	</div>
+}
+
+@section scripts{
+	<script type="text/javascript">
+		$(function () {
+			$("#btnImport").click(function () {
+				var EMAIL = $("#EMAIL").val();
+				var HPF = $("#HPF").val();
+				if (EMAIL != "") {
+					var reEmail = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+					if (!reEmail.test(EMAIL)) {
+						showMsg("單筆新增：E-mail 格式不正確！", 3)
+						return false;
+					}
+				}
+				else if (HPF != "") {
+					var start = HPF.lastIndexOf("\\");
+					start = start < 0 ? 0 : start;
+					var end = HPF.lastIndexOf(".");
+					var fileName = HPF.substr(start + 1, end);
+					var ext = HPF.substr(end);
+					if (ext != ".txt") {
+						showMsg("批次匯入：檔案格式僅支援文字檔 (.txt)！", 3)
+						return false;
+					}
+				}
+				else {
+					showMsg("請輸入 E-mail 或 選擇檔案(.txt)！", 3)
+					return false;
+				}
+			});
+		});
+	</script>
+}

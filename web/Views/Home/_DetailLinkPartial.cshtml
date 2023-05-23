@@ -1,0 +1,123 @@
+﻿@*
+    環境教育、熱門景點、商家的關連
+*@
+@model DATA1
+@{
+    PARAGRAPH ph99 = Model.GetParagraphByOrder(99);
+    string _content = ph99.CONTENT;
+    List<string> _arr = _content.ToSplit().ToList();
+    KingspModel.Interface.IDB iDB = new KingspModel.Repository.DBRepository();
+    List<IGrouping<string, DATA1>> links = iDB.GetAllAsNoTracking<DATA1>().Where(p => _arr.Contains(p.ID)
+     && "1".Equals(p.STATUS)
+     && (DateTime.Today >= p.DATETIME1 && (!p.DATETIME2.HasValue || DateTime.Today <= p.DATETIME2)))
+   .GroupBy(p => p.NODE_ID).ToList();
+}
+
+@if (links != null && links.Count > 0)
+{
+    <div class="page2-1_sec2">
+        @foreach (var t in links)
+        {
+            string _h31 = string.Empty;
+            string _h32 = string.Empty;
+            string _style = "";
+            string _padding = "40px";
+
+            if (t == links.FirstOrDefault())
+            {
+                _padding = "80px";
+            }
+            if (t == links.LastOrDefault())
+            {
+                _style = "margin-bottom: 80px;";
+            }
+            switch (t.Key)
+            {
+                default:
+                case "fun2000":
+                    _h31 = Resource.index01;
+                    _h32 = Resource.index02;
+                    break;
+                case "fun2001":
+                    _h31 = Resource.view06;
+                    _h32 = Resource.view07;
+                    break;
+                case "fun2002":
+                    _h31 = Resource.view03;
+                    _h32 = Resource.view04;
+                    break;
+                case "fun3000":
+                    _h31 = Resource.more;
+                    _h32 = Resource.view05;
+                    break;
+            }
+            <div class="wrap" style="padding-top:30px;">
+                <h3 style="color: #414141;padding-left: 10px;">@_h31</h3><h3 style="color: #44957F;">@_h32</h3>
+            </div>
+            <div class="page2-1_sec2_gallery owl-carousel aboutlink">
+                @foreach (var item in t.OrderByDescending(p => p.DATETIME1))
+                {
+                    bool isfun3000 = item.DECIMAL4 > 0;
+                    <div class="item" style="@(isfun3000?"":"height:280px")">
+                        <a target="_blank" href="@Url.Action("Detail",new { id = item.ID })">
+                            <img src="@item.GetFirstAttachment().GetPic(PictureType.Medium)" />
+                            <div class="item_des">
+                                <img class="icon" height="12" src="@Url.Content("~/images/icon/icon_location_green.png")">
+                                <h6>@Function.GetNodeValueByLang(item.CONTENT2)</h6>
+                                @if (isfun3000)
+                                {
+                                    <h5>@item.GetValueOnLang()</h5>
+                                }
+                                else
+                                {
+                                    <h6 style="color: #A2A2A2;float: right;">@item.GetValueOnLang()</h6>
+                                    @*<h6 style="color: #A2A2A2;float: right;">845公尺</h6>*@
+                                }
+                            </div>
+                            @if (isfun3000)
+                            {
+                                <div class="item_price">
+                                    <h6 style="color: #A2A2A2">NT$</h6>
+                                    <h4 style="color: #44957F; font-weight: bold;">@item.DECIMAL4.ToInt().ReplaceNumToThousand()</h4>
+                                    <h6 style="color: #44957F; font-weight: bold;">起</h6>
+                                </div>
+                            }
+                        </a>
+                    </div>
+                }
+            </div>
+            <div id="control_buttons2" style="display: none;"></div>
+        }
+    </div>
+}
+<script>
+    $(function () {
+        $(".aboutlink").owlCarousel({
+            //afterInit: function (elem) {
+            //    var that = this
+            //    that.owlControls.prependTo('#control_buttons2')// 修改讓程式加在此元素後 //
+            //},
+            @*navigation: true,
+            autoPlay: true,
+            pagination: true,
+            navigationText: ["<img src='@Url.Content("~/images/icon/icon_arrow_transparent.png")'>", "<img src='@Url.Content("~/images/icon/icon_arrow2_transparent.png")'>"],*@
+            nav: true,
+            autoPlay: true,
+            autoplaySpeed: 800,
+
+            dots: false,
+            navText: [
+                "<img src='@Url.Content("~/images/00-index/prev.png")'>",
+                "<img src='@Url.Content("~/images/00-index/next.png")'>"
+            ],
+            responsive:{
+                0: { 
+                    items: 1,
+                },
+                767: {
+                    items: 4,
+                 },
+            }
+        });
+    })
+</script>

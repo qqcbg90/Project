@@ -1,0 +1,44 @@
+﻿@model NewsModel
+@{
+
+}
+<div>
+    <label>
+        @MyHtml.RedSpan()
+        @Html.LabelFor(m => m.CONTENT1)
+    </label>
+    <div>
+        @Html.EditorValidationFor(m => m.CONTENT1)
+    </div>
+</div>
+<div>
+    <label>
+        @Html.LabelFor(m => m.CONTENT)
+    </label>
+    <div>
+        @Html.EditorValidationFor(m => m.CONTENT, new { htmlAttr = new { @class = "big_txtarea" } })
+    </div>
+</div>
+<div>
+    <label>
+        @Html.LabelFor(m => m.CONTENT11)
+    </label>
+    <div>
+        @Html.EditorValidationFor(m => m.CONTENT11)
+    </div>
+</div>
+@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = true, iDescType = 3 })
+<div>
+    <label>檔案上傳</label>
+    <div class="up_img">
+        <input type="file" name="HPF1s" multiple accept="@Function.DEFAULT_FILEUPLOAD_EXT" /><br />
+        @Html.Partial("_AttachmentPartial", Model.ATTAs)
+    </div>
+</div>
+<div style="border-top: 1px dashed #CCC">
+    <label>圖片上傳</label>
+    <div class="up_img">
+        <input type="file" name="HPF2s" multiple accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" /><br />
+        @Html.Partial("_AttachmentPartial", Model.PICs)
+    </div>
+</div>

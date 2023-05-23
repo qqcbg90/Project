@@ -1,0 +1,101 @@
+﻿@model InventoryItemModel
+@{
+
+}
+
+@section head{
+
+}
+
+@section featured{
+
+}
+
+@*網頁內容start*@
+@using (Html.BeginForm((string)ViewBag.ActionName, (string)ViewBag.ControllerName, new { nid = ViewBag.NodeID, k = ViewBag.k1 }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@MyHtml.RedP()
+	@Html.AntiForgeryToken()
+	<div class="edit_list" id="app1">
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.PARENT_ID)
+			</label>
+			<div>
+				<span class="select">@Html.DropDownListFor(m => m.PARENT_ID, ViewBag.INVENTORY_ITEM as SelectList, "請選擇")</span>
+				@Html.ValidationMessageFor(m => m.PARENT_ID)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.TITLE)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.TITLE)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.CONTENT1)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.CONTENT1)
+			</div>
+		</div>
+		<div>
+			<label>
+				@MyHtml.RedSpan()
+				@Html.LabelFor(m => m.ORDER)
+			</label>
+			<div>
+				@Html.EditorValidationFor(model => model.ORDER)
+			</div>
+		</div>
+		<div>
+			<label>@Html.LabelFor(m => m.CONTENT8)</label>
+			<div>
+				@Html.CheckBox("CONTENT8", Model.CONTENT8.CheckStringValue("1"))
+			</div>
+		</div>
+		@Html.Partial("_AttachmentNotesPartial", new AttaNotesModel { bMultiple = false, iDescType = 1 })
+		<div>
+			<label>
+				圖片上傳
+			</label>
+			<div class="up_img">
+				<input type="file" id="hpf" name="hpf" accept="@Function.DEFAULT_FILEUPLOAD_PICTURE_EXT" />
+				@Html.ValidationMessageFor(m => m.hpf)
+				@if (Model != null && Model.atta != null)
+				{
+					ATTACHMENT atta = Model.atta;
+					<br />
+					<div class="show_img del">
+						<p>
+							<a href="@Url.MyAction("DeleteAttachment", (Dictionary<string, string>)ViewBag.DefaultRouteValues, new { id = atta.MAIN_ID, attid = atta.ID, k1 = ViewBag.k1, really = true, actionName = "ItemEdit" })" title="刪除" onclick="return confirm('@Function.DEFAULT_CONFIRM_MESSAGE')" class="close_bt"><i class="far fa-times-circle"></i></a>
+							<a href="@Url.Content(atta.GetPic())" data-fancybox="images" title="點選圖片可放大檢視">
+								<img src="@Url.Content(atta.GetPic())" style="height:100px;border: 1px solid #CCC;" />
+							</a>
+						</p>
+					</div>
+				}
+			</div>
+		</div>
+		<div>
+			@Html.ValidationSummary(true)
+		</div>
+	</div>
+	<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+}
+@*網頁內容end*@
+
+@section scripts{
+	<script>
+		$(function () {
+
+		});
+	</script>
+}
+

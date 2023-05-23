@@ -1,0 +1,45 @@
+﻿@model DateTime?
+@{
+    ViewData[ViewData.TemplateInfo.HtmlFieldPrefix] = ViewData.TemplateInfo.FormattedModelValue;
+    string tmpName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    string _value = Model.HasValue ? Model.ToTaiwanTypeDateString() : string.Empty;
+}
+@Html.TextBox(string.Empty, _value, new { Style = ViewData["width"] != null ? ViewData["width"] : "", @class = "datepicker input" })
+<script type="text/javascript">
+    $("#@(tmpName)").datepickerTW({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'yy/mm/dd',
+        showAnim: 'drop',
+        //minDate: new Date()
+        buttonImage: '@Url.Content("~/images/calendar.gif")',
+        showOn: 'both', buttonImageOnly: true,
+        yearRange: "1912:+3"
+        //yearPadZero:true
+    });
+    @*$(function () {
+        $(".datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy/mm/dd',
+            showAnim: 'drop',
+            //minDate: new Date()
+            buttonImage: '@Url.Content("~/images/calendar.gif")',
+            showOn: 'both', buttonImageOnly: true,
+            yearRange: "1911:+3"
+            , onSelect: function (dateText, inst) {
+                console.log(dateText);
+                console.log(dateText.replace(/\//g, ""));
+                dateText = dateText.replace(/\//g, "") - 19110000;
+                var _text = dateText.toString();
+                if (_text.length == 6) {
+                    _text = [_text.slice(0, 2), _text.slice(2, 4), _text.slice(4, 6)].join('/');
+                }
+                else {
+                    _text = [_text.slice(0, 3), _text.slice(3, 5), _text.slice(5, 7)].join('/');
+                }
+                $(this).val(_text);
+            }
+        });
+    });*@
+</script>

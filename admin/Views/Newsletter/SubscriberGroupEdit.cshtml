@@ -1,0 +1,41 @@
+﻿@model ROLE_GROUP
+@{
+	Layout = "~/Views/Shared/_popupLayout.cshtml";
+}
+@section head{
+
+}
+
+@section bottonList{
+	<input type="submit" class="btn" value="存檔" style="visibility: hidden;" />
+}
+<div class="edit_list" id="app1">
+	<div>
+		<label>
+			@MyHtml.RedSpan()
+			群組名稱
+		</label>
+		<div>
+			@Html.EditorValidationFor(model => model.TITLE)
+		</div>
+	</div>
+	<div>
+		<label>
+			備註
+		</label>
+		<div>
+			@Html.EditorValidationFor(model => model.CONTENT1)
+		</div>
+	</div>
+	<div>
+		@Html.ValidationSummary(true)
+	</div>
+</div>
+<div class="In_btn_box">@MyHtml.EditButton(ViewBag.IsEdit)</div>
+@section scripts{
+	<script type="text/javascript">
+		$(function () {
+			setRequired("TITLE", false);
+		});
+	</script>
+}
