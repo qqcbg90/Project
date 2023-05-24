@@ -232,7 +232,7 @@ namespace admin.Controllers
                 model.AttList = d.ATTACHMENT
                     .OrderBy(p => p.CREATE_DATE)
                     .ToList(); //相關圖片
-
+               
                
             }
             return View(model);
