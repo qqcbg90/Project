@@ -28,7 +28,6 @@
             }
             else
             {
-                <div><label>姓名</label>sinyi</div>
                 <div><label>職稱</label>軟體工程師</div>
                 <div><label>現職年資</label>1年</div>
                 <div><label>本業年資</label>1年</div>
@@ -93,6 +92,7 @@
             條列說明109-111年符合表揚辦法規定之事蹟(按民國年份由近至遠撰寫)<br />
             範例1：111年5月開辦觀光跨領域創新工作坊，2場次共168人參與。<br />
             範例2：109年7月飯店開始實施防疫早餐制，將早餐送至每位房客的房間。
+
         </h3>
         <div class="fs-group">
             <div class="form-group">
@@ -143,8 +143,8 @@
             如：得獎事蹟(獎狀)、進修證明、相關新聞報導等照片。 事蹟照片及相關證明請精選至多12張。
         </h3>
         <div class="fs-edit">
-            <div class="edit_list">
-                <div>
+        <div class="edit_list">
+            <div>
                     <label for="">年份 </label>
                     <div>
                         <span class="select">
@@ -165,20 +165,36 @@
                         選擇圖片
                         <label class="fileupload_">
                             <label><input class="upload_img" style="display:none;" type="file">請選擇</label>
-                        </label>
+                </label>
                     </label>
-                    <div class="img_box">
-
+                <div class="img_box">
+                    <div class="input_bt">
+                        <div class="input_bt">@Html.EditorValidationFor(model => model.ATT)</div>
                     </div>
+                    <ul class="only_jpg">
+                        @if (Model.AttList != null && Model.AttList.Count > 0)
+                        {
+                            foreach (var att in Model.AttList)
+                            {
+                                <li>
+                                  
+                                </li>
+
+                            }
+
+                        }
+                    </ul>
+
                 </div>
+            </div>
                 <div class="fs-del">
                     <input type="button" name="del" class="submit-button" value="刪除" />
                 </div>
             </div>
             <div class="edit_list">
-                <div>
+            <div>
                     <label for="">年份 </label>
-                    <div>
+                <div>
                         <span class="select">
                             <select class="form-control" name="yeardob">
                                 <option>112</option>
@@ -186,9 +202,9 @@
                                 <option>110</option>
                             </select>  年
                         </span>
-                    </div>
                 </div>
-                <div>
+            </div>
+            <div>
                     <label for="">描述</label>
                     <textarea rows="5" placeholder="描述"></textarea>
                 </div>
@@ -201,20 +217,20 @@
                     </label>
                     <div class="img_box">
 
-                    </div>
                 </div>
+            </div>
                 <div class="fs-del">
                     <input type="button" name="del" class="submit-button" value="刪除" />
-                </div>
+        </div>
             </div>
         </div>
 
-            <div class="fs-add">
+        <div class="fs-add">
                 <input type="button" name="add" id="img12" class="add-button" value="Add" />
-            </div>
-            <button type="button" name="previous" class="previous action-button"><i class="arrowPre"></i>上一頁</button>
-            <button type="button" name="next" class="next action-button">下一頁<i class="arrowNext"></i></button>
-</fieldset>
+        </div>
+        <button type="button" name="previous" class="previous action-button"><i class="arrowPre"></i>上一頁</button>
+        <button type="button" name="next" class="next action-button">下一頁<i class="arrowNext"></i></button>
+    </fieldset>
 
     <fieldset>
         <h2 class="fs-title">聯絡人資料</h2>

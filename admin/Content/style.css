@@ -1961,6 +1961,7 @@ span.select select {
     border-radius: 15px;
     box-sizing: border-box;
     background: #FFF;
+    box-shadow: 0px 2px 4px rgba(126, 142, 177, 0.12);
     margin: 10px 0 0 0;
     border: 2px solid rgba(126, 142, 177, 0.12);
 }
@@ -3985,38 +3986,39 @@ input[type="checkbox"] {
             text-decoration: none;
             font-size: 14px;
         }
-        #msform fieldset {
-            background: white;
-            border: 0 none;
-            border-radius: 3px;
-            box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-            padding: 20px 30px;
-            box-sizing: border-box;
-            width: 80%;
-            margin: 0 10%;
-            /*stacking fieldsets above each other*/
-            position: relative;
-        }
+    #msform fieldset {
+        background: white;
+        border: 0 none;
+        border-radius: 3px;
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+        padding: 20px 30px;
+        box-sizing: border-box;
+        width: 80%;
+        margin: 0 10%;
+        /*stacking fieldsets above each other*/
+        position: relative;
+    }
         /*Hide all except first fieldset*/
         #msform fieldset:not(:first-of-type) {
             display: none;
         }
     /*inputs*/
     #msform input, #msform textarea {
+        padding: 5px;
         border: 1px solid #ccc;
         border-radius: 3px;
+        margin: 5px;
+        width: 100%;
         box-sizing: border-box;
         color: #2C3E50;
         font-size: 16px;
         width: 88%;
     }
-    #msform .edit_list textarea {
-     width:72%;
     }
 
-    .form-area {
-        padding-top: 10px;
-    }
+        .form-area {
+            padding-top: 10px;
+        }
 /*buttons*/
 
 #msform .add-button {
@@ -4116,23 +4118,7 @@ input[type="checkbox"] {
 #msform label {
     display: inline-block;
     width: 95px;
-    text-align: left;
     margin-right: 10px;
-}
-#msform .fileupload_ label {
-    display: inline-block;
-    width: 65px;
-    text-align: center;
-    margin-top: 5px;
-    margin-right: 0px;
-    padding: 7px 0 0 0;
-    font-size: 0.9375rem;
-    background: #93ac34;
-    color: white;
-    background: #93ac34;
-    height: 25px;
-    border-radius: 3px;
-    cursor: pointer;
 }
 #msform .fs-profiles {
     font-weight: normal;
@@ -4148,12 +4134,10 @@ input[type="checkbox"] {
 .form-group div {
     padding-left: 10px;
 }
-#msform .edit_list textarea {
-}
-.form-group .txtarea {
-    padding-left: 10px;
-    padding-top: 10px;
-}
+    .form-group .txtarea {
+        padding-left: 10px;
+        padding-top: 10px;
+    }
 .form-control {
     appearance: none;
     border: 1px solid #cecece;
