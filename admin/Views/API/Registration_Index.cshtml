@@ -158,54 +158,6 @@
             <div class="edit_list">
                 <div>
                     <label for="">年份 </label>
-                <div>
-                        <span class="select">
-                            <select class="form-control" name="yeardob">
-                                <option>112</option>
-                                <option>111</option>
-                                <option>110</option>
-                            </select>  年
-                        </span>
-                </div>
-            </div>
-            <div>
-                    <label for="">描述</label>
-                    <textarea rows="5" placeholder="描述"></textarea>
-                </div>
-                <div>
-                    <label>
-                        選擇圖片
-                        <label class="fileupload_">
-                            <label><input class="upload_img" style="display:none;" type="file">請選擇</label>
-                </label>
-                    </label>
-                <div class="img_box">
-                    <div class="input_bt">
-                        <div class="input_bt">@Html.EditorValidationFor(model => model.ATT)</div>
-                    </div>
-                    <ul class="only_jpg">
-                        @if (Model.AttList != null && Model.AttList.Count > 0)
-                        {
-                            foreach (var att in Model.AttList)
-                            {
-                                <li>
-                                  
-                                </li>
-
-                            }
-
-                        }
-                    </ul>
-
-                </div>
-            </div>
-                <div class="fs-del">
-                    <input type="button" name="del"  class="submit-button" value="刪除" />
-        </div>
-            </div>
-            <div class="edit_list">
-                <div>
-                    <label for="">年份 </label>
                     <div>
                         <span class="select">
                             <select class="form-control" name="yeardob">
@@ -233,27 +185,16 @@
                 </div>
                 <div class="fs-del">
                     <input type="button" name="del" class="submit-button" value="刪除" />
->>>>>>>>> Temporary merge branch 2
                 </div>
             </div>
         </div>
 
-<<<<<<<<< Temporary merge branch 1
         <div class="fs-add">
-            <input type="button" name="add" class="add-button" value="Add" />
+            <input type="button" name="add" id="img12" class="add-button" value="Add" />
         </div>
         <button type="button" name="previous" class="previous action-button"><i class="arrowPre"></i>上一頁</button>
         <button type="button" name="next" class="next action-button">下一頁<i class="arrowNext"></i></button>
     </fieldset>
-=========
-            <div class="fs-add">
-                <input type="button" name="add" id="img12" class="add-button" value="Add" />
-            </div>
-            <button type="button" name="previous" class="previous action-button"><i class="arrowPre"></i>上一頁</button>
-            <button type="button" name="next" class="next action-button">下一頁<i class="arrowNext"></i></button>
-</fieldset>
->>>>>>>>> Temporary merge branch 2
-
     <fieldset>
         <h2 class="fs-title">聯絡人資料</h2>
         @*<h3 class="fs-subtitle"></h3>*@
@@ -330,7 +271,7 @@
             //hide the current fieldset with style
             current_fs.animate({ opacity: 0 }, {
                 step: function (now, mx) {
-                   
+
                     scale = 0.8 + (1 - now) * 0.2;
                     //2. take current_fs to the right(50%) - from 0%
                     left = ((1 - now) * 50) + "%";
@@ -379,7 +320,7 @@
         // 監聽「group1_Add」按鈕的點擊事件
         addgp1.addEventListener('click', function () {
 
-            var gp1List = document.querySelector(".fs-group1"); 
+            var gp1List = document.querySelector(".fs-group1");
 
             // 複製現有的.edit_list區塊的 HTML 内容
             var newEditListHTML = gp1List.outerHTML;
@@ -389,14 +330,14 @@
             fsEdit.insertAdjacentHTML("beforeend", newEditListHTML);
 
 
-            // 
+            //
             var newEditList = fsEdit.lastElementChild;
             var newYearSelect = newEditList.querySelector("select[name='yeardob']");
             var newMonthSelect = newEditList.querySelector("select[name='monthdob']");
             var textarea = newEditList.querySelector('textarea');
             var num = newEditList.querySelector('span');//取得編號
             newYearSelect.selectedIndex = 0; // 年份默認
-            newMonthSelect.selectedIndex = 0; 
+            newMonthSelect.selectedIndex = 0;
             textarea.value = '';
             num.textContent = $(".fs-group1").length + ".";
 
@@ -404,11 +345,10 @@
             var deleteButtons = document.querySelectorAll(".fs-del input[name='delgp1']");
             deleteButtons.forEach(function (deleteButton) {
                 deleteButton.addEventListener("click", function () {
-                    if ($(".fs-group1").length != 1)
-                    {
-                    var editList = deleteButton.closest(".fs-group1");
-                    editList.remove();
-                    //呼叫重新編號 count func
+                    if ($(".fs-group1").length != 1) {
+                        var editList = deleteButton.closest(".fs-group1");
+                        editList.remove();
+                        //呼叫重新編號 count func
                         count(".fs-group1");
                     }
                 });
@@ -432,7 +372,7 @@
             fsEdit.insertAdjacentHTML("beforeend", newEditListHTML);
 
 
-            // 
+            //
             var newEditList = fsEdit.lastElementChild;
             var newYearSelect = newEditList.querySelector("select[name='yeardob']");
             var newMonthSelect = newEditList.querySelector("select[name='monthdob']");
@@ -461,9 +401,9 @@
             var group1Elements = document.querySelectorAll(n);
             group1Elements.forEach(function (element, index) {
                 var spanElement = element.querySelector('span');
-                spanElement.textContent = (index + 1).toString()+"."; 
+                spanElement.textContent = (index + 1).toString() + ".";
             });
-            
+
         }
 
         //ADD_img12
@@ -506,26 +446,19 @@
 
                 reader.readAsDataURL(file);
             });
-            
+
             //刪除
             var deleteButtons = document.querySelectorAll(".fs-del input[name='del']");
             deleteButtons.forEach(function (deleteButton) {
                 deleteButton.addEventListener("click", function () {
                     if ($(".edit_list").length != 1) {
-                    var editList = deleteButton.closest(".edit_list");
-                    editList.remove();
+                        var editList = deleteButton.closest(".edit_list");
+                        editList.remove();
+                    }
                 });
             });
         });
-        var deleteButtons = document.querySelectorAll(".fs-del input[name='del']");
-            // 监听 "刪除" 按钮点击事件
-            deleteButtons.forEach(function (deleteButton) {
-                deleteButton.addEventListener("click", function () {
-                    var editList = deleteButton.closest(".edit_list");
-                    editList.remove();
-                });
-            });
->>>>>>>>> Temporary merge branch 2
+
     </script>
 
 }
