@@ -89,7 +89,7 @@ namespace admin.Controllers
             }
             if (prompt != null)
             {
-                OpenAIAPI _openai = new OpenAIAPI("YOUR-KEY");
+                OpenAIAPI _openai = new OpenAIAPI("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");
                 if (action == "chat")
                 {
 
